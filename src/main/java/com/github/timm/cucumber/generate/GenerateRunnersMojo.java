@@ -32,7 +32,9 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
 /**
- * Goal which touches a timestamp file.
+ * Goal which generates a Cucumber JUnit runner for each Gherkin feature file in your project
+ *
+ * @author Tim Myerscough
  *
  */
 @Mojo(name = "generateRunners", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
