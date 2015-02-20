@@ -131,8 +131,8 @@
   </developers>
   
   <scm>
-      <connection>scm:git:git@github.com:temyers/cucumber-jvm-parallel-plugin.git</connection>
-      <developerConnection>scm:git:git@github.com:temyers/cucumber-jvm-parallel-plugin.git</developerConnection>
+      <connection>scm:git:https://github.com/temyers/cucumber-jvm-parallel-plugin.git</connection>
+      <developerConnection>scm:git:https://github.com/temyers/cucumber-jvm-parallel-plugin.git</developerConnection>
       <url>https://github.com/temyers/cucumber-jvm-parallel-plugin</url>
       <tag>HEAD</tag>
   </scm>
