@@ -7,7 +7,7 @@
 	<artifactId>simple-it</artifactId>
 	<version>1.0-SNAPSHOT</version>
 
-	<description>A simple IT verifying the basic use case.</description>
+	<description>The glue parameters are not specified - the build should fail.</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -40,9 +40,7 @@
 						<goals>
 							<goal>generateRunners</goal>
 						</goals>
-						<configuration>
-							<glue>foo, bar</glue>
-						</configuration>
+						
 					</execution>
 				</executions>
 			</plugin>

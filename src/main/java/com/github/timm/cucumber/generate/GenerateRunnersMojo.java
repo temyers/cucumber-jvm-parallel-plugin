@@ -27,6 +27,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -41,6 +42,16 @@ import org.apache.velocity.app.VelocityEngine;
 public class GenerateRunnersMojo extends AbstractMojo {
 
     /**
+     * The current project representation.
+     *
+     * @parameter expression="${project}"
+     * @required
+     * @readonly
+     */
+    @Parameter(property = "project", readonly = true, required = true)
+    private MavenProject project;
+
+    /**
      * Comma separated list of containing the packages to use for the cucumber glue code
      *
      * E.g. <code>my.package, my.second.package</code>
@@ -53,19 +64,19 @@ public class GenerateRunnersMojo extends AbstractMojo {
     /**
      * Location of the file.
      */
-    @Parameter(defaultValue = "${project.build.directory}/generated-test-sources/cucumber", property = "outputDir", required = false)
+    @Parameter(defaultValue = "${project.build.directory}/generated-test-sources/cucumber", property = "outputDir", required = true)
     private File outputDirectory;
 
     /**
      * Directory containing the feature files
      */
-    @Parameter(defaultValue = "src/test/resources/features/", property = "featuresDir", required = false)
+    @Parameter(defaultValue = "src/test/resources/features/", property = "featuresDir", required = true)
     private File featuresDirectory;
 
     /**
      * @see CucumberOptions.strict
      */
-    @Parameter(defaultValue = "true", property = "cucumber.strict", required = false)
+    @Parameter(defaultValue = "true", property = "cucumber.strict", required = true)
     private boolean strict;
 
     /**
@@ -73,19 +84,19 @@ public class GenerateRunnersMojo extends AbstractMojo {
      *
      * @see CucumberOptions.format
      */
-    @Parameter(defaultValue = "json", property = "cucumber.format", required = false)
+    @Parameter(defaultValue = "json", property = "cucumber.format", required = true)
     private String format;
 
     /**
      * @see CucumberOptions.monochrome
      */
-    @Parameter(defaultValue = "false", property = "cucumber.monochrome", required = false)
+    @Parameter(defaultValue = "false", property = "cucumber.monochrome", required = true)
     private boolean monochrome;
 
     /**
      * @see CucumberOptions.tags
      */
-    @Parameter(defaultValue = "\"@complete\", \"@accepted\"", property = "cucumber.tags", required = false)
+    @Parameter(defaultValue = "\"@complete\", \"@accepted\"", property = "cucumber.tags", required = true)
     private String tags;
 
     private String featureFileLocation;
@@ -94,6 +105,11 @@ public class GenerateRunnersMojo extends AbstractMojo {
     private Template velocityTemplate;
 
     public void execute() throws MojoExecutionException {
+
+        if (!featuresDirectory.exists()) {
+            throw new MojoExecutionException("Features directory does not exist");
+        }
+
         File f = outputDirectory;
         quoteGlueStrings();
         initTemplate();
@@ -129,6 +145,9 @@ public class GenerateRunnersMojo extends AbstractMojo {
             fileCounter++ ;
         }
 
+        getLog().info("Adding " + outputDirectory.getAbsolutePath() + " to test-compile source root");
+
+        project.addTestCompileSourceRoot(outputDirectory.getAbsolutePath());
     }
 
     /**
