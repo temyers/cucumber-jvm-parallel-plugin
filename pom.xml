@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -180,6 +181,7 @@
 		<developer>
 			<name>Tim Myerscough</name>
 			<email>tm14258+mvn-central@gmail.com</email>
+			<organizationUrl>https://github.com/temyers</organizationUrl>
 			<roles>
 				<role>creator</role>
 			</roles>
@@ -199,4 +201,16 @@
 		<url>https://github.com/temyers/cucumber-jvm-parallel-plugin</url>
 		<tag>HEAD</tag>
 	</scm>
+
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<prerequisites>
+		<maven>3.2.5</maven>
+	</prerequisites>
+	
 </project>
