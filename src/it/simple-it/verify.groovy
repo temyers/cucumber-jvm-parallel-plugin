@@ -23,7 +23,7 @@ import cucumber.api.junit.Cucumber;
 public class Parallel01IT {
 }"""
 
-Assert.assertEquals(expected01,suite01.text)
+Assert.assertEquals(expected01.replace("\\r\\n","\\n"),suite01.text.replace("\\r\\n","\\n"))
 
 
 String expected02=
@@ -38,4 +38,4 @@ import cucumber.api.junit.Cucumber;
 public class Parallel02IT {
 }"""
 
-Assert.assertEquals(expected02,suite02.text)
+Assert.assertEquals(expected02.replace("\\r\\n","\\n"),suite02.text.replace("\\r\\n","\\n"))
