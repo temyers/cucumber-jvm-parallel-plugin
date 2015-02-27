@@ -99,6 +99,9 @@ public class GenerateRunnersMojo extends AbstractMojo {
     @Parameter(defaultValue = "\"@complete\", \"@accepted\"", property = "cucumber.tags", required = true)
     private String tags;
 
+    @Parameter(defaultValue = "UTF-8", property = "${project.build.sourceEncoding}", readonly = true)
+    private String encoding;
+
     private String featureFileLocation;
     private int fileCounter = 1;
 
@@ -204,6 +207,6 @@ public class GenerateRunnersMojo extends AbstractMojo {
         props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
         VelocityEngine engine = new VelocityEngine(props);
         engine.init();
-        velocityTemplate = engine.getTemplate("cucumber-junit-runner.vm");
+        velocityTemplate = engine.getTemplate("cucumber-junit-runner.vm", encoding);
     }
 }
