@@ -1,4 +1,5 @@
 import org.junit.Assert;
+import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
 
 File suite01 = new File( basedir, "target/generated-test-sources/cucumber/Parallel01IT.java" );
 File suite02 = new File( basedir, "target/generated-test-sources/cucumber/Parallel02IT.java" );
@@ -23,7 +24,7 @@ import cucumber.api.junit.Cucumber;
 public class Parallel01IT {
 }"""
 
-Assert.assertEquals(expected01.replace("\\r\\n","\\n"),suite01.text.replace("\\r\\n","\\n"))
+Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected01))
 
 
 String expected02=
@@ -38,4 +39,4 @@ import cucumber.api.junit.Cucumber;
 public class Parallel02IT {
 }"""
 
-Assert.assertEquals(expected02.replace("\\r\\n","\\n"),suite02.text.replace("\\r\\n","\\n"))
+Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expected02))
