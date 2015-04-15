@@ -62,10 +62,16 @@ public class GenerateRunnersMojo extends AbstractMojo {
     private String glue;
 
     /**
-     * Location of the file.
+     * Location of the generated files.
      */
     @Parameter(defaultValue = "${project.build.directory}/generated-test-sources/cucumber", property = "outputDir", required = true)
     private File outputDirectory;
+
+    /**
+     * Directory where the cucumber report files shall be written.
+     */
+    @Parameter(defaultValue = "target/cucumber-parallel", property = "cucumberOutputDir", required = true)
+    private String cucumberOutputDir;
 
     /**
      * Directory containing the feature files
@@ -196,6 +202,7 @@ public class GenerateRunnersMojo extends AbstractMojo {
         context.put("fileCounter", String.format("%02d", fileCounter));
         context.put("tags", tags);
         context.put("monochrome", monochrome);
+        context.put("cucumberOutputDir", cucumberOutputDir);
         context.put("glue", glue);
 
         velocityTemplate.merge(context, writer);
