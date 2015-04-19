@@ -121,7 +121,6 @@ public class GenerateRunnersMojo extends AbstractMojo {
 
         File f = outputDirectory;
         quoteGlueStrings();
-        prepareFormatStrings();
         initTemplate();
 
         Collection<File> featureFiles = FileUtils.listFiles(featuresDirectory, new String[] {"feature"}, true);
@@ -180,9 +179,9 @@ public class GenerateRunnersMojo extends AbstractMojo {
     }
 
     /**
-     * Prepare the formats used for the output.
+     * Create the format string used for the output.
      */
-    private void prepareFormatStrings() {
+    private String createFormatStrings() {
         String[] formatStrs = format.split(",");
 
         StringBuilder sb = new StringBuilder();
@@ -195,7 +194,7 @@ public class GenerateRunnersMojo extends AbstractMojo {
                 sb.append(", ");
             }
         }
-        format = sb.toString();
+        return sb.toString();
     }
 
     /**
@@ -216,7 +215,7 @@ public class GenerateRunnersMojo extends AbstractMojo {
         VelocityContext context = new VelocityContext();
         context.put("strict", strict);
         context.put("featureFile", featureFileLocation);
-        context.put("reports", format);
+        context.put("reports", createFormatStrings());
         context.put("fileCounter", String.format("%02d", fileCounter));
         context.put("tags", tags);
         context.put("monochrome", monochrome);
