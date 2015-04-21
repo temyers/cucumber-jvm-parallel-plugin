@@ -44,7 +44,7 @@
 				</executions>
 				<configuration>
 					<glue>foo</glue>
-                    <format>html,json</format>
+					<format>html,json</format>
 				</configuration>
 			</plugin>
 		</plugins>
