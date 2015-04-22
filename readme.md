@@ -26,11 +26,23 @@ Add the following to your POM file:
       </goals>
       <configuration>
           <!-- Mandatory -->
+          <!-- comma separated list of package names to scan for glue code -->
          <glue>foo, bar</glue>
          <!-- These are the default values -->
+          <!-- Where to output the generated Junit tests -->
            <outputDirectory>${project.build.directory}/generated-test-sources/cucumber</outputDirectory>
+           <!-- The diectory containing your feature files.  -->
           <featuresDirectory>src/test/resources/features/</featuresDirectory>
+           <!-- Directory where the cucumber report files shall be written  -->
+          <cucumberOutputDir>target/cucumber-parallel</cucumberOutputDir>
+          <!-- comma separated list of output formats -->
          <format>json</format>
+         <!-- CucumberOptions.strict property -->
+         <strict>true</strict>
+         <!-- CucumberOptions.monochrome property -->
+         <monochrome>true</monochrome>
+         <!-- The tags to run, maps to CucumberOptions.tags property -->
+         <tags>"@complete", "@accepted"</tags>
       </configuration>
     </execution>
   </executions>
@@ -45,3 +57,16 @@ The Java source is generated in `outputDirectory`, and will have the pattern `Pa
 
 Each JUnit test is configured to output the results to a separate output file under `target/cucumber-parallel`
 
+Contributing
+============
+
+To contribute:
+
+* Create an integration test to demonstrate the behaviour under `src/it/`.  For example, to add support for multiple output formats:
+** Create src/it/multiple-format
+** copy the contents of the src/it/simple-it directory and update the pom/src as appropriate to demonstrate the configuration.  Update the verify.groovy to implement the test for your feature.
+** Run `mvn clean install -Prun-its` to run the integration tests.
+* Implement the feature
+* When all tests are passing, submit a pull request.
+
+Once the pull request has been merged, a new release will be performed as soon as practicable.
