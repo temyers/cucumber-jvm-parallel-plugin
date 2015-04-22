@@ -86,7 +86,7 @@ public class GenerateRunnersMojo extends AbstractMojo {
     private boolean strict;
 
     /**
-     * The format to use for the output. Currently only html and json formats are supported.
+     * Comma separated list of formats used for the output. Currently only html and json formats are supported.
      *
      * @see CucumberOptions.format
      */
@@ -179,6 +179,25 @@ public class GenerateRunnersMojo extends AbstractMojo {
     }
 
     /**
+     * Create the format string used for the output.
+     */
+    private String createFormatStrings() {
+        String[] formatStrs = format.split(",");
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < formatStrs.length; i++ ) {
+            String formatStr = formatStrs[i].trim();
+            sb.append(String.format("\"%s:%s/%s.%s\"", formatStr, cucumberOutputDir, fileCounter, formatStr));
+
+            if (i < formatStrs.length - 1) {
+                sb.append(", ");
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
      * Sets the feature file location based on the given file. The full file path is trimmed to only
      * include the featuresDirectory. E.g. /myproject/src/test/resources/features/feature1.feature
      * will be saved as features/feature1.feature
@@ -196,9 +215,7 @@ public class GenerateRunnersMojo extends AbstractMojo {
         VelocityContext context = new VelocityContext();
         context.put("strict", strict);
         context.put("featureFile", featureFileLocation);
-        String outputFile = String.format("%s.%s", fileCounter, format);
-        context.put("outputFile", outputFile);
-        context.put("reportType", format);
+        context.put("reports", createFormatStrings());
         context.put("fileCounter", String.format("%02d", fileCounter));
         context.put("tags", tags);
         context.put("monochrome", monochrome);
