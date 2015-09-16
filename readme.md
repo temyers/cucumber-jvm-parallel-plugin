@@ -75,9 +75,9 @@ Contributing
 To contribute:
 
 * Create an integration test to demonstrate the behaviour under `src/it/`.  For example, to add support for multiple output formats:
-** Create src/it/multiple-format
-** copy the contents of the src/it/simple-it directory and update the pom/src as appropriate to demonstrate the configuration.  Update the verify.groovy to implement the test for your feature.
-** Run `mvn clean install -Prun-its` to run the integration tests.
+    * Create src/it/multiple-format
+    * copy the contents of the src/it/simple-it directory and update the pom/src as appropriate to demonstrate the configuration.  Update the verify.groovy to implement the test for your feature.
+    * Run `mvn clean install -Prun-its` to run the integration tests.
 * Implement the feature
 * When all tests are passing, submit a pull request.
 
