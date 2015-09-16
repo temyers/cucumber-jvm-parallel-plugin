@@ -43,6 +43,9 @@ Add the following to your POM file:
          <monochrome>true</monochrome>
          <!-- The tags to run, maps to CucumberOptions.tags property -->
          <tags>"@complete", "@accepted"</tags>
+         <!-- If set to true, only feature files containing the required tags shall be generated. -->
+         <!-- Excluded tags (~@notMe) are ignored. -->
+         <filterFeaturesByTags>false</filterFeaturesByTags>
       </configuration>
     </execution>
   </executions>
@@ -56,6 +59,15 @@ The plugin will search `featuresDirectory` for `*.feature` files and generate a 
 The Java source is generated in `outputDirectory`, and will have the pattern `ParallelXXIT.java`, where `XX` is a one up counter.
 
 Each JUnit test is configured to output the results to a separate output file under `target/cucumber-parallel`
+
+FAQ
+===
+Q. Why isn't there much activity on this project
+A. The plugin is considered feature complete.  If you feel there is something missing, raise an issue.
+
+Changelog
+=========
+0.1.3 Implemented issue#XX - Added support for filtering generated files by tag.
 
 Contributing
 ============

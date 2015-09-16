@@ -2,12 +2,12 @@ package com.github.timm.cucumber.generate;
 
 /*
  * Copyright 2001-2005 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -35,7 +35,6 @@ import org.apache.velocity.app.VelocityEngine;
 /**
  * Goal which generates a Cucumber JUnit runner for each Gherkin feature file in your project
  *
- * @author Tim Myerscough
  *
  */
 @Mojo(name = "generateRunners", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
@@ -108,6 +107,9 @@ public class GenerateRunnersMojo extends AbstractMojo {
     @Parameter(defaultValue = "UTF-8", property = "project.build.sourceEncoding", readonly = true)
     private String encoding;
 
+    @Parameter(defaultValue="false", property="cucumber.tags.filterOutput", required=true)
+    private boolean filterFeaturesByTags;
+
     private String featureFileLocation;
     private int fileCounter = 1;
 
@@ -119,33 +121,36 @@ public class GenerateRunnersMojo extends AbstractMojo {
             throw new MojoExecutionException("Features directory does not exist");
         }
 
-        File f = outputDirectory;
+        final File f = outputDirectory;
         quoteGlueStrings();
         initTemplate();
 
-        Collection<File> featureFiles = FileUtils.listFiles(featuresDirectory, new String[] {"feature"}, true);
+        final Collection<File> featureFiles = FileUtils.listFiles(featuresDirectory, new String[] {"feature"}, true);
 
-        if (!f.exists()) {
-            f.mkdirs();
-        }
+        createOutputDirIfRequired(f);
 
-        for (File file : featureFiles) {
-            String outputFileName = String.format("Parallel%02dIT.java", fileCounter);
+        for (final File file : featureFiles) {
+
+            if(shouldSkipFile(file)) {
+                continue;
+            }
+
+            final String outputFileName = String.format("Parallel%02dIT.java", fileCounter);
 
             setFeatureFileLocation(file);
 
-            File outputFile = new File(f, outputFileName);
+            final File outputFile = new File(f, outputFileName);
             FileWriter w = null;
             try {
                 w = new FileWriter(outputFile);
                 writeContentFromTemplate(w);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 throw new MojoExecutionException("Error creating file " + outputFile, e);
             } finally {
                 if (w != null) {
                     try {
                         w.close();
-                    } catch (IOException e) {
+                    } catch (final IOException e) {
                         // ignore
                     }
                 }
@@ -159,16 +164,54 @@ public class GenerateRunnersMojo extends AbstractMojo {
         project.addTestCompileSourceRoot(outputDirectory.getAbsolutePath());
     }
 
+    private void createOutputDirIfRequired(final File f) {
+        if (!f.exists()) {
+            f.mkdirs();
+        }
+    }
+
+    private boolean shouldSkipFile(final File file) {
+        if(filterFeaturesByTags) {
+            try {
+                final String fileContents = FileUtils.readFileToString(file);
+
+                if(!fileContainsMatchingTags(fileContents)) {
+                    return true;
+                }
+            } catch (final IOException e) {
+                getLog().info("Failed to read contents of " + file.getPath() + ". Parallel Test shall be created.");
+            }
+        }
+        return false;
+    }
+
+    private boolean fileContainsMatchingTags(final String fileContents) {
+
+        final String[] individualTags = tags.replaceAll("\"","").split(",");
+
+        for (final String tag : individualTags) {
+            if(tag.startsWith("~")) {
+                // ignore
+            }
+
+            if(fileContents.contains(tag)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Wraps each package in quotes for use in the template
      */
     private void quoteGlueStrings() {
-        String[] packageStrs = glue.split(",");
+        final String[] packageStrs = glue.split(",");
 
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < packageStrs.length; i++ ) {
-            String packageStr = packageStrs[i];
+            final String packageStr = packageStrs[i];
             sb.append(String.format("\"%s\"", packageStr.trim()));
 
             if (i < packageStrs.length - 1) {
@@ -182,12 +225,12 @@ public class GenerateRunnersMojo extends AbstractMojo {
      * Create the format string used for the output.
      */
     private String createFormatStrings() {
-        String[] formatStrs = format.split(",");
+        final String[] formatStrs = format.split(",");
 
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < formatStrs.length; i++ ) {
-            String formatStr = formatStrs[i].trim();
+            final String formatStr = formatStrs[i].trim();
             sb.append(String.format("\"%s:%s/%s.%s\"", formatStr, cucumberOutputDir, fileCounter, formatStr));
 
             if (i < formatStrs.length - 1) {
@@ -212,7 +255,7 @@ public class GenerateRunnersMojo extends AbstractMojo {
 
     private void writeContentFromTemplate(final Writer writer) {
 
-        VelocityContext context = new VelocityContext();
+        final VelocityContext context = new VelocityContext();
         context.put("strict", strict);
         context.put("featureFile", featureFileLocation);
         context.put("reports", createFormatStrings());
@@ -226,10 +269,10 @@ public class GenerateRunnersMojo extends AbstractMojo {
     }
 
     private void initTemplate() {
-        Properties props = new Properties();
+        final Properties props = new Properties();
         props.put("resource.loader", "class");
         props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-        VelocityEngine engine = new VelocityEngine(props);
+        final VelocityEngine engine = new VelocityEngine(props);
         engine.init();
         velocityTemplate = engine.getTemplate("cucumber-junit-runner.vm", encoding);
     }
