@@ -67,7 +67,7 @@ A. The plugin is considered feature complete.  If you feel there is something mi
 
 Changelog
 =========
-0.1.3 Implemented issue#XX - Added support for filtering generated files by tag.
+1.0.0 Implemented issue#XX - Added support for filtering generated files by tag.
 
 Contributing
 ============
