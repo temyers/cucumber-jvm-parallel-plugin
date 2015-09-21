@@ -296,6 +296,7 @@ public class GenerateRunnersMojo extends AbstractMojo {
         if (cucumberOptions == null || cucumberOptions.isEmpty())
             return;
         CucumberOptionsParser parser = new CucumberOptionsParser(cucumberOptions);
-        tags = parser.parse(CucumberOptionsParser.TAG_DELIMITERS);
+        String overrideTags = parser.parseTags();
+        tags = overrideTags == null ? tags : overrideTags;
     }
 }
