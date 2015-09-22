@@ -33,7 +33,8 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
 /**
- * Goal which generates a Cucumber JUnit runner for each Gherkin feature file in your project
+ * Goal which generates a Cucumber JUnit runner for each Gherkin feature file in
+ * your project
  *
  *
  */
@@ -51,7 +52,8 @@ public class GenerateRunnersMojo extends AbstractMojo {
     private MavenProject project;
 
     /**
-     * Comma separated list of containing the packages to use for the cucumber glue code
+     * Comma separated list of containing the packages to use for the cucumber
+     * glue code
      *
      * E.g. <code>my.package, my.second.package</code>
      *
@@ -85,7 +87,8 @@ public class GenerateRunnersMojo extends AbstractMojo {
     private boolean strict;
 
     /**
-     * Comma separated list of formats used for the output. Currently only html and json formats are supported.
+     * Comma separated list of formats used for the output. Currently only html
+     * and json formats are supported.
      *
      * @see CucumberOptions.format
      */
@@ -107,8 +110,14 @@ public class GenerateRunnersMojo extends AbstractMojo {
     @Parameter(defaultValue = "UTF-8", property = "project.build.sourceEncoding", readonly = true)
     private String encoding;
 
-    @Parameter(defaultValue="false", property="cucumber.tags.filterOutput", required=true)
+    @Parameter(defaultValue = "false", property = "cucumber.tags.filterOutput", required = true)
     private boolean filterFeaturesByTags;
+
+    /**
+     * @see CucumberOptions
+     */
+    @Parameter(property = "cucumber.options", required = false)
+    private String cucumberOptions;
 
     private String featureFileLocation;
     private int fileCounter = 1;
@@ -116,6 +125,8 @@ public class GenerateRunnersMojo extends AbstractMojo {
     private Template velocityTemplate;
 
     public void execute() throws MojoExecutionException {
+
+        overrideParametersWithCucumberOptions();
 
         if (!featuresDirectory.exists()) {
             throw new MojoExecutionException("Features directory does not exist");
@@ -125,13 +136,13 @@ public class GenerateRunnersMojo extends AbstractMojo {
         quoteGlueStrings();
         initTemplate();
 
-        final Collection<File> featureFiles = FileUtils.listFiles(featuresDirectory, new String[] {"feature"}, true);
+        final Collection<File> featureFiles = FileUtils.listFiles(featuresDirectory, new String[] { "feature" }, true);
 
         createOutputDirIfRequired(f);
 
         for (final File file : featureFiles) {
 
-            if(shouldSkipFile(file)) {
+            if (shouldSkipFile(file)) {
                 continue;
             }
 
@@ -156,7 +167,7 @@ public class GenerateRunnersMojo extends AbstractMojo {
                 }
             }
 
-            fileCounter++ ;
+            fileCounter++;
         }
 
         getLog().info("Adding " + outputDirectory.getAbsolutePath() + " to test-compile source root");
@@ -171,11 +182,11 @@ public class GenerateRunnersMojo extends AbstractMojo {
     }
 
     private boolean shouldSkipFile(final File file) {
-        if(filterFeaturesByTags) {
+        if (filterFeaturesByTags) {
             try {
                 final String fileContents = FileUtils.readFileToString(file);
 
-                if(!fileContainsMatchingTags(fileContents)) {
+                if (!fileContainsMatchingTags(fileContents)) {
                     return true;
                 }
             } catch (final IOException e) {
@@ -187,14 +198,14 @@ public class GenerateRunnersMojo extends AbstractMojo {
 
     private boolean fileContainsMatchingTags(final String fileContents) {
 
-        final String[] individualTags = tags.replaceAll("\"","").split(",");
+        final String[] individualTags = tags.replaceAll("\"", "").split(",");
 
         for (final String tag : individualTags) {
-            if(tag.startsWith("~")) {
+            if (tag.startsWith("~")) {
                 // ignore
             }
 
-            if(fileContents.contains(tag)) {
+            if (fileContents.contains(tag)) {
                 return true;
             }
         }
@@ -210,7 +221,7 @@ public class GenerateRunnersMojo extends AbstractMojo {
 
         final StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < packageStrs.length; i++ ) {
+        for (int i = 0; i < packageStrs.length; i++) {
             final String packageStr = packageStrs[i];
             sb.append(String.format("\"%s\"", packageStr.trim()));
 
@@ -229,7 +240,7 @@ public class GenerateRunnersMojo extends AbstractMojo {
 
         final StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < formatStrs.length; i++ ) {
+        for (int i = 0; i < formatStrs.length; i++) {
             final String formatStr = formatStrs[i].trim();
             sb.append(String.format("\"%s:%s/%s.%s\"", formatStr, cucumberOutputDir, fileCounter, formatStr));
 
@@ -241,16 +252,16 @@ public class GenerateRunnersMojo extends AbstractMojo {
     }
 
     /**
-     * Sets the feature file location based on the given file. The full file path is trimmed to only
-     * include the featuresDirectory. E.g. /myproject/src/test/resources/features/feature1.feature
-     * will be saved as features/feature1.feature
+     * Sets the feature file location based on the given file. The full file
+     * path is trimmed to only include the featuresDirectory. E.g.
+     * /myproject/src/test/resources/features/feature1.feature will be saved as
+     * features/feature1.feature
      *
      * @param file
      *            The feature file
      */
     private void setFeatureFileLocation(final File file) {
-        featureFileLocation = file.getPath().replace(featuresDirectory.getPath(), featuresDirectory.getName())
-                .replace(File.separatorChar, '/');
+        featureFileLocation = file.getPath().replace(featuresDirectory.getPath(), featuresDirectory.getName()).replace(File.separatorChar, '/');
     }
 
     private void writeContentFromTemplate(final Writer writer) {
@@ -275,5 +286,17 @@ public class GenerateRunnersMojo extends AbstractMojo {
         final VelocityEngine engine = new VelocityEngine(props);
         engine.init();
         velocityTemplate = engine.getTemplate("cucumber-junit-runner.vm", encoding);
+    }
+
+    /**
+     * Overrides the parameters with cucumber.options if they have been
+     * specified. Currently only tags are supported.
+     */
+    private void overrideParametersWithCucumberOptions() {
+        if (cucumberOptions == null || cucumberOptions.isEmpty())
+            return;
+        CucumberOptionsParser parser = new CucumberOptionsParser(cucumberOptions);
+        String overrideTags = parser.parseTags();
+        tags = overrideTags == null ? tags : overrideTags;
     }
 }
