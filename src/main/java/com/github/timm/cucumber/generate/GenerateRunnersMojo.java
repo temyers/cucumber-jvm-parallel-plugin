@@ -19,6 +19,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
@@ -31,6 +32,9 @@ import org.apache.maven.project.MavenProject;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+
+import com.github.timm.cucumber.options.RuntimeOptions;
+import com.github.timm.cucumber.options.TagParser;
 
 /**
  * Goal which generates a Cucumber JUnit runner for each Gherkin feature file in
@@ -293,10 +297,14 @@ public class GenerateRunnersMojo extends AbstractMojo {
      * specified. Currently only tags are supported.
      */
     private void overrideParametersWithCucumberOptions() {
-        if (cucumberOptions == null || cucumberOptions.isEmpty())
+        if (cucumberOptions == null || cucumberOptions.isEmpty()) {
             return;
-        CucumberOptionsParser parser = new CucumberOptionsParser(cucumberOptions);
-        String overrideTags = parser.parseTags();
-        tags = overrideTags == null ? tags : overrideTags;
+        }
+        final RuntimeOptions options = new RuntimeOptions(cucumberOptions);
+        final List<String> tags = options.getFilters();
+        final String parsedTags = TagParser.parseTags(tags);
+        if(!parsedTags.isEmpty()) {
+            this.tags = parsedTags;
+        }
     }
 }
