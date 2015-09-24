@@ -133,14 +133,16 @@ public class GenerateRunnersMojo extends AbstractMojo {
         overrideParametersWithCucumberOptions();
 
         if (!featuresDirectory.exists()) {
-            throw new MojoExecutionException("Features directory does not exist");
+            throw new MojoExecutionException(
+                    "Features directory does not exist");
         }
 
         final File f = outputDirectory;
         quoteGlueStrings();
         initTemplate();
 
-        final Collection<File> featureFiles = FileUtils.listFiles(featuresDirectory, new String[] { "feature" }, true);
+        final Collection<File> featureFiles = FileUtils.listFiles(
+                featuresDirectory, new String[] { "feature" }, true);
 
         createOutputDirIfRequired(f);
 
@@ -150,7 +152,8 @@ public class GenerateRunnersMojo extends AbstractMojo {
                 continue;
             }
 
-            final String outputFileName = String.format("Parallel%02dIT.java", fileCounter);
+            final String outputFileName = String.format("Parallel%02dIT.java",
+                    fileCounter);
 
             setFeatureFileLocation(file);
 
@@ -160,7 +163,8 @@ public class GenerateRunnersMojo extends AbstractMojo {
                 w = new FileWriter(outputFile);
                 writeContentFromTemplate(w);
             } catch (final IOException e) {
-                throw new MojoExecutionException("Error creating file " + outputFile, e);
+                throw new MojoExecutionException("Error creating file "
+                        + outputFile, e);
             } finally {
                 if (w != null) {
                     try {
@@ -174,7 +178,9 @@ public class GenerateRunnersMojo extends AbstractMojo {
             fileCounter++;
         }
 
-        getLog().info("Adding " + outputDirectory.getAbsolutePath() + " to test-compile source root");
+        getLog().info(
+                "Adding " + outputDirectory.getAbsolutePath()
+                + " to test-compile source root");
 
         project.addTestCompileSourceRoot(outputDirectory.getAbsolutePath());
     }
@@ -194,7 +200,9 @@ public class GenerateRunnersMojo extends AbstractMojo {
                     return true;
                 }
             } catch (final IOException e) {
-                getLog().info("Failed to read contents of " + file.getPath() + ". Parallel Test shall be created.");
+                getLog().info(
+                        "Failed to read contents of " + file.getPath()
+                        + ". Parallel Test shall be created.");
             }
         }
         return false;
@@ -202,11 +210,42 @@ public class GenerateRunnersMojo extends AbstractMojo {
 
     private boolean fileContainsMatchingTags(final String fileContents) {
 
-        final String[] individualTags = tags.replaceAll("\"", "").split(",");
+        final List<List<String>> tagGroupsAnded = TagParser
+                .splitQuotedTagsIntoParts(tags);
 
-        for (final String tag : individualTags) {
+        // Tag groups are and'd together
+        for (final List<String> tagGroup : tagGroupsAnded) {
+            // individual tags are or'd together
+            if (!fileContainsAnyTags(fileContents, tagGroup)) {
+                return false;
+            }
+        }
+
+        //        final String[] individualTags = tags.replaceAll("\"", "").split(",");
+        //
+        //        for (final String tag : individualTags) {
+        //            if (tag.startsWith("~")) {
+        //                // ignore
+        //            }
+        //
+        //            if (fileContents.contains(tag)) {
+        //                return true;
+        //            }
+        //        }
+
+        return true;
+    }
+
+    private boolean fileContainsAnyTags(final String fileContents,
+            final List<String> tags) {
+
+        for (final String tag : tags) {
+
             if (tag.startsWith("~")) {
-                // ignore
+                // not tags must be ignored - cannot guarantee that a feature
+                // file containing an ignored tag does not contain scenarios that
+                // should be included
+                return true;
             }
 
             if (fileContents.contains(tag)) {
@@ -246,7 +285,8 @@ public class GenerateRunnersMojo extends AbstractMojo {
 
         for (int i = 0; i < formatStrs.length; i++) {
             final String formatStr = formatStrs[i].trim();
-            sb.append(String.format("\"%s:%s/%s.%s\"", formatStr, cucumberOutputDir, fileCounter, formatStr));
+            sb.append(String.format("\"%s:%s/%s.%s\"", formatStr,
+                    cucumberOutputDir, fileCounter, formatStr));
 
             if (i < formatStrs.length - 1) {
                 sb.append(", ");
@@ -265,7 +305,11 @@ public class GenerateRunnersMojo extends AbstractMojo {
      *            The feature file
      */
     private void setFeatureFileLocation(final File file) {
-        featureFileLocation = file.getPath().replace(featuresDirectory.getPath(), featuresDirectory.getName()).replace(File.separatorChar, '/');
+        featureFileLocation = file
+                .getPath()
+                .replace(featuresDirectory.getPath(),
+                        featuresDirectory.getName())
+                        .replace(File.separatorChar, '/');
     }
 
     private void writeContentFromTemplate(final Writer writer) {
@@ -286,10 +330,12 @@ public class GenerateRunnersMojo extends AbstractMojo {
     private void initTemplate() {
         final Properties props = new Properties();
         props.put("resource.loader", "class");
-        props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        props.put("class.resource.loader.class",
+                "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
         final VelocityEngine engine = new VelocityEngine(props);
         engine.init();
-        velocityTemplate = engine.getTemplate("cucumber-junit-runner.vm", encoding);
+        velocityTemplate = engine.getTemplate("cucumber-junit-runner.vm",
+                encoding);
     }
 
     /**
@@ -303,7 +349,7 @@ public class GenerateRunnersMojo extends AbstractMojo {
         final RuntimeOptions options = new RuntimeOptions(cucumberOptions);
         final List<String> tags = options.getFilters();
         final String parsedTags = TagParser.parseTags(tags);
-        if(!parsedTags.isEmpty()) {
+        if (!parsedTags.isEmpty()) {
             this.tags = parsedTags;
         }
     }

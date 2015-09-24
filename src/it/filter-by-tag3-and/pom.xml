@@ -42,8 +42,8 @@
 						</goals>
 						<configuration>
 							<glue>foo, bar</glue>
-							<!-- Negation - filter out scenarios tagged with ~@unwanted -->
-							<tags>"~@unwanted","@includeMe"</tags>
+							<!-- @feature1 AND @required -->
+							<tags>"@feature1","@required"</tags>
 							<filterFeaturesByTags>true</filterFeaturesByTags>
 						</configuration>
 					</execution>
