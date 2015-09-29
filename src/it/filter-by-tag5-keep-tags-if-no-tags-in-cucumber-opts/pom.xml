@@ -10,7 +10,7 @@
 	<description>A simple IT verifying the basic use case.</description>
 
 	<properties>
-	    <cucumber.options>--format pretty</cucumber.options>
+	    <cucumber.options>--format json</cucumber.options>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<cucumber.version>1.1.8</cucumber.version>
 	</properties>

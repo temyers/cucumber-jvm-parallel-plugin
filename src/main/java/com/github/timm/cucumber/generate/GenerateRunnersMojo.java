@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -221,18 +222,6 @@ public class GenerateRunnersMojo extends AbstractMojo {
             }
         }
 
-        //        final String[] individualTags = tags.replaceAll("\"", "").split(",");
-        //
-        //        for (final String tag : individualTags) {
-        //            if (tag.startsWith("~")) {
-        //                // ignore
-        //            }
-        //
-        //            if (fileContents.contains(tag)) {
-        //                return true;
-        //            }
-        //        }
-
         return true;
     }
 
@@ -342,7 +331,8 @@ public class GenerateRunnersMojo extends AbstractMojo {
      * Overrides the parameters with cucumber.options if they have been
      * specified. Currently only tags are supported.
      */
-    private void overrideParametersWithCucumberOptions() {
+    // Default for testing
+    void overrideParametersWithCucumberOptions() {
         if (cucumberOptions == null || cucumberOptions.isEmpty()) {
             return;
         }
@@ -352,5 +342,70 @@ public class GenerateRunnersMojo extends AbstractMojo {
         if (!parsedTags.isEmpty()) {
             this.tags = parsedTags;
         }
+
+        final List<String> glue = options.getGlue();
+        if(!glue.isEmpty()) {
+            this.glue = StringUtils.join(glue, ",");
+        }
+
+        if(options.isStrict()) {
+            this.strict = true;
+        }
+
+        if(!options.getPluginNames().isEmpty()) {
+            this.format = StringUtils.join(options.getPluginNames(),",");
+        }
+
+        if(options.isMonochrome()) {
+            this.monochrome = true;
+        }
     }
+
+
+    // These setters are provided for testing only.
+    final void setGlue(final String glue) {
+        this.glue = glue;
+    }
+
+    final void setStrict(final boolean strict) {
+        this.strict = strict;
+    }
+
+    final void setFormat(final String format) {
+        this.format = format;
+    }
+
+    final void setMonochrome(final boolean monochrome) {
+        this.monochrome = monochrome;
+    }
+
+    final void setTags(final String tags) {
+        this.tags = tags;
+    }
+
+
+    final void setCucumberOptions(final String cucumberOptions) {
+        this.cucumberOptions = cucumberOptions;
+    }
+
+    final String getGlue() {
+        return glue;
+    }
+
+    final boolean isStrict() {
+        return strict;
+    }
+
+    final String getFormat() {
+        return format;
+    }
+
+    final boolean isMonochrome() {
+        return monochrome;
+    }
+
+    final String getTags() {
+        return tags;
+    }
+
 }
