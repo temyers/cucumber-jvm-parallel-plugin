@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -34,7 +33,6 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
-import com.github.timm.cucumber.options.RuntimeOptions;
 import com.github.timm.cucumber.options.TagParser;
 
 /**
@@ -129,6 +127,8 @@ public class GenerateRunnersMojo extends AbstractMojo {
 
     private Template velocityTemplate;
 
+    private OverriddenCucumberOptionsParameters overriddenParameters;
+
     public void execute() throws MojoExecutionException {
 
         overrideParametersWithCucumberOptions();
@@ -139,7 +139,6 @@ public class GenerateRunnersMojo extends AbstractMojo {
         }
 
         final File f = outputDirectory;
-        quoteGlueStrings();
         initTemplate();
 
         final Collection<File> featureFiles = FileUtils.listFiles(
@@ -212,7 +211,7 @@ public class GenerateRunnersMojo extends AbstractMojo {
     private boolean fileContainsMatchingTags(final String fileContents) {
 
         final List<List<String>> tagGroupsAnded = TagParser
-                .splitQuotedTagsIntoParts(tags);
+                .splitQuotedTagsIntoParts(overriddenParameters.getTags());
 
         // Tag groups are and'd together
         for (final List<String> tagGroup : tagGroupsAnded) {
@@ -232,7 +231,8 @@ public class GenerateRunnersMojo extends AbstractMojo {
 
             if (tag.startsWith("~")) {
                 // not tags must be ignored - cannot guarantee that a feature
-                // file containing an ignored tag does not contain scenarios that
+                // file containing an ignored tag does not contain scenarios
+                // that
                 // should be included
                 return true;
             }
@@ -245,30 +245,13 @@ public class GenerateRunnersMojo extends AbstractMojo {
         return false;
     }
 
-    /**
-     * Wraps each package in quotes for use in the template
-     */
-    private void quoteGlueStrings() {
-        final String[] packageStrs = glue.split(",");
 
-        final StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < packageStrs.length; i++) {
-            final String packageStr = packageStrs[i];
-            sb.append(String.format("\"%s\"", packageStr.trim()));
-
-            if (i < packageStrs.length - 1) {
-                sb.append(", ");
-            }
-        }
-        glue = sb.toString();
-    }
 
     /**
      * Create the format string used for the output.
      */
     private String createFormatStrings() {
-        final String[] formatStrs = format.split(",");
+        final String[] formatStrs = overriddenParameters.getFormat().split(",");
 
         final StringBuilder sb = new StringBuilder();
 
@@ -304,16 +287,35 @@ public class GenerateRunnersMojo extends AbstractMojo {
     private void writeContentFromTemplate(final Writer writer) {
 
         final VelocityContext context = new VelocityContext();
-        context.put("strict", strict);
+        context.put("strict", overriddenParameters.isStrict());
         context.put("featureFile", featureFileLocation);
         context.put("reports", createFormatStrings());
         context.put("fileCounter", String.format("%02d", fileCounter));
-        context.put("tags", tags);
-        context.put("monochrome", monochrome);
+        context.put("tags", overriddenParameters.getTags());
+        context.put("monochrome", overriddenParameters.isMonochrome());
         context.put("cucumberOutputDir", cucumberOutputDir);
-        context.put("glue", glue);
+        context.put("glue", quoteGlueStrings());
 
         velocityTemplate.merge(context, writer);
+    }
+
+    /**
+     * Wraps each package in quotes for use in the template
+     */
+    private String quoteGlueStrings() {
+        final String[] packageStrs = overriddenParameters.getGlue().split(",");
+
+        final StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < packageStrs.length; i++) {
+            final String packageStr = packageStrs[i];
+            sb.append(String.format("\"%s\"", packageStr.trim()));
+
+            if (i < packageStrs.length - 1) {
+                sb.append(", ");
+            }
+        }
+        return sb.toString();
     }
 
     private void initTemplate() {
@@ -333,34 +335,16 @@ public class GenerateRunnersMojo extends AbstractMojo {
      */
     // Default for testing
     void overrideParametersWithCucumberOptions() {
-        if (cucumberOptions == null || cucumberOptions.isEmpty()) {
-            return;
-        }
-        final RuntimeOptions options = new RuntimeOptions(cucumberOptions);
-        final List<String> tags = options.getFilters();
-        final String parsedTags = TagParser.parseTags(tags);
-        if (!parsedTags.isEmpty()) {
-            this.tags = parsedTags;
-        }
 
-        final List<String> glue = options.getGlue();
-        if(!glue.isEmpty()) {
-            this.glue = StringUtils.join(glue, ",");
-        }
+        overriddenParameters = new OverriddenCucumberOptionsParameters();
+        overriddenParameters.setTags(this.tags).setGlue(this.glue)
+        .setStrict(this.strict).setFormat(this.format)
+        .setMonochrome(this.monochrome);
 
-        if(options.isStrict()) {
-            this.strict = true;
-        }
+        overriddenParameters
+        .overrideParametersWithCucumberOptions(cucumberOptions);
 
-        if(!options.getPluginNames().isEmpty()) {
-            this.format = StringUtils.join(options.getPluginNames(),",");
-        }
-
-        if(options.isMonochrome()) {
-            this.monochrome = true;
-        }
     }
-
 
     // These setters are provided for testing only.
     final void setGlue(final String glue) {
@@ -383,29 +367,28 @@ public class GenerateRunnersMojo extends AbstractMojo {
         this.tags = tags;
     }
 
-
     final void setCucumberOptions(final String cucumberOptions) {
         this.cucumberOptions = cucumberOptions;
     }
 
     final String getGlue() {
-        return glue;
+        return overriddenParameters.getGlue();
     }
 
     final boolean isStrict() {
-        return strict;
+        return overriddenParameters.isStrict();
     }
 
     final String getFormat() {
-        return format;
+        return overriddenParameters.getFormat();
     }
 
     final boolean isMonochrome() {
-        return monochrome;
+        return overriddenParameters.isMonochrome();
     }
 
     final String getTags() {
-        return tags;
+        return overriddenParameters.getTags();
     }
 
 }
