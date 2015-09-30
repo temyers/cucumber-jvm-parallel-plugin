@@ -333,8 +333,7 @@ public class GenerateRunnersMojo extends AbstractMojo {
      * Overrides the parameters with cucumber.options if they have been
      * specified. Currently only tags are supported.
      */
-    // Default for testing
-    void overrideParametersWithCucumberOptions() {
+    private void overrideParametersWithCucumberOptions() {
 
         overriddenParameters = new OverriddenCucumberOptionsParameters();
         overriddenParameters.setTags(this.tags).setGlue(this.glue)
@@ -344,51 +343,6 @@ public class GenerateRunnersMojo extends AbstractMojo {
         overriddenParameters
         .overrideParametersWithCucumberOptions(cucumberOptions);
 
-    }
-
-    // These setters are provided for testing only.
-    final void setGlue(final String glue) {
-        this.glue = glue;
-    }
-
-    final void setStrict(final boolean strict) {
-        this.strict = strict;
-    }
-
-    final void setFormat(final String format) {
-        this.format = format;
-    }
-
-    final void setMonochrome(final boolean monochrome) {
-        this.monochrome = monochrome;
-    }
-
-    final void setTags(final String tags) {
-        this.tags = tags;
-    }
-
-    final void setCucumberOptions(final String cucumberOptions) {
-        this.cucumberOptions = cucumberOptions;
-    }
-
-    final String getGlue() {
-        return overriddenParameters.getGlue();
-    }
-
-    final boolean isStrict() {
-        return overriddenParameters.isStrict();
-    }
-
-    final String getFormat() {
-        return overriddenParameters.getFormat();
-    }
-
-    final boolean isMonochrome() {
-        return overriddenParameters.isMonochrome();
-    }
-
-    final String getTags() {
-        return overriddenParameters.getTags();
     }
 
 }
