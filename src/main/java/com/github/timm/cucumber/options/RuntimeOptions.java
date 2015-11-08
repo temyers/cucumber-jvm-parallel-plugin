@@ -22,8 +22,8 @@ public class RuntimeOptions {
 
     /**
      * Create a new instance from a string of options, for example:
-     * <p/>
-     * <pre<{@code "--name 'the fox' --plugin pretty --strict"}</pre>
+     *
+     * <pre>"--name 'the fox' --plugin pretty --strict"</pre>
      *
      * @param argv the arguments
      */
@@ -33,8 +33,8 @@ public class RuntimeOptions {
 
     /**
      * Create a new instance from a list of options, for example:
-     * <p/>
-     * <pre<{@code Arrays.asList("--name", "the fox", "--plugin", "pretty", "--strict");}</pre>
+     *
+     * <pre>Arrays.asList("--name", "the fox", "--plugin", "pretty", "--strict");</pre>
      *
      * @param argv the arguments
      */
