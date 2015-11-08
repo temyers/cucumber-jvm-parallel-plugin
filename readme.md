@@ -52,6 +52,8 @@ Add the following to your POM file:
 </plugin>
 ```
 
+If `cucumber.options` VM argument is specified as per the [Cucumber CLI options](https://cucumber.io/docs/reference/jvm), they shall override the configuration tags.
+
 Where glue is a comma separated list of package names to use for the Cucumber Glue.
 
 The plugin will search `featuresDirectory` for `*.feature` files and generate a JUnit test for each one.
@@ -67,7 +69,10 @@ A. The plugin is considered feature complete.  If you feel there is something mi
 
 Changelog
 =========
-1.0.0 Implemented issue#XX - Added support for filtering generated files by tag.
+1.0.0
+* issue#10 - compilation error on Windows.
+* issue#7 - Added support for filtering generated files by tag.
+* Added support for cucumber.options command line arguments.
 
 Contributing
 ============
