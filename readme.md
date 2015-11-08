@@ -69,7 +69,8 @@ A. The plugin is considered feature complete.  If you feel there is something mi
 
 Changelog
 =========
-1.0.0
+1.0.1
+-----
 * issue#10 - compilation error on Windows.
 * issue#7 - Added support for filtering generated files by tag.
 * Added support for cucumber.options command line arguments.
