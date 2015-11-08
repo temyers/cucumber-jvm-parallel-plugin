@@ -88,3 +88,7 @@ To contribute:
 * When all tests are passing, submit a pull request.
 
 Once the pull request has been merged, a new release will be performed as soon as practicable.
+
+Release Process
+---------------
+See [Maven Central upload guide](https://maven.apache.org/guides/mini/guide-central-repository-upload.html)
