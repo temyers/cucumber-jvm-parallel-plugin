@@ -106,6 +106,10 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     @Parameter(defaultValue = "false", property = "cucumber.tags.filterOutput", required = true)
     private boolean filterFeaturesByTags;
 
+
+    @Parameter(defaultValue = "false", property = "useTestNG", required = true)
+    private boolean useTestNG;
+
     /**
      * @see CucumberOptions
      */
@@ -177,6 +181,10 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
     public String getCucumberOutputDir() {
         return cucumberOutputDir;
+    }
+
+    public boolean useTestNG() {
+        return useTestNG;
     }
 
 
