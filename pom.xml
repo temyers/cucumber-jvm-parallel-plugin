@@ -153,7 +153,7 @@
 							<debug>true</debug>
 							<cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
 							<pomIncludes>
-								<pomInclude>*/pom.xml</pomInclude>
+								<pomInclude>**/pom.xml</pomInclude>
 							</pomIncludes>
 							<postBuildHookScript>verify</postBuildHookScript>
 							<localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
