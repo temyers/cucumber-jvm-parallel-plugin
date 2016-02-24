@@ -1,4 +1,4 @@
-cucumber-jvm-parallel-plugin
+cucumber-jvm-parallel-plugin ![CI status](https://travis-ci.org/temyers/cucumber-jvm-parallel-plugin.svg?branch=master)
 ============================
 
 A common approach for running Cucumber features in parallel is to create a suite of Cucumber JUnit runners, one for each suite of tests you wish to run in parallel.  For maximum parallelism, there should be a runner per feature file.
