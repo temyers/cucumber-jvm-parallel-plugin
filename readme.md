@@ -1,11 +1,11 @@
 cucumber-jvm-parallel-plugin ![CI status](https://travis-ci.org/temyers/cucumber-jvm-parallel-plugin.svg?branch=master)
 ============================
 
-A common approach for running Cucumber features in parallel is to create a suite of Cucumber JUnit runners, one for each suite of tests you wish to run in parallel.  For maximum parallelism, there should be a runner per feature file.
+A common approach for running Cucumber features in parallel is to create a suite of Cucumber runners, one for each suite of tests you wish to run in parallel.  For maximum parallelism, there should be a runner per feature file.
 
 This is a pain to maintain and not very DRY.
 
-This is where the cucumber-jvm-parallel-plugin comes in.  This plugin automatically generates a Cucumber JUnit runner for each feature file found in your project.
+This is where the cucumber-jvm-parallel-plugin comes in.  This plugin automatically generates a Cucumber JUnit or TestNG runner for each feature file found in your project.
 
 Usage
 -----
@@ -16,7 +16,7 @@ Add the following to your POM file:
 <plugin>
   <groupId>com.github.temyers</groupId>
   <artifactId>cucumber-jvm-parallel-plugin</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.1.0-SNAPSHOT</version>
   <executions>
     <execution>
       <id>generateRunners</id>
@@ -29,7 +29,7 @@ Add the following to your POM file:
           <!-- comma separated list of package names to scan for glue code -->
          <glue>foo, bar</glue>
          <!-- These are the default values -->
-          <!-- Where to output the generated Junit tests -->
+          <!-- Where to output the generated tests -->
            <outputDirectory>${project.build.directory}/generated-test-sources/cucumber</outputDirectory>
            <!-- The diectory containing your feature files.  -->
           <featuresDirectory>src/test/resources/features/</featuresDirectory>
@@ -46,6 +46,8 @@ Add the following to your POM file:
          <!-- If set to true, only feature files containing the required tags shall be generated. -->
          <!-- Excluded tags (~@notMe) are ignored. -->
          <filterFeaturesByTags>false</filterFeaturesByTags>
+         <!-- Generate TestNG runners instead of JUnit ones. --> 
+         <useTestNG>false</useTestNG>
       </configuration>
     </execution>
   </executions>
@@ -56,11 +58,11 @@ If `cucumber.options` VM argument is specified as per the [Cucumber CLI options]
 
 Where glue is a comma separated list of package names to use for the Cucumber Glue.
 
-The plugin will search `featuresDirectory` for `*.feature` files and generate a JUnit test for each one.
+The plugin will search `featuresDirectory` for `*.feature` files and generate a JUnit test for each one. If you prefer to generate TestNG tests, set `useTestNG` to true
 
 The Java source is generated in `outputDirectory`, and will have the pattern `ParallelXXIT.java`, where `XX` is a one up counter.
 
-Each JUnit test is configured to output the results to a separate output file under `target/cucumber-parallel`
+Each runner is configured to output the results to a separate output file under `target/cucumber-parallel`
 
 FAQ
 ===
@@ -69,6 +71,10 @@ A. The plugin is considered feature complete.  If you feel there is something mi
 
 Changelog
 =========
+1.1.0
+-----
+* pr#13 - Added support for generating TestNG runners.
+
 1.0.1
 -----
 * issue#10 - compilation error on Windows.
@@ -80,9 +86,9 @@ Contributing
 
 To contribute:
 
-* Create an integration test to demonstrate the behaviour under `src/it/`.  For example, to add support for multiple output formats:
-    * Create src/it/multiple-format
-    * copy the contents of the src/it/simple-it directory and update the pom/src as appropriate to demonstrate the configuration.  Update the verify.groovy to implement the test for your feature.
+* Create an integration test to demonstrate the behaviour under `src/it/`.  For example, to add support for multiple output formats for junit runners:
+    * Create src/it/junit/multiple-format
+    * copy the contents of the src/it/junit/simple-it directory and update the pom/src as appropriate to demonstrate the configuration.  Update the verify.groovy to implement the test for your feature.
     * Run `mvn clean install -Prun-its` to run the integration tests.
 * Implement the feature
 * When all tests are passing, submit a pull request.

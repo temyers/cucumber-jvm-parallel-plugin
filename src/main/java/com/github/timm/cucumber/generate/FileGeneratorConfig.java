@@ -16,4 +16,6 @@ public interface FileGeneratorConfig {
 
     String getCucumberOutputDir();
 
+    boolean useTestNG();
+
 }

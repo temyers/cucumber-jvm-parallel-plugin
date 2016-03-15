@@ -37,8 +37,13 @@ public class CucumberITGenerator {
                 "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
         final VelocityEngine engine = new VelocityEngine(props);
         engine.init();
-        velocityTemplate = engine.getTemplate("cucumber-junit-runner.vm",
-                config.getEncoding());
+        if (config.useTestNG()){
+            velocityTemplate = engine.getTemplate("cucumber-testng-runner.vm",
+                                                  config.getEncoding());
+        } else {
+            velocityTemplate = engine.getTemplate("cucumber-junit-runner.vm",
+                                                  config.getEncoding());
+        }
     }
 
     void generateCucumberITFiles(final File outputDirectory, final Collection<File> featureFiles)
