@@ -18,4 +18,6 @@ public interface FileGeneratorConfig {
 
     boolean useTestNG();
 
+    String getNamingScheme();
+
 }

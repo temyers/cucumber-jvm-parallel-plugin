@@ -23,6 +23,9 @@ public class CucumberITGenerator {
     int fileCounter = 1;
     private String featureFileLocation;
     private Template velocityTemplate;
+    private ClassNameGenerator classNameGenerator=new ClassNameGenerator();
+
+
 
     public CucumberITGenerator(final FileGeneratorConfig config, final OverriddenCucumberOptionsParameters overriddenParameters) {
         this.config = config;
@@ -54,8 +57,17 @@ public class CucumberITGenerator {
                 continue;
             }
 
-            final String outputFileName = String.format("Parallel%02dIT.java",
-                    fileCounter);
+            final String outputFileName;
+
+            if(config.getNamingScheme().equals("simple")){
+                outputFileName = classNameGenerator.generateSimpleClassName(fileCounter);
+            }
+            else if (config.getNamingScheme().equals("feature-title")) {
+                outputFileName = classNameGenerator.generateClassNameFromFeatureFileName(file.getName(),fileCounter);
+            }
+            else {
+                throw new MojoExecutionException("Error in configuration ; accepted value for tag 'namingScheme' are 'simple' or 'feature-title'");
+            }
 
             setFeatureFileLocation(file);
 
