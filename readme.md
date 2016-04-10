@@ -48,6 +48,8 @@ Add the following to your POM file:
          <filterFeaturesByTags>false</filterFeaturesByTags>
          <!-- Generate TestNG runners instead of JUnit ones. --> 
          <useTestNG>false</useTestNG>
+         <!-- The naming scheme to use for the generated test classes.  One of 'simple' or 'feature-title' --> 
+         <namingScheme>simple</namingScheme>
       </configuration>
     </execution>
   </executions>
@@ -60,9 +62,26 @@ Where glue is a comma separated list of package names to use for the Cucumber Gl
 
 The plugin will search `featuresDirectory` for `*.feature` files and generate a JUnit test for each one. If you prefer to generate TestNG tests, set `useTestNG` to true
 
-The Java source is generated in `outputDirectory`, and will have the pattern `ParallelXXIT.java`, where `XX` is a one up counter.
+The Java source is generated in `outputDirectory`, based on the naming scheme used.
 
 Each runner is configured to output the results to a separate output file under `target/cucumber-parallel`
+
+###Naming Scheme
+
+The naming scheme used for the generated files is controlled by the `namingScheme` property.  The following values are supported:
+
+| Property      | Generated Name |
+| ------------- | -------------- |
+| simple        | `ParallelXXIT.java`, where `XX` is a one up counter.
+| feature-title | The name is generated based on the feature title with the following rules to ensure it is a valid classname:
+* Spaces are removed, camel-casing the title.
+* If the feature file starts with a digit, the classname is prefixed with '_'
+* A on up counter is appended to the classname, to prevent clashes. |
+
+By default, `simple` naming strategy is used.
+
+By default, generated test files use a 'simple' naming scheme.  
+
 
 FAQ
 ===
@@ -71,6 +90,10 @@ A. The plugin is considered feature complete.  If you feel there is something mi
 
 Changelog
 =========
+1.2.0
+-----
+* issue#15 Add option to name the generated test case based on the name of the feature file.
+
 1.1.0
 -----
 * pr#13 - Added support for generating TestNG runners.
