@@ -1,8 +1,8 @@
 import org.junit.Assert;
 import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
 
-File suite01 = new File( basedir, "target/generated-test-sources/cucumber/Feature101.java" );
-File suite02 = new File( basedir, "target/generated-test-sources/cucumber/Feature202.java" );
+File suite01 = new File( basedir, "target/generated-test-sources/cucumber/Feature101IT.java" );
+File suite02 = new File( basedir, "target/generated-test-sources/cucumber/Feature202IT.java" );
 
 assert suite01.isFile()
 assert suite02.isFile()
@@ -16,7 +16,7 @@ import cucumber.api.junit.Cucumber;
 @RunWith(Cucumber.class)
 @CucumberOptions(strict = true, features = {"classpath:features/feature1.feature"}, format = {"json:target/cucumber-parallel/1.json",
 "pretty"}, monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo", "bar" })
-public class Feature101 {
+public class Feature101IT {
 }"""
 
 String expected02=
@@ -28,7 +28,7 @@ import cucumber.api.junit.Cucumber;
 @RunWith(Cucumber.class)
 @CucumberOptions(strict = true, features = {"classpath:features/feature2.feature"}, format = {"json:target/cucumber-parallel/2.json",
 "pretty"}, monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo", "bar" })
-public class Feature202 {
+public class Feature202IT {
 }"""
 
 // Depending on the OS, listFiles can list files in different order.  The actual order of files isn't necessary

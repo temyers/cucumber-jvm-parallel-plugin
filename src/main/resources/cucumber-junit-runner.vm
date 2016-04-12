@@ -10,5 +10,5 @@ import cucumber.api.junit.Cucumber;
     monochrome = ${monochrome},
     tags = {$tags},
     glue = { $glue })
-public class Parallel${fileCounter}IT {
+public class $className {
 }
