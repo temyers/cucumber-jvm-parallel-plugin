@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -24,6 +25,7 @@ public class CucumberITGenerator {
     private String featureFileLocation;
     private Template velocityTemplate;
     private ClassNameGenerator classNameGenerator=new ClassNameGenerator();
+    private String outputFileName;
 
 
 
@@ -56,8 +58,6 @@ public class CucumberITGenerator {
             if (shouldSkipFile(file)) {
                 continue;
             }
-
-            final String outputFileName;
 
             if(config.getNamingScheme().equals("simple")){
                 outputFileName = classNameGenerator.generateSimpleClassName(fileCounter);
@@ -171,11 +171,14 @@ public class CucumberITGenerator {
         context.put("strict", overriddenParameters.isStrict());
         context.put("featureFile", featureFileLocation);
         context.put("reports", createFormatStrings());
-        context.put("fileCounter", String.format("%02d", fileCounter));
         context.put("tags", overriddenParameters.getTags());
         context.put("monochrome", overriddenParameters.isMonochrome());
         context.put("cucumberOutputDir", config.getCucumberOutputDir());
         context.put("glue", quoteGlueStrings());
+        //required for testNg template
+        context.put("fileCounter", String.format("%02d", fileCounter));
+        //required for junit template
+        context.put("className", FilenameUtils.removeExtension(outputFileName));
 
         velocityTemplate.merge(context, writer);
     }
