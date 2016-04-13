@@ -7,5 +7,5 @@ import cucumber.api.testng.AbstractTestNGCucumberTests;
     monochrome = ${monochrome},
     tags = {$tags},
     glue = { $glue })
-public class Parallel${fileCounter}IT extends AbstractTestNGCucumberTests {
+public class $className extends AbstractTestNGCucumberTests {
 }
