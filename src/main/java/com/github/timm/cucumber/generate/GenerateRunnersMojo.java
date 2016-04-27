@@ -118,6 +118,8 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
     @Parameter(defaultValue = "simple", property = "namingScheme", required = false)
     private String namingScheme;
+    @Parameter(property = "namingPattern", required = false)
+    private String namingPattern;
 
     private CucumberITGenerator fileGenerator;
 
@@ -190,6 +192,13 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
         return useTestNG;
     }
 
-    public String getNamingScheme() {return namingScheme; }
+    public String getNamingScheme() {
+        return namingScheme;
+    }
+
+    public String getNamingPattern() {
+        return namingPattern;
+    }
+
 
 }

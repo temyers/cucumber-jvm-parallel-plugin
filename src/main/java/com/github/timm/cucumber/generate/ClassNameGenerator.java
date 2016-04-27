@@ -1,6 +1,7 @@
 package com.github.timm.cucumber.generate;
 
 import com.github.timm.cucumber.generate.name.FeatureFileClassNamingScheme;
+import com.github.timm.cucumber.generate.name.PatternNamingScheme;
 import com.github.timm.cucumber.generate.name.SimpleClassNamingScheme;
 
 public class ClassNameGenerator {
@@ -24,6 +25,10 @@ public class ClassNameGenerator {
 
         //        return String.format("Parallel%02dIT.java",fileCounter);
         return simpleGenerator.generate(null);
+    }
+
+    public String patternNamingScheme(final String pattern, final String featureFileName) {
+        return new PatternNamingScheme(pattern).generate(featureFileName);
     }
 
 }

@@ -45,7 +45,7 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>generateRunners</id>
+						<id>generateRunners2</id>
 						<phase>validate</phase>
 						<goals>
 							<goal>generateRunners</goal>

@@ -64,9 +64,11 @@ public class CucumberITGenerator {
             }
             else if (config.getNamingScheme().equals("feature-title")) {
                 outputFileName = classNameGenerator.generateClassNameFromFeatureFileName(file.getName(),fileCounter);
+            } else if (config.getNamingScheme().equals("pattern")) {
+                outputFileName = classNameGenerator.patternNamingScheme(config.getNamingPattern(), file.getName());
             }
             else {
-                throw new MojoExecutionException("Error in configuration ; accepted value for tag 'namingScheme' are 'simple' or 'feature-title'");
+                throw new MojoExecutionException("Error in configuration ; accepted value for tag 'namingScheme' are 'simple' or 'feature-title' or 'pattern'");
             }
 
             setFeatureFileLocation(file);
