@@ -24,7 +24,7 @@ public class CucumberITGenerator {
     int fileCounter = 1;
     private String featureFileLocation;
     private Template velocityTemplate;
-    private ClassNameGenerator classNameGenerator=new ClassNameGenerator();
+    private final ClassNameGenerator classNameGenerator=new ClassNameGenerator();
     private String outputFileName;
 
 
@@ -44,10 +44,10 @@ public class CucumberITGenerator {
         engine.init();
         if (config.useTestNG()){
             velocityTemplate = engine.getTemplate("cucumber-testng-runner.vm",
-                                                  config.getEncoding());
+                    config.getEncoding());
         } else {
             velocityTemplate = engine.getTemplate("cucumber-junit-runner.vm",
-                                                  config.getEncoding());
+                    config.getEncoding());
         }
     }
 
@@ -60,7 +60,7 @@ public class CucumberITGenerator {
             }
 
             if(config.getNamingScheme().equals("simple")){
-                outputFileName = classNameGenerator.generateSimpleClassName(fileCounter);
+                outputFileName = classNameGenerator.generateSimpleClassName();
             }
             else if (config.getNamingScheme().equals("feature-title")) {
                 outputFileName = classNameGenerator.generateClassNameFromFeatureFileName(file.getName(),fileCounter);

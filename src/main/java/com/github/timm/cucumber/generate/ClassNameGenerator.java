@@ -1,37 +1,29 @@
 package com.github.timm.cucumber.generate;
 
-import com.google.common.base.CaseFormat;
-import org.apache.commons.io.FilenameUtils;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.github.timm.cucumber.generate.name.FeatureFileClassNamingScheme;
+import com.github.timm.cucumber.generate.name.SimpleClassNamingScheme;
 
 public class ClassNameGenerator {
 
-    Pattern startsWithDigit = Pattern.compile("^\\d.*");
+    private final SimpleClassNamingScheme simpleGenerator = new SimpleClassNamingScheme();
 
-    public String generateClassNameFromFeatureFileName(String featureFileName, int fileCounter) {
+    public String generateClassNameFromFeatureFileName(final String featureFileName, final int fileCounter) {
 
-        String fileNameWithNoExtension= FilenameUtils.removeExtension(featureFileName);
-
-        fileNameWithNoExtension=fileNameWithNoExtension.replaceAll("_","-");
-        fileNameWithNoExtension=fileNameWithNoExtension.replaceAll(" ","");
-
-        String className = CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_CAMEL, fileNameWithNoExtension);
-
-        Matcher startsWithDigitCheck = startsWithDigit.matcher(className);
-
-        if(startsWithDigitCheck.matches()){
-            className="_"+className;
-        }
-
-        return String.format(className+"%02dIT.java",fileCounter);
+        return new FeatureFileClassNamingScheme().generate(featureFileName);
     }
 
-    public String generateSimpleClassName(int fileCounter) {
+    /**
+     * @deprecated Use {@link #generateSimpleClassName()} instead
+     */
+    @Deprecated
+    public String generateSimpleClassName(final int fileCounter) {
+        return generateSimpleClassName();
+    }
 
-        return String.format("Parallel%02dIT.java",fileCounter);
+    public String generateSimpleClassName() {
 
+        //        return String.format("Parallel%02dIT.java",fileCounter);
+        return simpleGenerator.generate(null);
     }
 
 }
