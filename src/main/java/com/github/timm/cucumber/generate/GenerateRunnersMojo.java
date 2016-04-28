@@ -25,6 +25,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
+import com.github.timm.cucumber.generate.name.ClassNamingScheme;
+import com.github.timm.cucumber.generate.name.ClassNamingSchemeFactory;
+
 /**
  * Goal which generates a Cucumber JUnit runner for each Gherkin feature file in
  * your project
@@ -136,7 +139,10 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
         createOutputDirIfRequired();
 
         final OverriddenCucumberOptionsParameters overriddenParameters = overrideParametersWithCucumberOptions();
-        fileGenerator = new CucumberITGenerator(this, overriddenParameters);
+
+        final ClassNamingScheme classNamingScheme = ClassNamingSchemeFactory.create(namingScheme,namingPattern);
+
+        fileGenerator = new CucumberITGenerator(this, overriddenParameters, classNamingScheme);
 
         fileGenerator.generateCucumberITFiles(outputDirectory, featureFiles);
 

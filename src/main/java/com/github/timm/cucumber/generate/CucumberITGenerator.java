@@ -15,6 +15,7 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
+import com.github.timm.cucumber.generate.name.ClassNamingScheme;
 import com.github.timm.cucumber.options.TagParser;
 
 public class CucumberITGenerator {
@@ -24,14 +25,15 @@ public class CucumberITGenerator {
     int fileCounter = 1;
     private String featureFileLocation;
     private Template velocityTemplate;
-    private final ClassNameGenerator classNameGenerator=new ClassNameGenerator();
     private String outputFileName;
+    private final ClassNamingScheme classNamingScheme;
 
 
 
-    public CucumberITGenerator(final FileGeneratorConfig config, final OverriddenCucumberOptionsParameters overriddenParameters) {
+    public CucumberITGenerator(final FileGeneratorConfig config, final OverriddenCucumberOptionsParameters overriddenParameters, final ClassNamingScheme classNamingScheme) {
         this.config = config;
         this.overriddenParameters = overriddenParameters;
+        this.classNamingScheme = classNamingScheme;
         initTemplate();
     }
 
@@ -59,17 +61,7 @@ public class CucumberITGenerator {
                 continue;
             }
 
-            if(config.getNamingScheme().equals("simple")){
-                outputFileName = classNameGenerator.generateSimpleClassName();
-            }
-            else if (config.getNamingScheme().equals("feature-title")) {
-                outputFileName = classNameGenerator.generateClassNameFromFeatureFileName(file.getName(),fileCounter);
-            } else if (config.getNamingScheme().equals("pattern")) {
-                outputFileName = classNameGenerator.patternNamingScheme(config.getNamingPattern(), file.getName());
-            }
-            else {
-                throw new MojoExecutionException("Error in configuration ; accepted value for tag 'namingScheme' are 'simple' or 'feature-title' or 'pattern'");
-            }
+            outputFileName = classNamingScheme.generate(file.getName());
 
             setFeatureFileLocation(file);
 
