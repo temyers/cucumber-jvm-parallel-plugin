@@ -194,11 +194,13 @@ public class CucumberITGenerator {
         for (int i = 0; i < formatStrs.length; i++) {
             final String formatStr = formatStrs[i].trim();
             String extension = formatStr;
-            if(extension.equals("rerun"){
+            
+            if(extension.equals("rerun")){
                 extension = "txt";
             } else if(extension.equals("junit")){
                 extension = "xml";
             }
+            
             sb.append(String.format("\"%s:%s/%s.%s\"", formatStr,
                     config.getCucumberOutputDir()
                     .replace('\\', '/'), fileCounter, extension));
