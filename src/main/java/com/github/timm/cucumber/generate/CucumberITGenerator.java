@@ -201,11 +201,9 @@ public class CucumberITGenerator {
                 extension = "xml";
             }
             
-            String fileName = outputFileName + fileCounter;
-            
             sb.append(String.format("\"%s:%s/%s.%s\"", formatStr,
                     config.getCucumberOutputDir()
-                    .replace('\\', '/'), fileName, extension));
+                    .replace('\\', '/'), outputFileName, extension));
 
             if (i < formatStrs.length - 1) {
                 sb.append(", ");
