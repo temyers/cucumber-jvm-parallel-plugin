@@ -196,6 +196,8 @@ public class CucumberITGenerator {
             String extension = formatStr;
             if(extension.equals("rerun"){
                 extension = "txt";
+            } else if(extension.equals("junit")){
+                extension = "xml";
             }
             sb.append(String.format("\"%s:%s/%s.%s\"", formatStr,
                     config.getCucumberOutputDir()
