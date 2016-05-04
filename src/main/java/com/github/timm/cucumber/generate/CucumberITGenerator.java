@@ -195,6 +195,7 @@ public class CucumberITGenerator {
             final String formatStr = formatStrs[i].trim();
             String extension = formatStr;
             
+            //Supported Report Types - https://cucumber.io/docs/reference#reports 
             if(extension.equals("rerun")){
                 extension = "txt";
             } else if(extension.equals("junit")){
