@@ -13,10 +13,17 @@ Usage
 Add the following to your POM file:
 
 ```xml
+<dependencies>
+   <dependency>
+          <groupId>com.github.temyers</groupId>
+          <artifactId>cucumber-jvm-parallel-plugin</artifactId>
+          <version>1.2.2</version>
+  </dependency>
+</dependencies>
 <plugin>
   <groupId>com.github.temyers</groupId>
   <artifactId>cucumber-jvm-parallel-plugin</artifactId>
-  <version>1.2.1</version>
+  <version>1.2.2</version>
   <executions>
     <execution>
       <id>generateRunners</id>
@@ -50,6 +57,10 @@ Add the following to your POM file:
          <useTestNG>false</useTestNG>
          <!-- The naming scheme to use for the generated test classes.  One of 'simple' or 'feature-title' --> 
          <namingScheme>simple</namingScheme>
+         <!-- Generate ReRun runners instead of JUnit and TestNG. --> 
+         <useReRun>true</useReRun>
+         <!-- Max retry can be 5. --> 
+         <retryCount>2</retryCount>
       </configuration>
     </execution>
   </executions>
