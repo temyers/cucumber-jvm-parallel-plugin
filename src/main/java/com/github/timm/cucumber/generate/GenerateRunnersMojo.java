@@ -1,21 +1,20 @@
-package com.github.timm.cucumber.generate;
+package com.github.temyers.generate;
 
 /*
  * Copyright 2001-2005 The Apache Software Foundation.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
-import java.io.File;
-import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.AbstractMojo;
@@ -25,15 +24,18 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
+import java.io.File;
+import java.util.Collection;
+
 /**
- * Goal which generates a Cucumber JUnit runner for each Gherkin feature file in
- * your project
+ * Goal which touches a timestamp file.
  *
- *
+ * @goal touch
+ * 
+ * @phase process-sources
  */
 @Mojo(name = "generateRunners", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
 public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorConfig {
-
     /**
      * The current project representation.
      *
@@ -70,7 +72,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     /**
      * Directory containing the feature files
      */
-    @Parameter(defaultValue = "src/test/resources/features/", property = "featuresDir", required = true)
+    @Parameter(defaultValue = "/features/", property = "featuresDir", required = true)
     private File featuresDirectory;
 
     /**
@@ -119,6 +121,14 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     @Parameter(defaultValue = "simple", property = "namingScheme", required = false)
     private String namingScheme;
 
+    @Parameter(defaultValue = "false", property = "useReRun", required = true)
+    private boolean useReRun;
+
+    @Parameter(property = "retryCount",defaultValue= "2", required = true)
+    private int retryCount;
+
+
+
     private CucumberITGenerator fileGenerator;
 
     public void execute() throws MojoExecutionException {
@@ -134,16 +144,19 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
         createOutputDirIfRequired();
 
         final OverriddenCucumberOptionsParameters overriddenParameters = overrideParametersWithCucumberOptions();
-        fileGenerator = new CucumberITGenerator(this, overriddenParameters);
+        final OverriddenRerunOptionsParameters rerunOptionsParameters = overriddenRerunOptionsParameters();
+        fileGenerator = new CucumberITGenerator(this, overriddenParameters,rerunOptionsParameters);
 
         fileGenerator.generateCucumberITFiles(outputDirectory, featureFiles);
 
         getLog().info(
                 "Adding " + outputDirectory.getAbsolutePath()
-                + " to test-compile source root");
+                        + " to test-compile source root");
 
         project.addTestCompileSourceRoot(outputDirectory.getAbsolutePath());
     }
+
+
 
     private void createOutputDirIfRequired() {
         if (!outputDirectory.exists()) {
@@ -160,14 +173,21 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
         final OverriddenCucumberOptionsParameters overriddenParameters = new OverriddenCucumberOptionsParameters();
         overriddenParameters.setTags(this.tags).setGlue(this.glue)
-        .setStrict(this.strict).setFormat(this.format)
-        .setMonochrome(this.monochrome);
+                .setStrict(this.strict).setFormat(this.format)
+                .setMonochrome(this.monochrome);
 
         overriddenParameters
-        .overrideParametersWithCucumberOptions(cucumberOptions);
+                .overrideParametersWithCucumberOptions(cucumberOptions);
 
         return overriddenParameters;
 
+    }
+
+    private OverriddenRerunOptionsParameters overriddenRerunOptionsParameters() {
+        final OverriddenRerunOptionsParameters rerunOptionsParameters = new OverriddenRerunOptionsParameters();
+        rerunOptionsParameters.setRetryCount(this.retryCount);
+
+        return rerunOptionsParameters;
     }
 
     public boolean filterFeaturesByTags() {
@@ -190,6 +210,9 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
         return useTestNG;
     }
 
+    public boolean useReRun(){
+        return useReRun;
+    }
     public String getNamingScheme() {return namingScheme; }
 
 }

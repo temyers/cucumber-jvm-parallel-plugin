@@ -1,11 +1,10 @@
-package com.github.timm.cucumber.generate;
-
-import java.io.File;
+package com.github.temyers.generate;
 
 import org.apache.maven.plugin.logging.Log;
 
-public interface FileGeneratorConfig {
+import java.io.File;
 
+public interface FileGeneratorConfig {
     boolean filterFeaturesByTags();
 
     Log getLog();
@@ -18,6 +17,7 @@ public interface FileGeneratorConfig {
 
     boolean useTestNG();
 
-    String getNamingScheme();
+    boolean useReRun();
 
+    String getNamingScheme();
 }

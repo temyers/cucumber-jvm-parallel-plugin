@@ -1,11 +1,10 @@
-package com.github.timm.cucumber.generate;
+package com.github.temyers.generate;
 
-import java.util.List;
-
+import com.github.temyers.options.RuntimeOptions;
+import com.github.temyers.options.TagParser;
 import org.apache.commons.lang.StringUtils;
 
-import com.github.timm.cucumber.options.RuntimeOptions;
-import com.github.timm.cucumber.options.TagParser;
+import java.util.List;
 
 public class OverriddenCucumberOptionsParameters {
 
@@ -14,6 +13,7 @@ public class OverriddenCucumberOptionsParameters {
     private boolean strict;
     private String format;
     private boolean monochrome;
+
 
     public OverriddenCucumberOptionsParameters setTags(final String tags) {
         this.tags = tags;
@@ -41,8 +41,7 @@ public class OverriddenCucumberOptionsParameters {
         return this;
     }
 
-    public void overrideParametersWithCucumberOptions(
-            final String cucumberOptions) {
+    public void overrideParametersWithCucumberOptions( final String cucumberOptions) {
         if (cucumberOptions == null || cucumberOptions.isEmpty()) {
             return;
         }
