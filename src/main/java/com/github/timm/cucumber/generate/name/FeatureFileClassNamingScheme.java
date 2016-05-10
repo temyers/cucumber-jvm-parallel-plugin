@@ -9,9 +9,13 @@ import com.google.common.base.CaseFormat;
 
 public class FeatureFileClassNamingScheme implements ClassNamingScheme{
 
+    private final Counter counter;
 
     private final Pattern startsWithDigit = Pattern.compile("^\\d.*");
-    private static int fileCounter = 1;
+
+    public FeatureFileClassNamingScheme(final Counter counter) {
+        this.counter = counter;
+    }
 
     public String generate(final String featureFileName) {
         String fileNameWithNoExtension= FilenameUtils.removeExtension(featureFileName);
@@ -27,7 +31,8 @@ public class FeatureFileClassNamingScheme implements ClassNamingScheme{
             className="_"+className;
         }
 
-        return String.format(className+"%02dIT.java",fileCounter++);
+        return className;
+        //        return String.format(className+"%02dIT.java",counter.next());
     }
 
 }

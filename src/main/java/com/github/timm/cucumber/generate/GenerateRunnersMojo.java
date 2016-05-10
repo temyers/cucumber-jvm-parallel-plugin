@@ -27,6 +27,7 @@ import org.apache.maven.project.MavenProject;
 
 import com.github.timm.cucumber.generate.name.ClassNamingScheme;
 import com.github.timm.cucumber.generate.name.ClassNamingSchemeFactory;
+import com.github.timm.cucumber.generate.name.OneUpCounter;
 
 /**
  * Goal which generates a Cucumber JUnit runner for each Gherkin feature file in
@@ -140,7 +141,8 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
         final OverriddenCucumberOptionsParameters overriddenParameters = overrideParametersWithCucumberOptions();
 
-        final ClassNamingScheme classNamingScheme = ClassNamingSchemeFactory.create(namingScheme,namingPattern);
+        final ClassNamingSchemeFactory factory = new ClassNamingSchemeFactory(new OneUpCounter());
+        final ClassNamingScheme classNamingScheme = factory.create(namingScheme,namingPattern);
 
         fileGenerator = new CucumberITGenerator(this, overriddenParameters, classNamingScheme);
 

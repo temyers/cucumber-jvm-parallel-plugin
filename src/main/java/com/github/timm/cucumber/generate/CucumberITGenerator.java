@@ -65,7 +65,7 @@ public class CucumberITGenerator {
 
             setFeatureFileLocation(file);
 
-            final File outputFile = new File(outputDirectory, outputFileName);
+            final File outputFile = new File(outputDirectory, outputFileName+".java");
             FileWriter w = null;
             try {
                 w = new FileWriter(outputFile);

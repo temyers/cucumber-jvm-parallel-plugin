@@ -43,7 +43,7 @@
 						<configuration>
 							<glue>foo, bar</glue>
 							<namingScheme>pattern</namingScheme>
-							<namingPattern>Foo{f}</namingPattern>
+							<namingPattern>Foo{f}{c}IT</namingPattern>
 						</configuration>
 					</execution>
 				</executions>

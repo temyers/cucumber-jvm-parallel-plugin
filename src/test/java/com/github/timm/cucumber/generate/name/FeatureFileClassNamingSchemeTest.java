@@ -9,13 +9,10 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.github.timm.cucumber.generate.name.ClassNamingScheme;
-import com.github.timm.cucumber.generate.name.FeatureFileClassNamingScheme;
-
 
 public class FeatureFileClassNamingSchemeTest {
 
-    ClassNamingScheme classNameGenerator=new FeatureFileClassNamingScheme();
+    ClassNamingScheme classNameGenerator=new FeatureFileClassNamingScheme(new OneUpCounter());
 
     @Test
     public void shouldGenerateExpectedTestClassNames() throws Exception {
@@ -23,10 +20,10 @@ public class FeatureFileClassNamingSchemeTest {
         //using LinkedHasMap, as the order of insertion is important
         final Map<File,String> inputOutput=new LinkedHashMap <File, String>();
 
-        inputOutput.put(new File("my-domain_subSetScenarios.feature"), "MyDomainSubsetscenarios01IT.java");
-        inputOutput.put(new File("my-PERSONNALdomain subSetPersonnalScenarios.feature"), "MyPersonnaldomainsubsetpersonnalscenarios02IT.java");
-        inputOutput.put(new File("Avýplňový.feature"), "Avýplňový03IT.java");
-        inputOutput.put(new File("123.feature"), "_12304IT.java");
+        inputOutput.put(new File("my-domain_subSetScenarios.feature"), "MyDomainSubsetscenarios");
+        inputOutput.put(new File("my-PERSONNALdomain subSetPersonnalScenarios.feature"), "MyPersonnaldomainsubsetpersonnalscenarios");
+        inputOutput.put(new File("Avýplňový.feature"), "Avýplňový");
+        inputOutput.put(new File("123.feature"), "_123");
 
         for(final Map.Entry<File,String> example : inputOutput.entrySet()){
 
