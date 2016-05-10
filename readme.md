@@ -50,6 +50,8 @@ Add the following to your POM file:
          <useTestNG>false</useTestNG>
          <!-- The naming scheme to use for the generated test classes.  One of 'simple' or 'feature-title' --> 
          <namingScheme>simple</namingScheme>
+         <!-- The class naming pattern to use.  Only required/used if naming scheme is 'pattern'.-->
+         <namingPattern>Parallel{c}IT</namingPattern>
       </configuration>
     </execution>
   </executions>
@@ -77,10 +79,13 @@ The naming scheme used for the generated files is controlled by the `namingSchem
 * Spaces are removed, camel-casing the title.
 * If the feature file starts with a digit, the classname is prefixed with '_'
 * A on up counter is appended to the classname, to prevent clashes. |
+| pattern       | Generate the filename based on the `namingPattern` property.  
+The following tokens can be used in the pattern:
+* `{f}` Converts the feature file name to a valid class name using the rules for feature-title, apart from the one up counter.
+* `{c}` Adds a one up counter. |
 
-By default, `simple` naming strategy is used.
+By default, generated test files use the `simple` naming strategy.
 
-By default, generated test files use a 'simple' naming scheme.  
 
 
 FAQ
