@@ -2,6 +2,7 @@ package com.github.timm.cucumber.generate.name;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 
 import java.util.Arrays;
@@ -23,6 +24,7 @@ public class PatternNamingSchemeTest {
     public String output;
 
     Counter mockCounter = mock(Counter.class);
+    ClassNamingScheme mockFileNamingScheme = mock(ClassNamingScheme.class);
 
     @Parameters
     public static Collection<Object[]> params(){
@@ -43,18 +45,19 @@ public class PatternNamingSchemeTest {
     @Before
     public void setupMocks() {
         given(mockCounter.next()).willReturn(1);
+        given(mockFileNamingScheme.generate(any(String.class))).willReturn("FeatureFile");
     }
 
     @Test
     public void generateFilename() {
-        final PatternNamingScheme namingScheme = new PatternNamingScheme(pattern, mockCounter);
+        final PatternNamingScheme namingScheme = new PatternNamingScheme(pattern, mockCounter,mockFileNamingScheme);
         final String actual=namingScheme.generate("feature_file");
         assertThat(actual).isEqualTo(output);
     }
 
     @Test(expected=NullPointerException.class)
     public void patternIsNull() {
-        final PatternNamingScheme namingScheme = new PatternNamingScheme(null, mockCounter);
+        final PatternNamingScheme namingScheme = new PatternNamingScheme(null, mockCounter,mockFileNamingScheme);
         namingScheme.generate("feature_file");
 
     }
