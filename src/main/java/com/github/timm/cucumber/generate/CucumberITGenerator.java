@@ -169,9 +169,6 @@ public class CucumberITGenerator {
         context.put("monochrome", overriddenParameters.isMonochrome());
         context.put("cucumberOutputDir", config.getCucumberOutputDir());
         context.put("glue", quoteGlueStrings());
-        //required for testNg template
-        context.put("fileCounter", String.format("%02d", fileCounter));
-        //required for junit template
         context.put("className", FilenameUtils.removeExtension(outputFileName));
 
         velocityTemplate.merge(context, writer);
