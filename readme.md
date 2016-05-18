@@ -86,6 +86,12 @@ The following tokens can be used in the pattern:
 
 By default, generated test files use the `simple` naming strategy.
 
+####Note on Pattern Naming Scheme
+The `pattern` naming scheme is for advanced usage only.  
+
+It is up to you to ensure that class names generated are valid and there are no clashes.  If the same class name is generated multiple times, then it shall be overwritten and some of your tests will not be executed.
+
+The `namingPattern` property is for the **class name** only.  Do not add the `.java` suffix.
 
 
 FAQ
