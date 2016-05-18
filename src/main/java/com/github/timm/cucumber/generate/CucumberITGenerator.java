@@ -15,6 +15,7 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
+import com.github.timm.cucumber.generate.name.ClassNamingScheme;
 import com.github.timm.cucumber.options.TagParser;
 
 public class CucumberITGenerator {
@@ -24,14 +25,15 @@ public class CucumberITGenerator {
     int fileCounter = 1;
     private String featureFileLocation;
     private Template velocityTemplate;
-    private ClassNameGenerator classNameGenerator=new ClassNameGenerator();
     private String outputFileName;
+    private final ClassNamingScheme classNamingScheme;
 
 
 
-    public CucumberITGenerator(final FileGeneratorConfig config, final OverriddenCucumberOptionsParameters overriddenParameters) {
+    public CucumberITGenerator(final FileGeneratorConfig config, final OverriddenCucumberOptionsParameters overriddenParameters, final ClassNamingScheme classNamingScheme) {
         this.config = config;
         this.overriddenParameters = overriddenParameters;
+        this.classNamingScheme = classNamingScheme;
         initTemplate();
     }
 
@@ -44,10 +46,10 @@ public class CucumberITGenerator {
         engine.init();
         if (config.useTestNG()){
             velocityTemplate = engine.getTemplate("cucumber-testng-runner.vm",
-                                                  config.getEncoding());
+                    config.getEncoding());
         } else {
             velocityTemplate = engine.getTemplate("cucumber-junit-runner.vm",
-                                                  config.getEncoding());
+                    config.getEncoding());
         }
     }
 
@@ -59,19 +61,11 @@ public class CucumberITGenerator {
                 continue;
             }
 
-            if(config.getNamingScheme().equals("simple")){
-                outputFileName = classNameGenerator.generateSimpleClassName(fileCounter);
-            }
-            else if (config.getNamingScheme().equals("feature-title")) {
-                outputFileName = classNameGenerator.generateClassNameFromFeatureFileName(file.getName(),fileCounter);
-            }
-            else {
-                throw new MojoExecutionException("Error in configuration ; accepted value for tag 'namingScheme' are 'simple' or 'feature-title'");
-            }
+            outputFileName = classNamingScheme.generate(file.getName());
 
             setFeatureFileLocation(file);
 
-            final File outputFile = new File(outputDirectory, outputFileName);
+            final File outputFile = new File(outputDirectory, outputFileName+".java");
             FileWriter w = null;
             try {
                 w = new FileWriter(outputFile);
@@ -175,9 +169,6 @@ public class CucumberITGenerator {
         context.put("monochrome", overriddenParameters.isMonochrome());
         context.put("cucumberOutputDir", config.getCucumberOutputDir());
         context.put("glue", quoteGlueStrings());
-        //required for testNg template
-        context.put("fileCounter", String.format("%02d", fileCounter));
-        //required for junit template
         context.put("className", FilenameUtils.removeExtension(outputFileName));
 
         velocityTemplate.merge(context, writer);
