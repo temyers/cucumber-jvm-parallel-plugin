@@ -1,6 +1,7 @@
-package com.github.temyers.generate;
+package com.github.timm.cucumber.generate;
 
-import com.github.temyers.options.TagParser;
+import com.github.timm.cucumber.options.TagParser;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.plugin.MojoExecutionException;
