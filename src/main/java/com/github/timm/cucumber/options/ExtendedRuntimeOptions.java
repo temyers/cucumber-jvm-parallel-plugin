@@ -1,4 +1,4 @@
-package com.github.temyers.options;
+package com.github.timm.cucumber.options;
 
 import cucumber.api.SnippetType;
 import cucumber.api.StepDefinitionReporter;
