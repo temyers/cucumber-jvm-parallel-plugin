@@ -1,4 +1,4 @@
-package com.github.temyers.generate;
+package com.github.timm.cucumber.generate;
 
 /**
  * Created by sugad.mankar on 5/5/2016.
