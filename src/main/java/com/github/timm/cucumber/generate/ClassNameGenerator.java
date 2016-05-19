@@ -1,4 +1,4 @@
-package com.github.temyers.generate;
+package com.github.timm.cucumber.generate;
 
 import com.google.common.base.CaseFormat;
 import org.apache.commons.io.FilenameUtils;
