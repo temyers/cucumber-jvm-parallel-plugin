@@ -31,7 +31,7 @@ Add the following to your POM file:
          <!-- These are the default values -->
           <!-- Where to output the generated tests -->
            <outputDirectory>${project.build.directory}/generated-test-sources/cucumber</outputDirectory>
-           <!-- The diectory containing your feature files.  -->
+           <!-- The diectory, which must be in the root of the runtime classpath, containing your feature files.  -->
           <featuresDirectory>src/test/resources/features/</featuresDirectory>
            <!-- Directory where the cucumber report files shall be written  -->
           <cucumberOutputDir>target/cucumber-parallel</cucumberOutputDir>
@@ -62,7 +62,14 @@ If `cucumber.options` VM argument is specified as per the [Cucumber CLI options]
 
 Where glue is a comma separated list of package names to use for the Cucumber Glue.
 
-The plugin will search `featuresDirectory` for `*.feature` files and generate a JUnit test for each one. If you prefer to generate TestNG tests, set `useTestNG` to true
+The plugin will search `featuresDirectory` for `*.feature` files and generate a JUnit test for each one. 
+> **WARNING:** `featuresDirectory` must denote a directory within the root of the classpath.
+> **Example:** 
+> * Resources in `src/test/resources` are added to the classpath by default.
+> * `src/test/resources/features` **is** in the root of the classpath, so **would be valid** for `featuresDirectory`
+> * `src/test/resources/features/sub_folder` is **not** in the root of the classpath, so **would not be valid** to put in `featuresDirectory`
+
+If you prefer to generate TestNG tests, set `useTestNG` to true
 
 The Java source is generated in `outputDirectory`, based on the naming scheme used.
 
