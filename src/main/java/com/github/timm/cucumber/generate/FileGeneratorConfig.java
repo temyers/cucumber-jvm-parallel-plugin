@@ -1,4 +1,4 @@
-package com.github.temyers.generate;
+package com.github.timm.cucumber.generate;
 
 import org.apache.maven.plugin.logging.Log;
 
