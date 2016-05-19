@@ -1,8 +1,10 @@
-package com.github.temyers.generate;
+package com.github.timm.cucumber.generate;
 
-import com.github.temyers.options.RuntimeOptions;
-import com.github.temyers.options.TagParser;
+
 import org.apache.commons.lang.StringUtils;
+
+import com.github.timm.cucumber.options.RuntimeOptions;
+import com.github.timm.cucumber.options.TagParser;
 
 import java.util.List;
 
