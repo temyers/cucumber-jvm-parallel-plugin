@@ -1,4 +1,4 @@
-package com.github.temyers.generate;
+package com.github.timm.cucumber.generate;
 
 /*
  * Copyright 2001-2005 The Apache Software Foundation.
@@ -72,7 +72,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     /**
      * Directory containing the feature files
      */
-    @Parameter(defaultValue = "/features/", property = "featuresDir", required = true)
+    @Parameter(defaultValue = "src/test/resources/features/", property = "featuresDir", required = true)
     private File featuresDirectory;
 
     /**
