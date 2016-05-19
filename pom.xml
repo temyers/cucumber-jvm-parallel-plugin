@@ -65,6 +65,13 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
+		<dependency>
+		    <groupId>info.cukes</groupId>
+		    <artifactId>cucumber-java</artifactId>
+		    <version>1.2.4</version>
+		</dependency>
+		
+				
 	</dependencies>
 
 	<dependencyManagement>
