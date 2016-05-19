@@ -100,7 +100,7 @@ public class $className{
         try{
                 if(new File(outputPath+"/rerun1.rerun").exists()&& new BufferedReader(new FileReader(outputPath+"/rerun1.rerun")).readLine() != null) {
                         //ExecuteReRerun first arg: refactored input file ; second arg:- output json file path for getting result
-                        ExecuteReRerun("@"+outputPath+"/rerun1.rerun",outputPath+"/cucumber1.json",outputPath+"/rerun2.rerun");
+                        ExecuteReRerun("@"+outputPath+"/rerun1.rerun",outputPath+"/cucumber2.json",outputPath+"/rerun2.rerun");
                 }
             }catch(Exception e){e.printStackTrace();}
         }
