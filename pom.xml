@@ -189,7 +189,7 @@
 								<goal>clean</goal>
 								<goal>test-compile</goal>
 							</goals>
-							<parallelThreads>2</parallelThreads>
+							<parallelThreads>5</parallelThreads>
 						</configuration>
 						<executions>
 							<execution>
