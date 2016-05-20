@@ -21,5 +21,7 @@ public interface FileGeneratorConfig {
     String getNamingScheme();
 
     String getNamingPattern();
+    
+    boolean useJUnitReRun();
 
 }
