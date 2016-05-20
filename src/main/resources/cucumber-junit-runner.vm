@@ -1,0 +1,14 @@
+import org.junit.runner.RunWith;
+
+import cucumber.api.CucumberOptions;
+import cucumber.api.junit.Cucumber;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(strict = $strict,
+    features = {"classpath:$featureFile"},
+    format = {$reports, "pretty"},
+    monochrome = ${monochrome},
+    tags = {$tags},
+    glue = { $glue })
+public class $className {
+}
