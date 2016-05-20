@@ -89,7 +89,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
      *
      * @see CucumberOptions.format
      */
-    @Parameter(defaultValue = "json", property = "cucumber.format", required = true)
+    @Parameter(defaultValue = "json,html,rerun", property = "cucumber.format", required = true)
     private String format;
 
     /**
@@ -124,6 +124,15 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     private String namingScheme;
     @Parameter(property = "namingPattern", required = false)
     private String namingPattern;
+    
+    
+    @Parameter(defaultValue = "false", property = "useJUnitReRun", required = true)
+    private boolean useJUnitReRun;
+    /**
+     * Max retry count is 5. In order to avoid Flaky test exeution. 
+     */
+    @Parameter(property = "retryCount",defaultValue= "2", required = true)
+    private int retryCount;
 
     private CucumberITGenerator fileGenerator;
 
@@ -140,11 +149,12 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
         createOutputDirIfRequired();
 
         final OverriddenCucumberOptionsParameters overriddenParameters = overrideParametersWithCucumberOptions();
-
+        final OverriddenRerunOptionsParameters rerunOptionsParameters = overriddenRerunOptionsParameters();
+        
         final ClassNamingSchemeFactory factory = new ClassNamingSchemeFactory(new OneUpCounter());
         final ClassNamingScheme classNamingScheme = factory.create(namingScheme,namingPattern);
 
-        fileGenerator = new CucumberITGenerator(this, overriddenParameters, classNamingScheme);
+        fileGenerator = new CucumberITGenerator(this, overriddenParameters, classNamingScheme,rerunOptionsParameters);
 
         fileGenerator.generateCucumberITFiles(outputDirectory, featureFiles);
 
@@ -179,6 +189,12 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
         return overriddenParameters;
 
     }
+    
+    private OverriddenRerunOptionsParameters overriddenRerunOptionsParameters() {
+    	final OverriddenRerunOptionsParameters rerunOptionsParameters = new OverriddenRerunOptionsParameters();
+    	rerunOptionsParameters.setRetryCount(this.retryCount);
+		return rerunOptionsParameters;
+	}
 
     public boolean filterFeaturesByTags() {
         return filterFeaturesByTags;
@@ -206,6 +222,10 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
     public String getNamingPattern() {
         return namingPattern;
+    }
+    
+    public boolean useJUnitReRun(){
+    	return useJUnitReRun;
     }
 
 

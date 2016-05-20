@@ -77,6 +77,11 @@
 			<version>1.4</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+		    <groupId>info.cukes</groupId>
+		    <artifactId>cucumber-java</artifactId>
+		    <version>1.2.4</version>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -184,7 +189,7 @@
 								<goal>clean</goal>
 								<goal>test-compile</goal>
 							</goals>
-							<parallelThreads>5</parallelThreads>
+							<parallelThreads>2</parallelThreads>
 						</configuration>
 						<executions>
 							<execution>

@@ -1,19 +1,26 @@
 package com.github.timm.cucumber.generate;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 public class OverriddenCucumberOptionsParametersShouldOverrideParametersWithCucumberOptionsTest {
 
     private OverriddenCucumberOptionsParameters params;
+    private OverriddenRerunOptionsParameters rerunParam;
 
     @Before
     public void setup() {
         params = new OverriddenCucumberOptionsParameters();
+        rerunParam= new OverriddenRerunOptionsParameters();
     }
 
+    @Test
+    public void rerunTagIsOverriden(){
+        rerunParam.setRetryCount(5);
+        assertThat(rerunParam.getRetryCount(),equalTo(5));
+    }
     @Test
     public void tagsParameterIsOverridden() {
         params.setTags("\"@replaceMe\"");
