@@ -42,8 +42,8 @@ Add the following to your POM file:
           <featuresDirectory>src/test/resources/features/</featuresDirectory>
            <!-- Directory where the cucumber report files shall be written  -->
           <cucumberOutputDir>target/cucumber-parallel</cucumberOutputDir>
-          <!-- comma separated list of output formats -->
-         <format>json</format>
+          <!-- comma separated list of output formats. For JUnit Rerun json,html,rerun are mandatory-->
+         <format>json,html,rerun</format>
          <!-- CucumberOptions.strict property -->
          <strict>true</strict>
          <!-- CucumberOptions.monochrome property -->
