@@ -131,7 +131,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     /**
      * Max retry count is 5. In order to avoid Flaky test exeution. 
      */
-    @Parameter(property = "retryCount",defaultValue= "2", required = true)
+    @Parameter(property = "retryCount",defaultValue= "0", required = true)
     private int retryCount;
 
     private CucumberITGenerator fileGenerator;
