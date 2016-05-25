@@ -82,6 +82,12 @@
 		    <artifactId>cucumber-java</artifactId>
 		    <version>1.2.4</version>
 		</dependency>
+		<dependency>
+		    <groupId>net.masterthought</groupId>
+		    <artifactId>cucumber-reporting</artifactId>
+		    <version>2.2.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<dependencyManagement>
@@ -189,7 +195,7 @@
 								<goal>clean</goal>
 								<goal>test-compile</goal>
 							</goals>
-							<parallelThreads>5</parallelThreads>
+							<parallelThreads>1</parallelThreads>
 						</configuration>
 						<executions>
 							<execution>

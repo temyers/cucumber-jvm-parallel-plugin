@@ -89,7 +89,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
      *
      * @see CucumberOptions.format
      */
-    @Parameter(defaultValue = "json,html,rerun", property = "cucumber.format", required = true)
+    @Parameter(defaultValue = "json", property = "cucumber.format", required = true)
     private String format;
 
     /**
@@ -124,16 +124,14 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     private String namingScheme;
     @Parameter(property = "namingPattern", required = false)
     private String namingPattern;
-    
-    
-    @Parameter(defaultValue = "false", property = "useJUnitReRun", required = true)
-    private boolean useJUnitReRun;
+
     /**
      * Max retry count is 5. In order to avoid Flaky test exeution. 
      */
-    @Parameter(property = "retryCount",defaultValue= "0", required = true)
-    private int retryCount;
+    @Parameter(property = "JUnitRetryCount",defaultValue= "0", required = true)
+    private int JUnitRetryCount;
 
+    private boolean useJUnitReRun;
     private CucumberITGenerator fileGenerator;
 
     public void execute() throws MojoExecutionException {
@@ -141,6 +139,9 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
         if (!featuresDirectory.exists()) {
             throw new MojoExecutionException(
                     "Features directory does not exist");
+        }
+        if(JUnitRetryCount>0){
+            useJUnitReRun=true;
         }
 
         final Collection<File> featureFiles = FileUtils.listFiles(
@@ -180,11 +181,13 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
         final OverriddenCucumberOptionsParameters overriddenParameters = new OverriddenCucumberOptionsParameters();
         overriddenParameters.setTags(this.tags).setGlue(this.glue)
-        .setStrict(this.strict).setFormat(this.format)
-        .setMonochrome(this.monochrome);
-
-        overriddenParameters
-        .overrideParametersWithCucumberOptions(cucumberOptions);
+        .setStrict(this.strict).setMonochrome(this.monochrome);
+        if(useJUnitReRun){
+            overriddenParameters.setFormat("json,html,rerun");
+        }else{
+            overriddenParameters.setFormat(this.format);
+        }
+        overriddenParameters.overrideParametersWithCucumberOptions(cucumberOptions);
 
         return overriddenParameters;
 
@@ -192,7 +195,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     
     private OverriddenRerunOptionsParameters overriddenRerunOptionsParameters() {
     	final OverriddenRerunOptionsParameters rerunOptionsParameters = new OverriddenRerunOptionsParameters();
-    	rerunOptionsParameters.setRetryCount(this.retryCount);
+    	rerunOptionsParameters.setJUnitRetryCount(this.JUnitRetryCount);
 		return rerunOptionsParameters;
 	}
 

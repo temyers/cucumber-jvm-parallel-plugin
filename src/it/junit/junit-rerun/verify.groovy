@@ -8,21 +8,22 @@ assert suite01.isFile()
 assert suite02.isFile()
 
 String expected01=
-"""import cucumber.runtime.Runtime;
+"""import com.github.timm.cucumber.options.ExtendedRuntimeOptions;
+import cucumber.runtime.Runtime;
 import cucumber.runtime.io.MultiLoader;
 import cucumber.runtime.io.ResourceLoaderClassFinder;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.junit.Test;
-import com.github.timm.cucumber.options.ExtendedRuntimeOptions;
-import java.io.*;
-import java.util.*;
-import java.text.SimpleDateFormat;
-import org.apache.commons.io.FileUtils;
 import net.masterthought.cucumber.ReportBuilder;
+import org.apache.commons.io.FileUtils;
+import org.junit.Test;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 public class Parallel01IT{
 
@@ -34,9 +35,7 @@ public class Parallel01IT{
 
                 defaultRun();
 
-                int count= 2;
-
-                System.out.println("Retry Count specified is :- "+count);
+                int count= 1;
 
                 switch (count){
                         case 1:
@@ -237,7 +236,7 @@ public class Parallel01IT{
         }
 
          public static void generateRunWiseReport(List<File> jsons,String run){
-         String timeStamp = new SimpleDateFormat("yyyyMMddhhmmss").format(new java.util.Date());
+         String timeStamp = new SimpleDateFormat("yyyyMMddhhmm").format(new java.util.Date());
                        try {
                            File rd = new File("../Reports/Result_"+timeStamp+"/"+run);
                            List<String> jsonReports = new ArrayList<String>();
@@ -253,24 +252,27 @@ public class Parallel01IT{
                        }
                }
 }
+
 """
 
 String expected02=
-"""import cucumber.runtime.Runtime;
+"""
+import com.github.timm.cucumber.options.ExtendedRuntimeOptions;
+import cucumber.runtime.Runtime;
 import cucumber.runtime.io.MultiLoader;
 import cucumber.runtime.io.ResourceLoaderClassFinder;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.junit.Test;
-import com.github.timm.cucumber.options.ExtendedRuntimeOptions;
-import java.io.*;
-import java.util.*;
-import java.text.SimpleDateFormat;
-import org.apache.commons.io.FileUtils;
 import net.masterthought.cucumber.ReportBuilder;
+import org.apache.commons.io.FileUtils;
+import org.junit.Test;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 public class Parallel02IT{
 
@@ -282,9 +284,7 @@ public class Parallel02IT{
 
                 defaultRun();
 
-                int count= 2;
-
-                System.out.println("Retry Count specified is :- "+count);
+                int count= 1;
 
                 switch (count){
                         case 1:
@@ -322,7 +322,7 @@ public class Parallel02IT{
         private void defaultRun() {
                        List<String> arguments = new ArrayList<String>();
                        arguments.add("classpath:features/feature2.feature");
-                       String[] tags = {"@complete", "@accepted"};
+                       String[] tags = {"@complete"};
                           for(String tag : tags) {
                               arguments.add("--tags");
                               arguments.add(tag);
@@ -485,7 +485,7 @@ public class Parallel02IT{
         }
 
          public static void generateRunWiseReport(List<File> jsons,String run){
-         String timeStamp = new SimpleDateFormat("yyyyMMddhhmmss").format(new java.util.Date());
+         String timeStamp = new SimpleDateFormat("yyyyMMddhhmm").format(new java.util.Date());
                        try {
                            File rd = new File("../Reports/Result_"+timeStamp+"/"+run);
                            List<String> jsonReports = new ArrayList<String>();
@@ -501,6 +501,7 @@ public class Parallel02IT{
                        }
                }
 }
+
 """
 
 // Depending on the OS, listFiles can list files in different order.  The actual order of files isn't necessary

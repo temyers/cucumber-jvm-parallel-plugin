@@ -182,7 +182,7 @@ public class CucumberITGenerator {
         }
         context.put("className", FilenameUtils.removeExtension(outputFileName));
         context.put("outPutPath",config.getCucumberOutputDir().replace('\\', '/')+"/"+FilenameUtils.removeExtension(outputFileName)+"/"+FilenameUtils.removeExtension(outputFileName));
-        context.put("retryCount",overriddenRerunOptionsParameters.getRetryCount());
+        context.put("retryCount",overriddenRerunOptionsParameters.getJUnitRetryCount());
         context.put("htmlFormat", this.htmlFormat);
         context.put("jsonFormat", this.jsonFormat);
         context.put("rerunFormat", this.rerunFormat);
@@ -199,13 +199,18 @@ public class CucumberITGenerator {
 
         for (int i = 0; i < formatStrs.length; i++) {
             final String formatStr = formatStrs[i].trim();
-            sb.append(String.format("\"%s:%s/%s/%s.%s\"", formatStr,config.getCucumberOutputDir().replace('\\', '/'),FilenameUtils.removeExtension(outputFileName), FilenameUtils.removeExtension(outputFileName), formatStr));
-            if(formatStr.equalsIgnoreCase("html"))
-                htmlFormat =String.format("\"%s:%s/%s/%s.%s\"", formatStr,config.getCucumberOutputDir().replace('\\', '/'),FilenameUtils.removeExtension(outputFileName), FilenameUtils.removeExtension(outputFileName), formatStr);
-            if(formatStr.equalsIgnoreCase("json"))
-                jsonFormat =String.format("\"%s:%s/%s/%s.%s\"", formatStr,config.getCucumberOutputDir().replace('\\', '/'),FilenameUtils.removeExtension(outputFileName), FilenameUtils.removeExtension(outputFileName), formatStr);
-            if(formatStr.equalsIgnoreCase("rerun"))
-                rerunFormat =String.format("\"%s:%s/%s/%s.%s\"", formatStr,config.getCucumberOutputDir().replace('\\', '/'),FilenameUtils.removeExtension(outputFileName), FilenameUtils.removeExtension(outputFileName), formatStr);
+            if(config.useJUnitReRun()) {
+                sb.append(String.format("\"%s:%s/%s/%s.%s\"", formatStr, config.getCucumberOutputDir().replace('\\', '/'), FilenameUtils.removeExtension(outputFileName), FilenameUtils.removeExtension(outputFileName), formatStr));
+                if (formatStr.equalsIgnoreCase("html"))
+                    htmlFormat = String.format("\"%s:%s/%s/%s.%s\"", formatStr, config.getCucumberOutputDir().replace('\\', '/'), FilenameUtils.removeExtension(outputFileName), FilenameUtils.removeExtension(outputFileName), formatStr);
+                if (formatStr.equalsIgnoreCase("json"))
+                    jsonFormat = String.format("\"%s:%s/%s/%s.%s\"", formatStr, config.getCucumberOutputDir().replace('\\', '/'), FilenameUtils.removeExtension(outputFileName), FilenameUtils.removeExtension(outputFileName), formatStr);
+                if (formatStr.equalsIgnoreCase("rerun"))
+                    rerunFormat = String.format("\"%s:%s/%s/%s.%s\"", formatStr, config.getCucumberOutputDir().replace('\\', '/'), FilenameUtils.removeExtension(outputFileName), FilenameUtils.removeExtension(outputFileName), formatStr);
+
+            }else{
+                sb.append(String.format("\"%s:%s/%s.%s\"", formatStr,config.getCucumberOutputDir().replace('\\', '/'), fileCounter, formatStr));
+            }
             if (i < formatStrs.length - 1) {
                 sb.append(", ");
             }

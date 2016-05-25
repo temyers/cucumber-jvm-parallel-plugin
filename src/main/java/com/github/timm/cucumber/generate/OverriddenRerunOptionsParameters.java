@@ -6,12 +6,12 @@ package com.github.timm.cucumber.generate;
 public class OverriddenRerunOptionsParameters {
 	   private int retryCount;
 
-	    public OverriddenRerunOptionsParameters setRetryCount(int  retryCount) {
+	    public OverriddenRerunOptionsParameters setJUnitRetryCount(int  retryCount) {
 	        this.retryCount = retryCount;
 	        return this;
 	    }
 
-	    public int getRetryCount() {
+	    public int getJUnitRetryCount() {
 	        return retryCount;
 	    }
 

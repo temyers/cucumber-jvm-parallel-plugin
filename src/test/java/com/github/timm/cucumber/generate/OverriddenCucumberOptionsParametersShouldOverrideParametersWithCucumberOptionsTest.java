@@ -18,8 +18,8 @@ public class OverriddenCucumberOptionsParametersShouldOverrideParametersWithCucu
 
     @Test
     public void rerunTagIsOverriden(){
-        rerunParam.setRetryCount(5);
-        assertThat(rerunParam.getRetryCount(),equalTo(5));
+        rerunParam.setJUnitRetryCount(5);
+        assertThat(rerunParam.getJUnitRetryCount(),equalTo(5));
     }
     @Test
     public void tagsParameterIsOverridden() {

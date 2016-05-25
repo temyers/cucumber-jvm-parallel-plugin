@@ -26,6 +26,11 @@
 			<version>${cucumber.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>net.masterthought</groupId>
+			<artifactId>cucumber-reporting</artifactId>
+			<version>0.0.24</version>
+		</dependency>
+		<dependency>
 				<groupId>@project.groupId@</groupId>
 				<artifactId>@project.artifactId@</artifactId>
 				<version>@project.version@</version>
@@ -47,7 +52,7 @@
 						</goals>
 						<configuration>
 							<glue>foo, bar</glue>
-							<useJUnitReRun>true</useJUnitReRun>
+							<JUnitRetryCount>1</JUnitRetryCount>
 						</configuration>
 					</execution>
 				</executions>
