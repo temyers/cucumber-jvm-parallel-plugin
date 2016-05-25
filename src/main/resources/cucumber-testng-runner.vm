@@ -3,7 +3,7 @@ import cucumber.api.testng.AbstractTestNGCucumberTests;
 
 @CucumberOptions(strict = $strict,
     features = {"classpath:$featureFile"},
-    format = {$reports, "pretty"},
+    plugin = {$reports, "pretty"},
     monochrome = ${monochrome},
     tags = {$tags},
     glue = { $glue })
