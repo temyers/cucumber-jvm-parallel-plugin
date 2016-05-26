@@ -201,12 +201,10 @@ public class CucumberITGenerator {
             } else if(extension.equals("junit")){
                 extension = "xml";
             }
-            //Remove Java extenstion
-            String reportFileName = outputFileName.replace(".java", "");
             
             sb.append(String.format("\"%s:%s/%s.%s\"", formatStr,
                     config.getCucumberOutputDir()
-                    .replace('\\', '/'), reportFileName, extension));
+                    .replace('\\', '/'), fileCounter, extension));
 
             if (i < formatStrs.length - 1) {
                 sb.append(", ");
