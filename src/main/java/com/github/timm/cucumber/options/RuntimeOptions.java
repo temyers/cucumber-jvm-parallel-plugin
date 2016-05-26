@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Copyright (c) 2008-2014 The Cucumber Organisation
- *
+ * <p/>
  * Fork of https://github.com/cucumber/cucumber-jvm/blob/master/core/src/main/java/cucumber/runtime/RuntimeOptions.java
  */
 public class RuntimeOptions {
@@ -22,7 +22,7 @@ public class RuntimeOptions {
 
     /**
      * Create a new instance from a string of options, for example:
-     *
+     * <p/>
      * <pre>"--name 'the fox' --plugin pretty --strict"</pre>
      *
      * @param argv the arguments
@@ -33,7 +33,7 @@ public class RuntimeOptions {
 
     /**
      * Create a new instance from a list of options, for example:
-     *
+     * <p/>
      * <pre>Arrays.asList("--name", "the fox", "--plugin", "pretty", "--strict");</pre>
      *
      * @param argv the arguments
@@ -61,20 +61,22 @@ public class RuntimeOptions {
             } else if (arg.equals("--plugin") || arg.equals("-p")) {
                 addPluginName(args.remove(0));
             } else if (arg.equals("--format") || arg.equals("-f")) {
-                System.err.println("WARNING: Cucumber-JVM's --format option is deprecated. Please use --plugin instead.");
+                System.err.println(
+                    "WARNING: Cucumber-JVM's --format option is deprecated. Please use --plugin instead.");
                 addPluginName(args.remove(0));
             } else if (arg.equals("--no-dry-run") || arg.equals("--dry-run") || arg.equals("-d")) {
                 dryRun = !arg.startsWith("--no-");
             } else if (arg.equals("--no-strict") || arg.equals("--strict") || arg.equals("-s")) {
                 strict = !arg.startsWith("--no-");
-            } else if (arg.equals("--no-monochrome") || arg.equals("--monochrome") || arg.equals("-m")) {
+            } else if (arg.equals("--no-monochrome") || arg.equals("--monochrome") || arg
+                .equals("-m")) {
                 monochrome = !arg.startsWith("--no-");
             } else {
                 // ignore
             }
         }
 
-        if (!parsedFilters.isEmpty() ) {
+        if (!parsedFilters.isEmpty()) {
             filters.clear();
             filters.addAll(parsedFilters);
         }

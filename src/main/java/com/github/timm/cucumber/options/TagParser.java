@@ -1,12 +1,12 @@
 package com.github.timm.cucumber.options;
 
-import static java.util.Arrays.asList;
-import static org.apache.commons.lang.StringUtils.join;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang.StringUtils.join;
 
 public class TagParser {
 
@@ -24,8 +24,7 @@ public class TagParser {
 
     }
 
-    public static List<List<String>> splitQuotedTagsIntoParts(
-            final String quotedTags) {
+    public static List<List<String>> splitQuotedTagsIntoParts(final String quotedTags) {
 
         final String TAG_GROUP = "(" + QUOTE + NOT_QUOTE_CHARS + QUOTE + ")";
         final Matcher matcher = Pattern.compile(TAG_GROUP).matcher(quotedTags);
