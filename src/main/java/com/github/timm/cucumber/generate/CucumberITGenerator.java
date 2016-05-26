@@ -196,9 +196,9 @@ public class CucumberITGenerator {
             String extension = formatStr;
             
             //Supported Report Types - https://cucumber.io/docs/reference#reports 
-            if(extension.equals("rerun")){
+            if(extension.equalsIgnoreCase("rerun")){
                 extension = "txt";
-            } else if(extension.equals("junit")){
+            } else if(extension.equalsIgnoreCase("junit")){
                 extension = "xml";
             }
             
