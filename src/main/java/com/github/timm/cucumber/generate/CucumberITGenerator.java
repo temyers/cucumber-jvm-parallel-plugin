@@ -184,9 +184,18 @@ public class CucumberITGenerator {
 
         for (int i = 0; i < formatStrs.length; i++) {
             final String formatStr = formatStrs[i].trim();
+            String extension = formatStr;
+            
+            //Supported Report Types - https://cucumber.io/docs/reference#reports 
+            if(extension.equalsIgnoreCase("rerun")){
+                extension = "txt";
+            } else if(extension.equalsIgnoreCase("junit")){
+                extension = "xml";
+            }
+            
             sb.append(String.format("\"%s:%s/%s.%s\"", formatStr,
                     config.getCucumberOutputDir()
-                    .replace('\\', '/'), fileCounter, formatStr));
+                    .replace('\\', '/'), fileCounter, extension));
 
             if (i < formatStrs.length - 1) {
                 sb.append(", ");
