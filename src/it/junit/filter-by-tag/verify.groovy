@@ -1,5 +1,6 @@
 import org.junit.Assert;
 import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
+import static org.hamcrest.Matchers.equalTo;
 
 File suite01 = new File( basedir, "target/generated-test-sources/cucumber/Parallel01IT.java" );
 File suite02 = new File( basedir, "target/generated-test-sources/cucumber/Parallel02IT.java" );
@@ -21,4 +22,4 @@ public class Parallel01IT {
 }"""
 
 Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected01))
-
+Assert.assertThat("false", equalTo("true"))
