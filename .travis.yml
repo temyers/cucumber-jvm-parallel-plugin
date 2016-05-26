@@ -1,4 +1,4 @@
 language: java
 
 script:
-  mvn post-integration-test -Prun-its
+  mvn verify -Prun-its
