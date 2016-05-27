@@ -1,11 +1,10 @@
 package com.github.timm.cucumber.generate;
 
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-
 import com.github.timm.cucumber.options.RuntimeOptions;
 import com.github.timm.cucumber.options.TagParser;
+import org.apache.commons.lang.StringUtils;
+
+import java.util.List;
 
 public class OverriddenCucumberOptionsParameters {
 
@@ -35,14 +34,12 @@ public class OverriddenCucumberOptionsParameters {
         return this;
     }
 
-    public OverriddenCucumberOptionsParameters setMonochrome(
-            final boolean monochrome) {
+    public OverriddenCucumberOptionsParameters setMonochrome(final boolean monochrome) {
         this.monochrome = monochrome;
         return this;
     }
 
-    public void overrideParametersWithCucumberOptions(
-            final String cucumberOptions) {
+    public void overrideParametersWithCucumberOptions(final String cucumberOptions) {
         if (cucumberOptions == null || cucumberOptions.isEmpty()) {
             return;
         }

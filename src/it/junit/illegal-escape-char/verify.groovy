@@ -1,12 +1,13 @@
-import org.junit.Assert;
-import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
+import org.junit.Assert
 
-File suite01 = new File( basedir, "target/generated-test-sources/cucumber/Parallel01IT.java" );
+import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace
+
+File suite01 = new File(basedir, "target/generated-test-sources/cucumber/Parallel01IT.java");
 
 assert suite01.isFile()
 
-String expected01=
-"""import org.junit.runner.RunWith;
+String expected01 =
+        """import org.junit.runner.RunWith;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;

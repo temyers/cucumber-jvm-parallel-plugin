@@ -9,6 +9,7 @@ import cucumber.api.junit.Cucumber;
     plugin = {$reports, "pretty"},
     monochrome = ${monochrome},
     tags = {$tags},
+    plugin = {"com.cucumber.listener.ExtentCucumberFormatter:"},
     glue = { $glue })
 public class $className {
 }
