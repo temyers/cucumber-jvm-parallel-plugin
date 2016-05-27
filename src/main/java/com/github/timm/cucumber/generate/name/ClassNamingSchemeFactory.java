@@ -29,7 +29,8 @@ public class ClassNamingSchemeFactory {
             return new PatternNamingScheme(namingPattern, counter, featureFileNamingScheme);
         } else {
             throw new MojoExecutionException(
-                "Error in configuration ; accepted value for tag 'namingScheme' are 'simple' or 'feature-title' or 'pattern'");
+                "Error in configuration ; accepted value for tag "
+                    + "'namingScheme' are 'simple' or 'feature-title' or 'pattern'");
         }
 
     }

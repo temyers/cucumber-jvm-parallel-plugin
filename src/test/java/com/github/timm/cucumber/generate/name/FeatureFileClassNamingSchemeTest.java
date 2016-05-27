@@ -1,13 +1,13 @@
 package com.github.timm.cucumber.generate.name;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 
 public class FeatureFileClassNamingSchemeTest {

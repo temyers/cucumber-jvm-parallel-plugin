@@ -188,13 +188,6 @@
             <property name="tokens" value="VARIABLE_DEF"/>
             <property name="allowSamelineMultipleAnnotations" value="true"/>
         </module>
-        <module name="NonEmptyAtclauseDescription"/>
-        <module name="AtclauseOrder">
-            <property name="tagOrder" value="@param, @return, @throws, @deprecated"/>
-            <property name="target"
-                      value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/>
-            <property name="severity" value="warning"/>
-        </module>
         <module name="MethodName">
             <property name="format"
                       value="^([IosUIAutomation]||[AndroidUIAutomator]||[AccessibilityId])||([a-z][a-z0-9][a-zA-Z0-9])*$"/>

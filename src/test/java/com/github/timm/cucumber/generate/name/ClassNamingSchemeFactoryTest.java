@@ -1,5 +1,9 @@
 package com.github.timm.cucumber.generate.name;
 
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -9,11 +13,8 @@ import org.junit.runners.Parameterized.Parameters;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-
-@RunWith(Parameterized.class) public class ClassNamingSchemeFactoryTest {
+@RunWith(Parameterized.class)
+public class ClassNamingSchemeFactoryTest {
 
     @Parameter(0) public String namingScheme;
     @Parameter(1) public String pattern;

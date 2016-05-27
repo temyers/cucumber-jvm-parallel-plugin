@@ -1,5 +1,7 @@
 package com.github.timm.cucumber.options;
 
+import static java.util.Arrays.asList;
+
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,9 +14,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import static java.util.Arrays.asList;
-
-@RunWith(Parameterized.class) public class TagParserShouldSplitQuotedTagsTest {
+@RunWith(Parameterized.class)
+public class TagParserShouldSplitQuotedTagsTest {
 
     @Parameter(0) public String sourceTags;
 

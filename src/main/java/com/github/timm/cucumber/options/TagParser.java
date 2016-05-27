@@ -1,12 +1,13 @@
 package com.github.timm.cucumber.options;
 
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang.StringUtils.join;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.util.Arrays.asList;
-import static org.apache.commons.lang.StringUtils.join;
 
 public class TagParser {
 
