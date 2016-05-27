@@ -6,7 +6,6 @@ import cucumber.api.testng.AbstractTestNGCucumberTests;
     plugin = {$reports, "pretty"},
     monochrome = ${monochrome},
     tags = {$tags},
-    plugin = {"com.cucumber.listener.ExtentCucumberFormatter:"},
     glue = { $glue })
 public class $className extends AbstractTestNGCucumberTests {
 }
