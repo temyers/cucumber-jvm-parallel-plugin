@@ -7,12 +7,11 @@ import java.util.regex.Pattern;
 
 /**
  * Copyright (c) 2008-2014 The Cucumber Organisation
- *
+ * <p/>
  * Copy of Cucumber Shellwords
  */
 public class Shellwords {
-    private static final Pattern SHELLWORDS_PATTERN = Pattern
-            .compile("[^\\s']+|'([^']*)'");
+    private static final Pattern SHELLWORDS_PATTERN = Pattern.compile("[^\\s']+|'([^']*)'");
 
     public static List<String> parse(final String cmdline) {
         final List<String> matchList = new ArrayList<String>();

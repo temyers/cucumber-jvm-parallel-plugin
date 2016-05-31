@@ -2,4 +2,4 @@
 Feature: Feature2
 
   Scenario: Non Matching tags are excluded
-    	Then this feature should should be excluded
+    Then this feature should should be excluded

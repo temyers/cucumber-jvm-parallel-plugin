@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class TagParser {
 
     private static final String QUOTE = Pattern.quote("\"");
@@ -24,8 +25,7 @@ public class TagParser {
 
     }
 
-    public static List<List<String>> splitQuotedTagsIntoParts(
-            final String quotedTags) {
+    public static List<List<String>> splitQuotedTagsIntoParts(final String quotedTags) {
 
         final String TAG_GROUP = "(" + QUOTE + NOT_QUOTE_CHARS + QUOTE + ")";
         final Matcher matcher = Pattern.compile(TAG_GROUP).matcher(quotedTags);
