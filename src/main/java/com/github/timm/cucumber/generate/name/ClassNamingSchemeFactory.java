@@ -9,7 +9,7 @@ public class ClassNamingSchemeFactory {
 
     public ClassNamingSchemeFactory(final Counter counter) {
         this.counter = counter;
-        featureFileNamingScheme = new FeatureFileClassNamingScheme(counter);
+        featureFileNamingScheme = new FeatureFileClassNamingScheme();
     }
 
     public ClassNamingScheme create(final String namingScheme, final String namingPattern)
