@@ -78,6 +78,7 @@ public class CucumberITGenerator {
                         w.close();
                     } catch (final IOException e) {
                         // ignore
+                        System.out.println("Failed to close file: " + outputFile);
                     }
                 }
             }

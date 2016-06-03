@@ -13,7 +13,6 @@ public class TagParser {
 
     private static final String QUOTE = Pattern.quote("\"");
     private static final String NOT_QUOTE_CHARS = "[^" + QUOTE + "]*?";
-    private static final String COMMA = ",";
 
     public static String parseTags(final List<String> tags) {
 

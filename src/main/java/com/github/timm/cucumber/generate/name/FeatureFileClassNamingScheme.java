@@ -9,12 +9,10 @@ import java.util.regex.Pattern;
 
 public class FeatureFileClassNamingScheme implements ClassNamingScheme {
 
-    private final Counter counter;
-
     private final Pattern startsWithDigit = Pattern.compile("^\\d.*");
 
-    public FeatureFileClassNamingScheme(final Counter counter) {
-        this.counter = counter;
+    public FeatureFileClassNamingScheme() {
+
     }
 
     public String generate(final String featureFileName) {
