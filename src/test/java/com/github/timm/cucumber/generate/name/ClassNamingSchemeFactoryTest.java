@@ -24,6 +24,10 @@ public class ClassNamingSchemeFactoryTest {
     Counter mockCounter = mock(Counter.class);
     ClassNamingSchemeFactory factory = new ClassNamingSchemeFactory(mockCounter);
 
+    /**
+     * Create params.
+     * @return
+     */
     @Parameters public static Collection<Object[]> params() {
         final Object[][] params =
             {{"simple", "", "Parallel01IT", 1}, {"simple", "", "Parallel02IT", 2},

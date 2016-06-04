@@ -160,6 +160,7 @@
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    <excludes>**/options/*.java</excludes>
                 </configuration>
                 <executions>
                     <execution>
@@ -247,6 +248,7 @@
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>false</failsOnError>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    <excludes>**/options/*.java</excludes>
                 </configuration>
                 <reportSets>
                     <reportSet>

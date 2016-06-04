@@ -25,6 +25,10 @@ public class PatternNamingSchemeTest {
     Counter mockCounter = mock(Counter.class);
     ClassNamingScheme mockFileNamingScheme = mock(ClassNamingScheme.class);
 
+    /**
+     * Create params.
+     * @return
+     */
     @Parameters public static Collection<Object[]> params() {
         final Object[][] params = {
 

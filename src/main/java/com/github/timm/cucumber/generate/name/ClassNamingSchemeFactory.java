@@ -2,16 +2,39 @@ package com.github.timm.cucumber.generate.name;
 
 import org.apache.maven.plugin.MojoExecutionException;
 
+/**
+ * Factory for {@link ClassNamingScheme}based on a name.
+ *
+ * <p>The following naming schemes are supported:</p>
+ * <ul>
+ *     <li>simple</li>
+ *     <li>feature-title</li>
+ *     <li>pattern</li>
+ * </ul>
+ */
 public class ClassNamingSchemeFactory {
 
     private final Counter counter;
     private final ClassNamingScheme featureFileNamingScheme;
 
+    /**
+     *
+     * @param counter Counter for adding 1-up numbers to generated class names.
+     */
     public ClassNamingSchemeFactory(final Counter counter) {
         this.counter = counter;
-        featureFileNamingScheme = new FeatureFileClassNamingScheme(counter);
+        featureFileNamingScheme = new FeatureFileClassNamingScheme();
     }
 
+    /**
+     * Create a {@link ClassNamingScheme} based on the given name.
+     * @param namingScheme The naming scheme to use
+     * @param namingPattern Only required if <code>pattern</code> naming scheme is used.
+     *                      The pattern to use when generating the classname.
+     *                      See {@link PatternNamingScheme} for more details.
+     * @return
+     * @throws MojoExecutionException
+     */
     public ClassNamingScheme create(final String namingScheme, final String namingPattern)
         throws MojoExecutionException {
 

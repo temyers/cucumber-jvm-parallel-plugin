@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class FeatureFileClassNamingSchemeTest {
 
-    ClassNamingScheme classNameGenerator = new FeatureFileClassNamingScheme(new OneUpCounter());
+    ClassNamingScheme classNameGenerator = new FeatureFileClassNamingScheme();
 
     @Test public void shouldGenerateExpectedTestClassNames() throws Exception {
 

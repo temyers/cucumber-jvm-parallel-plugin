@@ -30,7 +30,7 @@ import java.util.Collection;
 
 /**
  * Goal which generates a Cucumber JUnit runner for each Gherkin feature file in
- * your project
+ * your project.
  */
 @Mojo(name = "generateRunners", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
 public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorConfig {
@@ -46,11 +46,10 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
     /**
      * Comma separated list of containing the packages to use for the cucumber
-     * glue code
-     * <p/>
+     * glue code.
      * E.g. <code>my.package, my.second.package</code>
      *
-     * @see CucumberOptions.glue
+     * <P>see cucumber.api.CucumberOptions.glue</P>
      */
     @Parameter(property = "cucumber.glue", required = true) private String glue;
 
@@ -67,13 +66,13 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
         property = "cucumberOutputDir", required = true) private String cucumberOutputDir;
 
     /**
-     * Directory containing the feature files
+     * Directory containing the feature files.
      */
     @Parameter(defaultValue = "src/test/resources/features/",
         property = "featuresDir", required = true) private File featuresDirectory;
 
     /**
-     * @see CucumberOptions.strict
+     * see cucumber.api.CucumberOptions.strict
      */
     @Parameter(defaultValue = "true",
         property = "cucumber.strict", required = true) private boolean strict;
@@ -82,19 +81,19 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
      * Comma separated list of formats used for the output. Currently only html
      * and json formats are supported.
      *
-     * @see CucumberOptions.format
+     * <p>see cucumber.api.CucumberOptions.format</p>
      */
     @Parameter(defaultValue = "json", property = "cucumber.format",
         required = true) private String format;
 
     /**
-     * @see CucumberOptions.monochrome
+     * <p>see cucumber.api.CucumberOptions.monochrome</p>
      */
     @Parameter(defaultValue = "false", property = "cucumber.monochrome",
         required = true) private boolean monochrome;
 
     /**
-     * @see CucumberOptions.tags
+     * <p>see cucumber.api.CucumberOptions.tags</p>
      */
     @Parameter(defaultValue = "\"@complete\", \"@accepted\"",
         property = "cucumber.tags", required = true) private String tags;
@@ -111,7 +110,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
         property = "useTestNG", required = true) private boolean useTestNG;
 
     /**
-     * @see CucumberOptions
+     * see cucumber.api.CucumberOptions
      */
     @Parameter(property = "cucumber.options",
         required = false) private String cucumberOptions;
@@ -124,6 +123,10 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
     private CucumberITGenerator fileGenerator;
 
+    /**
+     * Called by Maven to run this mojo after parameters have been injected.
+     * @throws MojoExecutionException
+     */
     public void execute() throws MojoExecutionException {
 
         if (!featuresDirectory.exists()) {

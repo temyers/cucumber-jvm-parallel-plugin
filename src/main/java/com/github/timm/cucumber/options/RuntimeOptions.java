@@ -6,7 +6,7 @@ import java.util.List;
 
 
 /**
- * Copyright (c) 2008-2014 The Cucumber Organisation
+ * Copyright (c) 2008-2014 The Cucumber Organisation.
  * <p/>
  * Fork of https://github.com/cucumber/cucumber-jvm/blob/master/core/src/main/java/cucumber/runtime/RuntimeOptions.java
  */
