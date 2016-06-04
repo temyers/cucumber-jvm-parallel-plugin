@@ -154,7 +154,7 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <configLocation>doc/style/google-style.xml</configLocation>
+                    <configLocation>doc/style/style.xml</configLocation>
                     <encoding>UTF-8</encoding>
                     <linkXRef>false</linkXRef>
                     <consoleOutput>true</consoleOutput>
