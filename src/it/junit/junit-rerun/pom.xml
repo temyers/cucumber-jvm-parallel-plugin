@@ -52,7 +52,7 @@
 						</goals>
 						<configuration>
 							<glue>foo, bar</glue>
-							<JUnitRetryCount>1</JUnitRetryCount>
+							<retryCount>1</retryCount>
 						</configuration>
 					</execution>
 				</executions>

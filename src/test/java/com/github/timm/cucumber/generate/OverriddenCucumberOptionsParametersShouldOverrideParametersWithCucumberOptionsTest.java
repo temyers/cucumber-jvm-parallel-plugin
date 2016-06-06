@@ -1,10 +1,11 @@
 package com.github.timm.cucumber.generate;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 public class OverriddenCucumberOptionsParametersShouldOverrideParametersWithCucumberOptionsTest {
 
     private OverriddenCucumberOptionsParameters params;
@@ -13,21 +14,22 @@ public class OverriddenCucumberOptionsParametersShouldOverrideParametersWithCucu
     @Before
     public void setup() {
         params = new OverriddenCucumberOptionsParameters();
-        rerunParam= new OverriddenRerunOptionsParameters();
+        rerunParam = new OverriddenRerunOptionsParameters();
     }
 
     @Test
-    public void rerunTagIsOverriden(){
-        rerunParam.setJUnitRetryCount(5);
-        assertThat(rerunParam.getJUnitRetryCount(),equalTo(5));
+    public void rerunTagIsOverriden() {
+        rerunParam.setRetryCount(5);
+        assertThat(rerunParam.getRetryCount(), equalTo(5));
     }
+
     @Test
     public void tagsParameterIsOverridden() {
         params.setTags("\"@replaceMe\"");
 
         params.overrideParametersWithCucumberOptions("--tags @tag1 --tags @tag2");
 
-        assertThat(params.getTags(),equalTo("\"@tag1\",\"@tag2\""));
+        assertThat(params.getTags(), equalTo("\"@tag1\",\"@tag2\""));
     }
 
     @Test
@@ -35,7 +37,7 @@ public class OverriddenCucumberOptionsParametersShouldOverrideParametersWithCucu
         params.setGlue("a.b.c,d.e.f");
 
         params.overrideParametersWithCucumberOptions("--glue somewhere,somewhere.else");
-        assertThat(params.getGlue(),equalTo("somewhere,somewhere.else"));
+        assertThat(params.getGlue(), equalTo("somewhere,somewhere.else"));
     }
 
     @Test
@@ -43,7 +45,7 @@ public class OverriddenCucumberOptionsParametersShouldOverrideParametersWithCucu
         params.setStrict(false);
 
         params.overrideParametersWithCucumberOptions("--strict");
-        assertThat(params.isStrict(),equalTo(true));
+        assertThat(params.isStrict(), equalTo(true));
 
     }
 
@@ -52,7 +54,7 @@ public class OverriddenCucumberOptionsParametersShouldOverrideParametersWithCucu
         params.setStrict(true);
 
         params.overrideParametersWithCucumberOptions("--glue somewhere,somewhere.else");
-        assertThat(params.isStrict(),equalTo(true));
+        assertThat(params.isStrict(), equalTo(true));
     }
 
     @Test
@@ -60,21 +62,23 @@ public class OverriddenCucumberOptionsParametersShouldOverrideParametersWithCucu
 
         params.setStrict(false);
         params.overrideParametersWithCucumberOptions("--glue somewhere,somewhere.else");
-        assertThat(params.isStrict(),equalTo(false));
+        assertThat(params.isStrict(), equalTo(false));
     }
 
     @Test
     public void formatParameterIsOverridden() {
 
         params.setFormat("somethingElse");
-        params.overrideParametersWithCucumberOptions("--format html --plugin pretty --glue somewhere");
-        assertThat(params.getFormat(),equalTo("html,pretty"));
+        params.overrideParametersWithCucumberOptions(
+            "--format html --plugin pretty --glue somewhere");
+        assertThat(params.getFormat(), equalTo("html,pretty"));
     }
+
     @Test
     public void monochromeParameterIsOverridden() {
 
         params.setMonochrome(false);
         params.overrideParametersWithCucumberOptions("--monochrome");
-        assertThat(params.isMonochrome(),equalTo(true));
+        assertThat(params.isMonochrome(), equalTo(true));
     }
 }

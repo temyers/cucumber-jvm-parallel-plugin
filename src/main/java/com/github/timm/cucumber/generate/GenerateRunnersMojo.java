@@ -14,9 +14,9 @@ package com.github.timm.cucumber.generate;
  * the License.
  */
 
-import java.io.File;
-import java.util.Collection;
-
+import com.github.timm.cucumber.generate.name.ClassNamingScheme;
+import com.github.timm.cucumber.generate.name.ClassNamingSchemeFactory;
+import com.github.timm.cucumber.generate.name.OneUpCounter;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -25,15 +25,12 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
-import com.github.timm.cucumber.generate.name.ClassNamingScheme;
-import com.github.timm.cucumber.generate.name.ClassNamingSchemeFactory;
-import com.github.timm.cucumber.generate.name.OneUpCounter;
+import java.io.File;
+import java.util.Collection;
 
 /**
  * Goal which generates a Cucumber JUnit runner for each Gherkin feature file in
  * your project
- *
- *
  */
 @Mojo(name = "generateRunners", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
 public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorConfig {
@@ -51,7 +48,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     /**
      * Comma separated list of containing the packages to use for the cucumber
      * glue code
-     *
+     * <p/>
      * E.g. <code>my.package, my.second.package</code>
      *
      * @see CucumberOptions.glue
@@ -62,25 +59,29 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     /**
      * Location of the generated files.
      */
-    @Parameter(defaultValue = "${project.build.directory}/generated-test-sources/cucumber", property = "outputDir", required = true)
+    @Parameter(defaultValue = "${project.build.directory}/generated-test-sources/cucumber",
+        property = "outputDir", required = true)
     private File outputDirectory;
 
     /**
      * Directory where the cucumber report files shall be written.
      */
-    @Parameter(defaultValue = "target/cucumber-parallel", property = "cucumberOutputDir", required = true)
+    @Parameter(defaultValue = "target/cucumber-parallel",
+        property = "cucumberOutputDir", required = true)
     private String cucumberOutputDir;
 
     /**
      * Directory containing the feature files
      */
-    @Parameter(defaultValue = "src/test/resources/features/", property = "featuresDir", required = true)
+    @Parameter(defaultValue = "src/test/resources/features/",
+        property = "featuresDir", required = true)
     private File featuresDirectory;
 
     /**
      * @see CucumberOptions.strict
      */
-    @Parameter(defaultValue = "true", property = "cucumber.strict", required = true)
+    @Parameter(defaultValue = "true",
+        property = "cucumber.strict", required = true)
     private boolean strict;
 
     /**
@@ -89,79 +90,98 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
      *
      * @see CucumberOptions.format
      */
-    @Parameter(defaultValue = "json", property = "cucumber.format", required = true)
+    @Parameter(defaultValue = "json", property = "cucumber.format",
+        required = true)
     private String format;
 
     /**
      * @see CucumberOptions.monochrome
      */
-    @Parameter(defaultValue = "false", property = "cucumber.monochrome", required = true)
+    @Parameter(defaultValue = "false", property = "cucumber.monochrome",
+        required = true)
     private boolean monochrome;
 
     /**
      * @see CucumberOptions.tags
      */
-    @Parameter(defaultValue = "\"@complete\", \"@accepted\"", property = "cucumber.tags", required = true)
+    @Parameter(defaultValue = "\"@complete\", \"@accepted\"",
+        property = "cucumber.tags", required = true)
     private String tags;
 
-    @Parameter(defaultValue = "UTF-8", property = "project.build.sourceEncoding", readonly = true)
+    @Parameter(defaultValue = "UTF-8",
+        property = "project.build.sourceEncoding", readonly = true)
     private String encoding;
 
-    @Parameter(defaultValue = "false", property = "cucumber.tags.filterOutput", required = true)
-    private boolean filterFeaturesByTags;
+    @Parameter(defaultValue = "false",
+        property = "cucumber.tags.filterOutput", required = true)
+    private boolean
+        filterFeaturesByTags;
 
 
-    @Parameter(defaultValue = "false", property = "useTestNG", required = true)
+    @Parameter(defaultValue = "false",
+        property = "useTestNG", required = true)
     private boolean useTestNG;
 
     /**
      * @see CucumberOptions
      */
-    @Parameter(property = "cucumber.options", required = false)
+    @Parameter(property = "cucumber.options",
+        required = false)
     private String cucumberOptions;
 
-    @Parameter(defaultValue = "simple", property = "namingScheme", required = false)
+    @Parameter(defaultValue = "simple",
+        property = "namingScheme", required = false)
     private String namingScheme;
-    @Parameter(property = "namingPattern", required = false)
+
+    @Parameter(property = "namingPattern",
+        required = false)
     private String namingPattern;
 
     /**
-     * Max retry count is 5. In order to avoid Flaky test exeution. 
+     * Max retry count is 5. In order to avoid Flaky test exeution.
      */
-    @Parameter(property = "JUnitRetryCount",defaultValue= "0", required = true)
-    private int JUnitRetryCount;
+    @Parameter(property = "retryCount", defaultValue = "0", required = true)
+    private int retryCount;
 
-    private boolean useJUnitReRun;
-    private CucumberITGenerator fileGenerator;
+    private boolean useReRun;
+    private CucumberItGenerator fileGenerator;
 
     public void execute() throws MojoExecutionException {
 
         if (!featuresDirectory.exists()) {
-            throw new MojoExecutionException(
-                    "Features directory does not exist");
+            throw new MojoExecutionException("Features directory does not exist");
         }
-        if(JUnitRetryCount>0){
-            useJUnitReRun=true;
+        if (retryCount > 0) {
+            useReRun = true;
         }
 
-        final Collection<File> featureFiles = FileUtils.listFiles(
-                featuresDirectory, new String[] { "feature" }, true);
+        final Collection<File> featureFiles =
+            FileUtils.listFiles(featuresDirectory, new String[] {"feature"}, true);
 
         createOutputDirIfRequired();
 
-        final OverriddenCucumberOptionsParameters overriddenParameters = overrideParametersWithCucumberOptions();
-        final OverriddenRerunOptionsParameters rerunOptionsParameters = overriddenRerunOptionsParameters();
-        
-        final ClassNamingSchemeFactory factory = new ClassNamingSchemeFactory(new OneUpCounter());
-        final ClassNamingScheme classNamingScheme = factory.create(namingScheme,namingPattern);
 
-        fileGenerator = new CucumberITGenerator(this, overriddenParameters, classNamingScheme,rerunOptionsParameters);
+        final OverriddenCucumberOptionsParameters overriddenParameters =
+            overrideParametersWithCucumberOptions();
 
-        fileGenerator.generateCucumberITFiles(outputDirectory, featureFiles);
+        final OverriddenRerunOptionsParameters rerunOptionsParameters =
+            overriddenRerunOptionsParameters();
 
-        getLog().info(
-                "Adding " + outputDirectory.getAbsolutePath()
-                + " to test-compile source root");
+        final ClassNamingSchemeFactory factory =
+            new ClassNamingSchemeFactory(new OneUpCounter());
+
+        final ClassNamingScheme classNamingScheme =
+            factory.create(namingScheme, namingPattern);
+
+        fileGenerator = new CucumberItGenerator(this,
+            overriddenParameters,
+            classNamingScheme,
+            rerunOptionsParameters);
+
+        fileGenerator.generateCucumberItFiles(outputDirectory, featureFiles);
+
+        getLog()
+            .info("Adding " + outputDirectory.getAbsolutePath() + " to test-compile source root");
 
         project.addTestCompileSourceRoot(outputDirectory.getAbsolutePath());
     }
@@ -175,29 +195,33 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     /**
      * Overrides the parameters with cucumber.options if they have been
      * specified. Currently only tags are supported.
+     *
      * @return
      */
     private OverriddenCucumberOptionsParameters overrideParametersWithCucumberOptions() {
 
-        final OverriddenCucumberOptionsParameters overriddenParameters = new OverriddenCucumberOptionsParameters();
-        overriddenParameters.setTags(this.tags).setGlue(this.glue)
-        .setStrict(this.strict).setMonochrome(this.monochrome);
-        if(useJUnitReRun){
+        final OverriddenCucumberOptionsParameters overriddenParameters =
+            new OverriddenCucumberOptionsParameters();
+        overriddenParameters.setTags(this.tags).setGlue(this.glue).setStrict(this.strict)
+            .setFormat(this.format).setMonochrome(this.monochrome);
+        if (useReRun) {
             overriddenParameters.setFormat("json,html,rerun");
-        }else{
+        } else {
             overriddenParameters.setFormat(this.format);
         }
+
         overriddenParameters.overrideParametersWithCucumberOptions(cucumberOptions);
 
         return overriddenParameters;
 
     }
-    
+
     private OverriddenRerunOptionsParameters overriddenRerunOptionsParameters() {
-    	final OverriddenRerunOptionsParameters rerunOptionsParameters = new OverriddenRerunOptionsParameters();
-    	rerunOptionsParameters.setJUnitRetryCount(this.JUnitRetryCount);
-		return rerunOptionsParameters;
-	}
+        final OverriddenRerunOptionsParameters rerunOptionsParams =
+            new OverriddenRerunOptionsParameters();
+        rerunOptionsParams.setRetryCount(this.retryCount);
+        return rerunOptionsParams;
+    }
 
     public boolean filterFeaturesByTags() {
         return filterFeaturesByTags;
@@ -226,9 +250,9 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     public String getNamingPattern() {
         return namingPattern;
     }
-    
-    public boolean useJUnitReRun(){
-    	return useJUnitReRun;
+
+    public boolean useReRun() {
+        return useReRun;
     }
 
 

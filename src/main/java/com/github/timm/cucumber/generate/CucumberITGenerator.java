@@ -17,27 +17,28 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
-public class CucumberITGenerator {
+public class CucumberItGenerator {
 
     private final FileGeneratorConfig config;
     private final OverriddenCucumberOptionsParameters overriddenParameters;
     private final OverriddenRerunOptionsParameters overriddenRerunOptionsParameters;
+    private final ClassNamingScheme classNamingScheme;
     int fileCounter = 1;
     private String featureFileLocation;
     private Template velocityTemplate;
     private String outputFileName;
-    private final ClassNamingScheme classNamingScheme;
     private String htmlFormat;
     private String jsonFormat;
     private String rerunFormat;
 
-
-
-    public CucumberITGenerator(final FileGeneratorConfig config, final OverriddenCucumberOptionsParameters overriddenParameters, final ClassNamingScheme classNamingScheme, final OverriddenRerunOptionsParameters overriddenRerunOptionsParameters) {
+    public CucumberItGenerator(final FileGeneratorConfig config,
+                               final OverriddenCucumberOptionsParameters overriddenParameters,
+                               final ClassNamingScheme classNamingScheme,
+                               final OverriddenRerunOptionsParameters overriddenRerunOptionsPrms) {
         this.config = config;
         this.overriddenParameters = overriddenParameters;
         this.classNamingScheme = classNamingScheme;
-        this.overriddenRerunOptionsParameters= overriddenRerunOptionsParameters;
+        this.overriddenRerunOptionsParameters = overriddenRerunOptionsPrms;
         initTemplate();
     }
 
@@ -45,23 +46,24 @@ public class CucumberITGenerator {
         final Properties props = new Properties();
         props.put("resource.loader", "class");
         props.put("class.resource.loader.class",
-                "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+            "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
         final VelocityEngine engine = new VelocityEngine(props);
         engine.init();
-        if (config.useTestNG()){
+
+        if (config.useTestNG()) {
             velocityTemplate = engine.getTemplate("cucumber-testng-runner.vm",
-                    config.getEncoding());
-        } else if (config.useJUnitReRun()){
-        	 velocityTemplate = engine.getTemplate("cucumber-junit-re-runner.vm",
-                     config.getEncoding());
+                config.getEncoding());
+        } else if (config.useReRun()) {
+            velocityTemplate = engine.getTemplate("cucumber-junit-re-runner.vm",
+                config.getEncoding());
         } else {
             velocityTemplate = engine.getTemplate("cucumber-junit-runner.vm",
-                    config.getEncoding());
+                config.getEncoding());
         }
     }
 
-    void generateCucumberITFiles(final File outputDirectory, final Collection<File> featureFiles)
-            throws MojoExecutionException {
+    void generateCucumberItFiles(final File outputDirectory, final Collection<File> featureFiles)
+        throws MojoExecutionException {
         for (final File file : featureFiles) {
 
             if (shouldSkipFile(file)) {
@@ -72,20 +74,20 @@ public class CucumberITGenerator {
 
             setFeatureFileLocation(file);
 
-            final File outputFile = new File(outputDirectory, outputFileName+".java");
-            FileWriter w = null;
+            final File outputFile = new File(outputDirectory, outputFileName + ".java");
+            FileWriter writer = null;
             try {
-                w = new FileWriter(outputFile);
-                writeContentFromTemplate(w);
-            } catch (final IOException e) {
-                throw new MojoExecutionException("Error creating file "
-                        + outputFile, e);
+                writer = new FileWriter(outputFile);
+                writeContentFromTemplate(writer);
+            } catch (final IOException exception) {
+                throw new MojoExecutionException("Error creating file " + outputFile, exception);
             } finally {
-                if (w != null) {
+                if (writer != null) {
                     try {
-                        w.close();
-                    } catch (final IOException e) {
+                        writer.close();
+                    } catch (final IOException exception) {
                         // ignore
+                        System.out.println("Failed to close file: " + outputFile);
                     }
                 }
             }
@@ -96,6 +98,7 @@ public class CucumberITGenerator {
 
     private boolean shouldSkipFile(final File file) {
         if (config.filterFeaturesByTags()) {
+
             try {
                 final String fileContents = FileUtils.readFileToString(file);
 
@@ -104,8 +107,8 @@ public class CucumberITGenerator {
                 }
             } catch (final IOException e) {
                 config.getLog().info(
-                        "Failed to read contents of " + file.getPath()
-                        + ". Parallel Test shall be created.");
+                    "Failed to read contents of " + file.getPath()
+                    + ". Parallel Test shall be created.");
             }
         }
         return false;
@@ -114,7 +117,7 @@ public class CucumberITGenerator {
     private boolean fileContainsMatchingTags(final String fileContents) {
 
         final List<List<String>> tagGroupsAnded = TagParser
-                .splitQuotedTagsIntoParts(overriddenParameters.getTags());
+            .splitQuotedTagsIntoParts(overriddenParameters.getTags());
 
         // Tag groups are and'd together
         for (final List<String> tagGroup : tagGroupsAnded) {
@@ -127,8 +130,7 @@ public class CucumberITGenerator {
         return true;
     }
 
-    private boolean fileContainsAnyTags(final String fileContents,
-            final List<String> tags) {
+    private boolean fileContainsAnyTags(final String fileContents, final List<String> tags) {
 
         for (final String tag : tags) {
 
@@ -149,21 +151,17 @@ public class CucumberITGenerator {
     }
 
     /**
-     * Sets the feature file location based on the given file. The full file
-     * path is trimmed to only include the featuresDirectory. E.g.
-     * /myproject/src/test/resources/features/feature1.feature will be saved as
-     * features/feature1.feature
+     * Sets the feature file location based on the given file. The full file path is trimmed to only
+     * include the featuresDirectory. E.g. /myproject/src/test/resources/features/feature1.feature
+     * will be saved as features/feature1.feature
      *
-     * @param file
-     *            The feature file
+     * @param file The feature file
      */
     private void setFeatureFileLocation(final File file) {
         final File featuresDirectory = config.getFeaturesDirectory();
-        featureFileLocation = file
-                .getPath()
-                .replace(featuresDirectory.getPath(),
-                        featuresDirectory.getName())
-                        .replace(File.separatorChar, '/');
+        featureFileLocation = file.getPath()
+            .replace(featuresDirectory.getPath(), featuresDirectory.getName())
+            .replace(File.separatorChar, '/');
     }
 
     private void writeContentFromTemplate(final Writer writer) {
@@ -175,14 +173,18 @@ public class CucumberITGenerator {
         context.put("tags", overriddenParameters.getTags());
         context.put("monochrome", overriddenParameters.isMonochrome());
         context.put("cucumberOutputDir", config.getCucumberOutputDir());
-        if(config.useJUnitReRun()){
+        if (config.useReRun()) {
             context.put("glue", overriddenParameters.getGlue());
-        }else {
+        } else {
             context.put("glue", quoteGlueStrings());
         }
         context.put("className", FilenameUtils.removeExtension(outputFileName));
-        context.put("outPutPath",config.getCucumberOutputDir().replace('\\', '/')+"/"+FilenameUtils.removeExtension(outputFileName)+"/"+FilenameUtils.removeExtension(outputFileName));
-        context.put("retryCount",overriddenRerunOptionsParameters.getJUnitRetryCount());
+        context.put(
+            "outPutPath",
+            config.getCucumberOutputDir().replace('\\', '/') + "/"
+                + FilenameUtils.removeExtension(outputFileName) + "/"
+                + FilenameUtils.removeExtension(outputFileName));
+        context.put("retryCount", overriddenRerunOptionsParameters.getRetryCount());
         context.put("htmlFormat", this.htmlFormat);
         context.put("jsonFormat", this.jsonFormat);
         context.put("rerunFormat", this.rerunFormat);
@@ -199,17 +201,45 @@ public class CucumberITGenerator {
 
         for (int i = 0; i < formatStrs.length; i++) {
             final String formatStr = formatStrs[i].trim();
-            if(config.useJUnitReRun()) {
-                sb.append(String.format("\"%s:%s/%s/%s.%s\"", formatStr, config.getCucumberOutputDir().replace('\\', '/'), FilenameUtils.removeExtension(outputFileName), FilenameUtils.removeExtension(outputFileName), formatStr));
-                if (formatStr.equalsIgnoreCase("html"))
-                    htmlFormat = String.format("\"%s:%s/%s/%s.%s\"", formatStr, config.getCucumberOutputDir().replace('\\', '/'), FilenameUtils.removeExtension(outputFileName), FilenameUtils.removeExtension(outputFileName), formatStr);
-                if (formatStr.equalsIgnoreCase("json"))
-                    jsonFormat = String.format("\"%s:%s/%s/%s.%s\"", formatStr, config.getCucumberOutputDir().replace('\\', '/'), FilenameUtils.removeExtension(outputFileName), FilenameUtils.removeExtension(outputFileName), formatStr);
-                if (formatStr.equalsIgnoreCase("rerun"))
-                    rerunFormat = String.format("\"%s:%s/%s/%s.%s\"", formatStr, config.getCucumberOutputDir().replace('\\', '/'), FilenameUtils.removeExtension(outputFileName), FilenameUtils.removeExtension(outputFileName), formatStr);
 
-            }else{
-                sb.append(String.format("\"%s:%s/%s.%s\"", formatStr,config.getCucumberOutputDir().replace('\\', '/'), fileCounter, formatStr));
+            if (config.useReRun()) {
+                sb.append(String.format("\"%s:%s/%s/%s.%s\"",
+                    formatStr,
+                    config.getCucumberOutputDir().replace('\\', '/'),
+                    FilenameUtils.removeExtension(outputFileName),
+                    FilenameUtils.removeExtension(outputFileName),
+                    formatStr));
+                if (formatStr.equalsIgnoreCase("html")) {
+                    htmlFormat = String.format("\"%s:%s/%s/%s.%s\"",
+                        formatStr,
+                        config.getCucumberOutputDir().replace('\\', '/'),
+                        FilenameUtils.removeExtension(outputFileName),
+                        FilenameUtils.removeExtension(outputFileName),
+                        formatStr);
+                }
+                if (formatStr.equalsIgnoreCase("json")) {
+                    jsonFormat = String.format("\"%s:%s/%s/%s.%s\"",
+                        formatStr,
+                        config.getCucumberOutputDir().replace('\\', '/'),
+                        FilenameUtils.removeExtension(outputFileName),
+                        FilenameUtils.removeExtension(outputFileName),
+                        formatStr);
+                }
+                if (formatStr.equalsIgnoreCase("rerun")) {
+                    rerunFormat = String.format("\"%s:%s/%s/%s.%s\"",
+                        formatStr,
+                        config.getCucumberOutputDir().replace('\\', '/'),
+                        FilenameUtils.removeExtension(outputFileName),
+                        FilenameUtils.removeExtension(outputFileName),
+                        "txt");
+                }
+
+            } else {
+                sb.append(String.format("\"%s:%s/%s.%s\"",
+                    formatStr,
+                    config.getCucumberOutputDir().replace('\\', '/'),
+                    fileCounter,
+                    formatStr));
             }
             if (i < formatStrs.length - 1) {
                 sb.append(", ");
@@ -219,7 +249,7 @@ public class CucumberITGenerator {
     }
 
     /**
-     * Wraps each package in quotes for use in the template
+     * Wraps each package in quotes for use in the template.
      */
     private String quoteGlueStrings() {
         final String[] packageStrs = overriddenParameters.getGlue().split(",");
