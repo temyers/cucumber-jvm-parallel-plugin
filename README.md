@@ -59,10 +59,8 @@ Add the following to your POM file:
          <namingScheme>simple</namingScheme>
          <!-- The class naming pattern to use.  Only required/used if naming scheme is 'pattern'.-->
          <namingPattern>Parallel{c}IT</namingPattern>
-         <!-- Generate JUnitReRun runners instead of JUnit and TestNG single runner. --> 
-         <useJUnitReRun>true</useJUnitReRun>
          <!-- It is meaningless to keep reruning without looking for root cause of the failure. Test case/features/scenarios won't pass magically so you can use max 5 rerun. -->
-			   <retryCount>2</retryCount>
+			   <JUnitRetryCount>0</JUnitRetryCount>
       </configuration>
     </execution>
   </executions>
