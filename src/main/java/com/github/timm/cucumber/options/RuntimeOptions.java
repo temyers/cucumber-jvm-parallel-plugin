@@ -1,8 +1,14 @@
 package com.github.timm.cucumber.options;
 
+import cucumber.api.SnippetType;
+import cucumber.runtime.CucumberException;
+import cucumber.runtime.model.PathWithLines;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 /**
@@ -19,6 +25,8 @@ public class RuntimeOptions {
     private boolean dryRun;
     private boolean strict = false;
     private boolean monochrome = false;
+    private final List<String> featurePaths = new ArrayList<String>();
+    private SnippetType snippetType;
 
     /**
      * Create a new instance from a string of options, for example:
@@ -46,9 +54,9 @@ public class RuntimeOptions {
     }
 
     private void parse(final List<String> args) {
-        final List<String> parsedFilters = new ArrayList<String>();
-        //        final List<String> parsedFeaturePaths = new ArrayList<String>();
-        final List<String> parsedGlue = new ArrayList<String>();
+        final List parsedFilters = new ArrayList<String>();
+        final List parsedFeaturePaths = new ArrayList<String>();
+        final List parsedGlue = new ArrayList<String>();
 
         while (!args.isEmpty()) {
             final String arg = args.remove(0).trim();
@@ -72,8 +80,25 @@ public class RuntimeOptions {
             } else if (arg.equals("--no-monochrome") || arg.equals("--monochrome") || arg
                 .equals("-m")) {
                 monochrome = !arg.startsWith("--no-");
+            } else if (arg.equals("--snippets")) {
+                this.snippetType = SnippetType.fromString(args.remove(0));
+            } else if (!arg.equals("--name") && !arg.equals("-n")) {
+                if (arg.startsWith("-")) {
+                   // ignore
+                }
+                parsedFeaturePaths.add(arg);
             } else {
-                // ignore
+                Pattern patternFilter = Pattern.compile(args.remove(0));
+                parsedFilters.add(patternFilter);
+            }
+        }
+
+        if (!parsedFilters.isEmpty() || this.haveLineFilters(parsedFeaturePaths)) {
+            this.filters.clear();
+            this.filters.addAll(parsedFilters);
+            System.out.println(parsedFilters.toString());
+            if (parsedFeaturePaths.isEmpty() && !this.featurePaths.isEmpty()) {
+                this.stripLinesFromFeaturePaths(this.featurePaths);
             }
         }
 
@@ -115,4 +140,35 @@ public class RuntimeOptions {
         return pluginNames;
     }
 
+    public List<String> getFeaturePaths() {
+        return featurePaths;
+    }
+
+    private void stripLinesFromFeaturePaths(List<String> featurePaths) {
+        ArrayList newPaths = new ArrayList();
+        Iterator var3 = featurePaths.iterator();
+
+        while (var3.hasNext()) {
+            String pathName = (String) var3.next();
+            newPaths.add(PathWithLines.stripLineFilters(pathName));
+        }
+
+        featurePaths.clear();
+        featurePaths.addAll(newPaths);
+    }
+
+    private boolean haveLineFilters(List<String> parsedFeaturePaths) {
+        Iterator var2 = parsedFeaturePaths.iterator();
+
+        String pathName;
+        do {
+            if (!var2.hasNext()) {
+                return false;
+            }
+
+            pathName = (String) var2.next();
+        } while (!pathName.startsWith("@") && !PathWithLines.hasLineFilters(pathName));
+
+        return true;
+    }
 }

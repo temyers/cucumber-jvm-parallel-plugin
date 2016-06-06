@@ -17,6 +17,7 @@ package com.github.timm.cucumber.generate;
 import com.github.timm.cucumber.generate.name.ClassNamingScheme;
 import com.github.timm.cucumber.generate.name.ClassNamingSchemeFactory;
 import com.github.timm.cucumber.generate.name.OneUpCounter;
+import com.github.timm.cucumber.options.RuntimeOptions;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -26,6 +27,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -147,7 +149,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     private CucumberItGenerator fileGenerator;
 
     public void execute() throws MojoExecutionException {
-
+        RuntimeOptions runtimeOptions = new RuntimeOptions(cucumberOptions);
         if (!featuresDirectory.exists()) {
             throw new MojoExecutionException("Features directory does not exist");
         }
@@ -155,8 +157,15 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
             useReRun = true;
         }
 
-        final Collection<File> featureFiles =
-            FileUtils.listFiles(featuresDirectory, new String[] {"feature"}, true);
+        Collection<File> featureFiles = new ArrayList<File>();
+        if (runtimeOptions.getFeaturePaths().size() != 0) {
+            for (String f : runtimeOptions.getFeaturePaths()) {
+                System.out.println("Features :- " + f);
+                featureFiles.add(new File(f));
+            }
+        } else {
+            featureFiles = FileUtils.listFiles(featuresDirectory, new String[] {"feature"}, true);
+        }
 
         createOutputDirIfRequired();
 
@@ -178,7 +187,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
             classNamingScheme,
             rerunOptionsParameters);
 
-        fileGenerator.generateCucumberItFiles(outputDirectory, featureFiles);
+        fileGenerator.generateCucumberItFiles(outputDirectory, featureFiles, runtimeOptions);
 
         getLog()
             .info("Adding " + outputDirectory.getAbsolutePath() + " to test-compile source root");

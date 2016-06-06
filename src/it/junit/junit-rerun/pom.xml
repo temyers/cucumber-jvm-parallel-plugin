@@ -53,6 +53,7 @@
 						<configuration>
 							<glue>foo, bar</glue>
 							<retryCount>1</retryCount>
+							<namingScheme>tag</namingScheme>
 						</configuration>
 					</execution>
 				</executions>

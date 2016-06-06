@@ -1,6 +1,8 @@
 package com.github.timm.cucumber.generate;
 
 import com.github.timm.cucumber.generate.name.ClassNamingScheme;
+import com.github.timm.cucumber.generate.name.TagNamingScheme;
+import com.github.timm.cucumber.options.RuntimeOptions;
 import com.github.timm.cucumber.options.TagParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -13,6 +15,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
@@ -62,37 +65,87 @@ public class CucumberItGenerator {
         }
     }
 
-    void generateCucumberItFiles(final File outputDirectory, final Collection<File> featureFiles)
+    void generateCucumberItFiles(final File outputDirectory,
+                                 final Collection<File> featureFiles,
+                                 final RuntimeOptions runtimeOptions)
         throws MojoExecutionException {
-        for (final File file : featureFiles) {
-
-            if (shouldSkipFile(file)) {
-                continue;
+        if (config.getNamingScheme().equalsIgnoreCase("tag")) {
+            List<String> tags = runtimeOptions.getFilters();
+            List<String> parsedTags = new ArrayList<String>();
+            for (final String tag : tags) {
+                String[] allTags = tag.split(",");
+                for (String t : allTags) {
+                    parsedTags.add(t);
+                }
             }
-
-            outputFileName = classNamingScheme.generate(file.getName());
-
-            setFeatureFileLocation(file);
-
-            final File outputFile = new File(outputDirectory, outputFileName + ".java");
-            FileWriter writer = null;
-            try {
-                writer = new FileWriter(outputFile);
-                writeContentFromTemplate(writer);
-            } catch (final IOException exception) {
-                throw new MojoExecutionException("Error creating file " + outputFile, exception);
-            } finally {
-                if (writer != null) {
+            for (final String tag : parsedTags) {
+                for (final File file : featureFiles) {
+                    String fileContents = null;
                     try {
-                        writer.close();
-                    } catch (final IOException exception) {
-                        // ignore
-                        System.out.println("Failed to close file: " + outputFile);
+                        final File featuresDirectory = config.getFeaturesDirectory();
+                        String FileLocation = featuresDirectory.getPath().replace("features", "")
+                            + file.getPath().replace(File.separatorChar, '/');
+                        fileContents = FileUtils.readFileToString(new File(FileLocation));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (fileContainsMatchingTags(fileContents, tag)) {
+                        System.out.println("File " + file.getName() + " contains tag " + tag);
+                        outputFileName = new TagNamingScheme().generate(tag);
+                        final File outputFile = new File(outputDirectory, outputFileName);
+                        setFeatureFileLocation(file);
+                        FileWriter writer = null;
+                        try {
+                            writer = new FileWriter(outputFile);
+                            writeContentFromTemplate(writer, tag);
+                        } catch (final IOException e) {
+                            throw new MojoExecutionException("Error creating file "
+                                + outputFile, e);
+                        } finally {
+                            if (writer != null) {
+                                try {
+                                    writer.close();
+                                } catch (final IOException e) {
+                                    // ignore
+                                }
+                            }
+                        }
+                        fileCounter++;
                     }
                 }
             }
+        } else {
+            for (final File file : featureFiles) {
 
-            fileCounter++;
+                if (shouldSkipFile(file)) {
+                    continue;
+                }
+
+                outputFileName = classNamingScheme.generate(file.getName());
+
+                setFeatureFileLocation(file);
+
+                final File outputFile = new File(outputDirectory, outputFileName + ".java");
+                FileWriter writer = null;
+                try {
+                    writer = new FileWriter(outputFile);
+                    writeContentFromTemplate(writer);
+                } catch (final IOException exception) {
+                    throw new MojoExecutionException("Error creating file "
+                        + outputFile, exception);
+                } finally {
+                    if (writer != null) {
+                        try {
+                            writer.close();
+                        } catch (final IOException exception) {
+                            // ignore
+                            System.out.println("Failed to close file: " + outputFile);
+                        }
+                    }
+                }
+
+                fileCounter++;
+            }
         }
     }
 
@@ -108,7 +161,7 @@ public class CucumberItGenerator {
             } catch (final IOException e) {
                 config.getLog().info(
                     "Failed to read contents of " + file.getPath()
-                    + ". Parallel Test shall be created.");
+                        + ". Parallel Test shall be created.");
             }
         }
         return false;
@@ -129,6 +182,15 @@ public class CucumberItGenerator {
 
         return true;
     }
+
+    private boolean fileContainsMatchingTags(final String fileContents, String tag) {
+
+        if (fileContents.contains(tag)) {
+            return true;
+        }
+        return false;
+    }
+
 
     private boolean fileContainsAnyTags(final String fileContents, final List<String> tags) {
 
@@ -171,6 +233,33 @@ public class CucumberItGenerator {
         context.put("featureFile", featureFileLocation);
         context.put("reports", createFormatStrings());
         context.put("tags", overriddenParameters.getTags());
+        context.put("monochrome", overriddenParameters.isMonochrome());
+        context.put("cucumberOutputDir", config.getCucumberOutputDir());
+        if (config.useReRun()) {
+            context.put("glue", overriddenParameters.getGlue());
+        } else {
+            context.put("glue", quoteGlueStrings());
+        }
+        context.put("className", FilenameUtils.removeExtension(outputFileName));
+        context.put(
+            "outPutPath",
+            config.getCucumberOutputDir().replace('\\', '/') + "/"
+                + FilenameUtils.removeExtension(outputFileName) + "/"
+                + FilenameUtils.removeExtension(outputFileName));
+        context.put("retryCount", overriddenRerunOptionsParameters.getRetryCount());
+        context.put("htmlFormat", this.htmlFormat);
+        context.put("jsonFormat", this.jsonFormat);
+        context.put("rerunFormat", this.rerunFormat);
+        velocityTemplate.merge(context, writer);
+    }
+
+    private void writeContentFromTemplate(final Writer writer, final String tag) {
+
+        final VelocityContext context = new VelocityContext();
+        context.put("strict", overriddenParameters.isStrict());
+        context.put("featureFile", featureFileLocation);
+        context.put("reports", createFormatStrings());
+        context.put("tags", "\"" + tag + "\"");
         context.put("monochrome", overriddenParameters.isMonochrome());
         context.put("cucumberOutputDir", config.getCucumberOutputDir());
         if (config.useReRun()) {
