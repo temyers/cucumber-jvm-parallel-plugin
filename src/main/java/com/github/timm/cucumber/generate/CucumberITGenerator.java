@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Generates Cucumber runner files using configuration from FileGeneratorConfig containing
- * parameters passed into the Maven Plugin configuration.
+ * Generates Cucumber runner files using configuration from FileGeneratorConfig containing parameters passed into the
+ * Maven Plugin configuration.
  */
 public class CucumberITGenerator {
 
@@ -34,8 +34,7 @@ public class CucumberITGenerator {
 
     /**
      * @param config               The configuration parameters passed to the Maven Mojo
-     * @param overriddenParameters Parameters overridden from Cucumber options VM parameter
-     *                             (-Dcucumber.options)
+     * @param overriddenParameters Parameters overridden from Cucumber options VM parameter (-Dcucumber.options)
      * @param classNamingScheme    The naming scheme to use for the generated class files
      */
     public CucumberITGenerator(final FileGeneratorConfig config,
@@ -149,9 +148,8 @@ public class CucumberITGenerator {
     }
 
     /**
-     * Sets the feature file location based on the given file. The full file
-     * path is trimmed to only include the featuresDirectory. E.g.
-     * /myproject/src/test/resources/features/feature1.feature will be saved as
+     * Sets the feature file location based on the given file. The full file path is trimmed to only include the
+     * featuresDirectory. E.g. /myproject/src/test/resources/features/feature1.feature will be saved as
      * features/feature1.feature
      *
      * @param file The feature file

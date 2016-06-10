@@ -29,8 +29,7 @@ import java.io.File;
 import java.util.Collection;
 
 /**
- * Goal which generates a Cucumber JUnit runner for each Gherkin feature file in
- * your project.
+ * Goal which generates a Cucumber JUnit runner for each Gherkin feature file in your project.
  */
 @Mojo(name = "generateRunners", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES)
 public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorConfig {
@@ -42,90 +41,102 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
      * @required
      * @readonly
      */
-    @Parameter(property = "project", readonly = true, required = true) private MavenProject project;
+    @Parameter(property = "project", readonly = true, required = true)
+    private MavenProject project;
 
     /**
-     * Comma separated list of containing the packages to use for the cucumber
-     * glue code.
-     * E.g. <code>my.package, my.second.package</code>
+     * Comma separated list of containing the packages to use for the cucumber glue code. E.g. <code>my.package,
+     * my.second.package</code>
      *
      * <P>see cucumber.api.CucumberOptions.glue</P>
      */
-    @Parameter(property = "cucumber.glue", required = true) private String glue;
+    @Parameter(property = "cucumber.glue", required = true)
+    private String glue;
 
     /**
      * Location of the generated files.
      */
     @Parameter(defaultValue = "${project.build.directory}/generated-test-sources/cucumber",
-        property = "outputDir", required = true) private File outputDirectory;
+            property = "outputDir", required = true)
+    private File outputDirectory;
 
     /**
      * Directory where the cucumber report files shall be written.
      */
     @Parameter(defaultValue = "target/cucumber-parallel",
-        property = "cucumberOutputDir", required = true) private String cucumberOutputDir;
+            property = "cucumberOutputDir", required = true)
+    private String cucumberOutputDir;
 
     /**
      * Directory containing the feature files.
      */
     @Parameter(defaultValue = "src/test/resources/features/",
-        property = "featuresDir", required = true) private File featuresDirectory;
+            property = "featuresDir", required = true)
+    private File featuresDirectory;
 
     /**
      * see cucumber.api.CucumberOptions.strict
      */
     @Parameter(defaultValue = "true",
-        property = "cucumber.strict", required = true) private boolean strict;
+            property = "cucumber.strict", required = true)
+    private boolean strict;
 
     /**
-     * Comma separated list of formats used for the output. Currently only html
-     * and json formats are supported.
+     * Comma separated list of formats used for the output. Currently only html and json formats are supported.
      *
      * <p>see cucumber.api.CucumberOptions.format</p>
      */
     @Parameter(defaultValue = "json", property = "cucumber.format",
-        required = true) private String format;
+            required = true)
+    private String format;
 
     /**
      * <p>see cucumber.api.CucumberOptions.monochrome</p>
      */
     @Parameter(defaultValue = "false", property = "cucumber.monochrome",
-        required = true) private boolean monochrome;
+            required = true)
+    private boolean monochrome;
 
     /**
      * <p>see cucumber.api.CucumberOptions.tags</p>
      */
     @Parameter(defaultValue = "\"@complete\", \"@accepted\"",
-        property = "cucumber.tags", required = true) private String tags;
+            property = "cucumber.tags", required = true)
+    private String tags;
 
     @Parameter(defaultValue = "UTF-8",
-        property = "project.build.sourceEncoding", readonly = true) private String encoding;
+            property = "project.build.sourceEncoding", readonly = true)
+    private String encoding;
 
     @Parameter(defaultValue = "false",
-        property = "cucumber.tags.filterOutput", required = true) private boolean
-        filterFeaturesByTags;
+            property = "cucumber.tags.filterOutput", required = true)
+    private boolean
+            filterFeaturesByTags;
 
 
     @Parameter(defaultValue = "false",
-        property = "useTestNG", required = true) private boolean useTestNG;
+            property = "useTestNG", required = true)
+    private boolean useTestNG;
 
     /**
      * see cucumber.api.CucumberOptions
      */
     @Parameter(property = "cucumber.options",
-        required = false) private String cucumberOptions;
+            required = false)
+    private String cucumberOptions;
 
     @Parameter(defaultValue = "simple",
-        property = "namingScheme", required = false) private String namingScheme;
+            property = "namingScheme", required = false)
+    private String namingScheme;
 
     @Parameter(property = "namingPattern",
-        required = false) private String namingPattern;
+            required = false)
+    private String namingPattern;
 
     private CucumberITGenerator fileGenerator;
 
     /**
      * Called by Maven to run this mojo after parameters have been injected.
-     * @throws MojoExecutionException
      */
     public void execute() throws MojoExecutionException {
 
@@ -134,12 +145,12 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
         }
 
         final Collection<File> featureFiles =
-            FileUtils.listFiles(featuresDirectory, new String[] {"feature"}, true);
+                FileUtils.listFiles(featuresDirectory, new String[]{"feature"}, true);
 
         createOutputDirIfRequired();
 
         final OverriddenCucumberOptionsParameters overriddenParameters =
-            overrideParametersWithCucumberOptions();
+                overrideParametersWithCucumberOptions();
 
         final ClassNamingSchemeFactory factory = new ClassNamingSchemeFactory(new OneUpCounter());
         final ClassNamingScheme classNamingScheme = factory.create(namingScheme, namingPattern);
@@ -149,7 +160,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
         fileGenerator.generateCucumberITFiles(outputDirectory, featureFiles);
 
         getLog()
-            .info("Adding " + outputDirectory.getAbsolutePath() + " to test-compile source root");
+                .info("Adding " + outputDirectory.getAbsolutePath() + " to test-compile source root");
 
         project.addTestCompileSourceRoot(outputDirectory.getAbsolutePath());
     }
@@ -161,17 +172,14 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     }
 
     /**
-     * Overrides the parameters with cucumber.options if they have been
-     * specified. Currently only tags are supported.
-     *
-     * @return
+     * Overrides the parameters with cucumber.options if they have been specified. Currently only tags are supported.
      */
     private OverriddenCucumberOptionsParameters overrideParametersWithCucumberOptions() {
 
         final OverriddenCucumberOptionsParameters overriddenParameters =
-            new OverriddenCucumberOptionsParameters();
+                new OverriddenCucumberOptionsParameters();
         overriddenParameters.setTags(this.tags).setGlue(this.glue).setStrict(this.strict)
-            .setFormat(this.format).setMonochrome(this.monochrome);
+                .setFormat(this.format).setMonochrome(this.monochrome);
 
         overriddenParameters.overrideParametersWithCucumberOptions(cucumberOptions);
 

@@ -73,7 +73,6 @@ class OverriddenCucumberOptionsParameters {
     }
 
 
-
     public String getFormat() {
         return format;
     }

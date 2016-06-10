@@ -10,11 +10,13 @@ public class OverriddenCucumberOptionsParametersShouldOverrideParametersWithCucu
 
     private OverriddenCucumberOptionsParameters params;
 
-    @Before public void setup() {
+    @Before
+    public void setup() {
         params = new OverriddenCucumberOptionsParameters();
     }
 
-    @Test public void tagsParameterIsOverridden() {
+    @Test
+    public void tagsParameterIsOverridden() {
         params.setTags("\"@replaceMe\"");
 
         params.overrideParametersWithCucumberOptions("--tags @tag1 --tags @tag2");
@@ -22,14 +24,16 @@ public class OverriddenCucumberOptionsParametersShouldOverrideParametersWithCucu
         assertThat(params.getTags(), equalTo("\"@tag1\",\"@tag2\""));
     }
 
-    @Test public void glueParameterIsOverridden() {
+    @Test
+    public void glueParameterIsOverridden() {
         params.setGlue("a.b.c,d.e.f");
 
         params.overrideParametersWithCucumberOptions("--glue somewhere,somewhere.else");
         assertThat(params.getGlue(), equalTo("somewhere,somewhere.else"));
     }
 
-    @Test public void strictParameterIsOverriddenIfSpecified() {
+    @Test
+    public void strictParameterIsOverriddenIfSpecified() {
         params.setStrict(false);
 
         params.overrideParametersWithCucumberOptions("--strict");
@@ -37,29 +41,33 @@ public class OverriddenCucumberOptionsParametersShouldOverrideParametersWithCucu
 
     }
 
-    @Test public void strictParameterIsMaintainedIfNotSpecified() {
+    @Test
+    public void strictParameterIsMaintainedIfNotSpecified() {
         params.setStrict(true);
 
         params.overrideParametersWithCucumberOptions("--glue somewhere,somewhere.else");
         assertThat(params.isStrict(), equalTo(true));
     }
 
-    @Test public void strictParameterIsMaintainedIfNotSpecified2() {
+    @Test
+    public void strictParameterIsMaintainedIfNotSpecified2() {
 
         params.setStrict(false);
         params.overrideParametersWithCucumberOptions("--glue somewhere,somewhere.else");
         assertThat(params.isStrict(), equalTo(false));
     }
 
-    @Test public void formatParameterIsOverridden() {
+    @Test
+    public void formatParameterIsOverridden() {
 
         params.setFormat("somethingElse");
         params.overrideParametersWithCucumberOptions(
-            "--format html --plugin pretty --glue somewhere");
+                "--format html --plugin pretty --glue somewhere");
         assertThat(params.getFormat(), equalTo("html,pretty"));
     }
 
-    @Test public void monochromeParameterIsOverridden() {
+    @Test
+    public void monochromeParameterIsOverridden() {
 
         params.setMonochrome(false);
         params.overrideParametersWithCucumberOptions("--monochrome");

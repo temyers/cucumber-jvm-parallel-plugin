@@ -62,15 +62,15 @@ public class RuntimeOptions {
                 addPluginName(args.remove(0));
             } else if (arg.equals("--format") || arg.equals("-f")) {
                 System.err.println(
-                    "WARNING: Cucumber-JVM's --format option is deprecated. "
-                        + "Please use --plugin instead.");
+                        "WARNING: Cucumber-JVM's --format option is deprecated. "
+                                + "Please use --plugin instead.");
                 addPluginName(args.remove(0));
             } else if (arg.equals("--no-dry-run") || arg.equals("--dry-run") || arg.equals("-d")) {
                 dryRun = !arg.startsWith("--no-");
             } else if (arg.equals("--no-strict") || arg.equals("--strict") || arg.equals("-s")) {
                 strict = !arg.startsWith("--no-");
             } else if (arg.equals("--no-monochrome") || arg.equals("--monochrome") || arg
-                .equals("-m")) {
+                    .equals("-m")) {
                 monochrome = !arg.startsWith("--no-");
             } else {
                 // ignore

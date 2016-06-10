@@ -19,42 +19,47 @@ import java.util.Collection;
 @RunWith(Parameterized.class)
 public class PatternNamingSchemeTest {
 
-    @Parameter(0) public String pattern;
-    @Parameter(1) public String output;
+    @Parameter(0)
+    public String pattern;
+    @Parameter(1)
+    public String output;
 
     Counter mockCounter = mock(Counter.class);
     ClassNamingScheme mockFileNamingScheme = mock(ClassNamingScheme.class);
 
     /**
      * Create params.
-     * @return
      */
-    @Parameters public static Collection<Object[]> params() {
+    @Parameters
+    public static Collection<Object[]> params() {
         final Object[][] params = {
 
-            {"{f}", "FeatureFile"}, {"{c}", "01"}, {"{f}{c}", "FeatureFile01"}, {"Foo", "Foo"},
+                {"{f}", "FeatureFile"}, {"{c}", "01"}, {"{f}{c}", "FeatureFile01"}, {"Foo", "Foo"},
 
-            // No validation is performed
-            {"", ""},};
+                // No validation is performed
+                {"", ""},};
 
         return Arrays.asList(params);
     }
 
-    @Before public void setupMocks() {
+    @Before
+    public void setupMocks() {
         given(mockCounter.next()).willReturn(1);
         given(mockFileNamingScheme.generate(any(String.class))).willReturn("FeatureFile");
     }
 
-    @Test public void generateFilename() {
+    @Test
+    public void generateFilename() {
         final PatternNamingScheme namingScheme =
-            new PatternNamingScheme(pattern, mockCounter, mockFileNamingScheme);
+                new PatternNamingScheme(pattern, mockCounter, mockFileNamingScheme);
         final String actual = namingScheme.generate("feature_file");
         assertThat(actual).isEqualTo(output);
     }
 
-    @Test(expected = NullPointerException.class) public void patternIsNull() {
+    @Test(expected = NullPointerException.class)
+    public void patternIsNull() {
         final PatternNamingScheme namingScheme =
-            new PatternNamingScheme(null, mockCounter, mockFileNamingScheme);
+                new PatternNamingScheme(null, mockCounter, mockFileNamingScheme);
         namingScheme.generate("feature_file");
 
     }
