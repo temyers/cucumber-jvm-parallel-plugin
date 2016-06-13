@@ -149,26 +149,15 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     private CucumberItGenerator fileGenerator;
 
     public void execute() throws MojoExecutionException {
-        RuntimeOptions runtimeOptions = new RuntimeOptions(cucumberOptions);
+        
         if (!featuresDirectory.exists()) {
             throw new MojoExecutionException("Features directory does not exist");
         }
         if (retryCount > 0) {
             useReRun = true;
         }
-
-        Collection<File> featureFiles = new ArrayList<File>();
-        if (runtimeOptions.getFeaturePaths().size() != 0) {
-            for (String f : runtimeOptions.getFeaturePaths()) {
-                System.out.println("Features :- " + f);
-                featureFiles.add(new File(f));
-            }
-        } else {
-            featureFiles = FileUtils.listFiles(featuresDirectory, new String[] {"feature"}, true);
-        }
-
+        
         createOutputDirIfRequired();
-
 
         final OverriddenCucumberOptionsParameters overriddenParameters =
             overrideParametersWithCucumberOptions();
@@ -187,7 +176,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
             classNamingScheme,
             rerunOptionsParameters);
 
-        fileGenerator.generateCucumberItFiles(outputDirectory, featureFiles, runtimeOptions);
+        fileGenerator.generateCucumberItFiles(outputDirectory);
 
         getLog()
             .info("Adding " + outputDirectory.getAbsolutePath() + " to test-compile source root");
@@ -263,6 +252,5 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     public boolean useReRun() {
         return useReRun;
     }
-
 
 }

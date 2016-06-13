@@ -24,4 +24,5 @@ public interface FileGeneratorConfig {
     
     boolean useReRun();
 
+
 }

@@ -188,8 +188,7 @@ public class CucumberItGenerator {
     }
 
     private boolean fileContainsMatchingTags(final String fileContents, String tag) {
-
-        if (fileContents.contains(tag)) {
+        if (!config.filterFeaturesByTags() && fileContents.contains(tag)) {
             return true;
         }
         return false;

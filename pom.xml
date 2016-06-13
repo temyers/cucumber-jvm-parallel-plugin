@@ -190,7 +190,6 @@
                         <arguments>${arguments} -Psonatype-oss-release -Prun-its</arguments>
                     </configuration>
                 </plugin>
-
             </plugins>
         </pluginManagement>
     </build>
@@ -220,7 +219,7 @@
                                 <goal>clean</goal>
                                 <goal>test-compile</goal>
                             </goals>
-                            <parallelThreads>5</parallelThreads>
+                            <parallelThreads>1</parallelThreads>
                         </configuration>
                         <executions>
                             <execution>
