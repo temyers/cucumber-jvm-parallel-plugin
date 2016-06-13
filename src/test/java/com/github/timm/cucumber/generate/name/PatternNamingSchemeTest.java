@@ -34,10 +34,13 @@ public class PatternNamingSchemeTest {
     public static Collection<Object[]> params() {
         final Object[][] params = {
 
-                {"{f}", "FeatureFile"}, {"{c}", "01"}, {"{f}{c}", "FeatureFile01"}, {"Foo", "Foo"},
+            {"{f}", "FeatureFile"},
+            {"{c}", "01"},
+            {"{f}{c}", "FeatureFile01"},
+            {"Foo", "Foo"},
 
-                // No validation is performed
-                {"", ""},};
+            // No validation is performed
+            {"", ""},};
 
         return Arrays.asList(params);
     }
@@ -51,7 +54,7 @@ public class PatternNamingSchemeTest {
     @Test
     public void generateFilename() {
         final PatternNamingScheme namingScheme =
-                new PatternNamingScheme(pattern, mockCounter, mockFileNamingScheme);
+                        new PatternNamingScheme(pattern, mockCounter, mockFileNamingScheme);
         final String actual = namingScheme.generate("feature_file");
         assertThat(actual).isEqualTo(output);
     }
@@ -59,7 +62,7 @@ public class PatternNamingSchemeTest {
     @Test(expected = NullPointerException.class)
     public void patternIsNull() {
         final PatternNamingScheme namingScheme =
-                new PatternNamingScheme(null, mockCounter, mockFileNamingScheme);
+                        new PatternNamingScheme(null, mockCounter, mockFileNamingScheme);
         namingScheme.generate("feature_file");
 
     }

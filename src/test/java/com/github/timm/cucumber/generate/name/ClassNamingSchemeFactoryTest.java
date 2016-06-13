@@ -33,16 +33,14 @@ public class ClassNamingSchemeFactoryTest {
      */
     @Parameters
     public static Collection<Object[]> params() {
-        final Object[][] params =
-            {
-                {"simple", "", "Parallel01IT", 1},
-                {"simple", "", "Parallel02IT", 2},
-                {"feature-title", "", "Feature101IT", 1},
-                {"feature-title", "", "Feature102IT", 2},
-                {"pattern", "{f}", "Feature1", 2},
-                {"pattern", "{c}", "02", 2},
-                {"pattern", "{f}_{c}IT", "Feature1_02IT", 2},
-            };
+        final Object[][] params = {
+            {"simple", "", "Parallel01IT", 1},
+            {"simple", "", "Parallel02IT", 2},
+            {"feature-title", "", "Feature101IT", 1},
+            {"feature-title", "", "Feature102IT", 2},
+            {"pattern", "{f}", "Feature1", 2},
+            {"pattern", "{c}", "02", 2},
+            {"pattern", "{f}_{c}IT", "Feature1_02IT", 2},};
 
         return Arrays.asList(params);
     }

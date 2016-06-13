@@ -62,7 +62,7 @@ public class OverriddenCucumberOptionsParametersShouldOverrideParametersWithCucu
 
         params.setFormat("somethingElse");
         params.overrideParametersWithCucumberOptions(
-                "--format html --plugin pretty --glue somewhere");
+                        "--format html --plugin pretty --glue somewhere");
         assertThat(params.getFormat(), equalTo("html,pretty"));
     }
 

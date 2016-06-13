@@ -17,7 +17,7 @@ import java.util.List;
 public class RuntimeOptionsTest {
 
     private static final String CUCUMBER_OPTS_WITH_MULTI_WHITESPACE_BETWEEN_ARGS =
-            "--format html --tags   @tag1,@tag2      --tags      @foo";
+                    "--format html --tags   @tag1,@tag2      --tags      @foo";
 
 
     @Test
@@ -41,15 +41,15 @@ public class RuntimeOptionsTest {
 
     @Test
     public void parses_plugin() {
-        final RuntimeOptions options =
-                new RuntimeOptions(asList("--plugin", "html:some/dir", "--glue", "somewhere"));
+        final RuntimeOptions options = new RuntimeOptions(
+                        asList("--plugin", "html:some/dir", "--glue", "somewhere"));
         assertEquals("html:some/dir", options.getPluginNames().get(0));
     }
 
     @Test
     public void parses_multiple_plugins() {
-        final RuntimeOptions options = new RuntimeOptions(
-                asList("--plugin", "html:some/dir", "--plugin", "pretty", "--glue", "somewhere"));
+        final RuntimeOptions options = new RuntimeOptions(asList("--plugin", "html:some/dir",
+                        "--plugin", "pretty", "--glue", "somewhere"));
         assertEquals(2, options.getPluginNames().size());
         assertTrue(options.getPluginNames().contains("pretty"));
     }
@@ -57,7 +57,7 @@ public class RuntimeOptionsTest {
     @Test
     public void assigns_strict() {
         final RuntimeOptions options =
-                new RuntimeOptions(asList("--strict", "--glue", "somewhere"));
+                        new RuntimeOptions(asList("--strict", "--glue", "somewhere"));
         assertTrue(options.isStrict());
     }
 
@@ -92,7 +92,7 @@ public class RuntimeOptionsTest {
     @Test
     public void shouldParseTagsWhenMultipleWhitespaceBetweenOptionArgs() {
         final RuntimeOptions parser =
-                new RuntimeOptions(CUCUMBER_OPTS_WITH_MULTI_WHITESPACE_BETWEEN_ARGS);
+                        new RuntimeOptions(CUCUMBER_OPTS_WITH_MULTI_WHITESPACE_BETWEEN_ARGS);
         final List<String> tags = parser.getFilters();
         assertEquals(Arrays.asList("@tag1,@tag2", "@foo"), tags);
     }

@@ -29,16 +29,18 @@ public class TagParserShouldSplitQuotedTagsTest {
         // @formatter:off
         final Object[][] params = {
 
-                // SINGLE tag
-                {"\"@tag\"", asList(asList("@tag"))},
-                // OR
-                {"\"@tag1,@tag2\"", asList(asList("@tag1", "@tag2"))},
-                // AND
-                {"\"@tag1\",\"@tag2\"", asList(asList("@tag1"), asList("@tag2"))},
-                // mixture AND and OR
-                {"\"@tag1,@tag2\",\"~@notMe\"", asList(asList("@tag1", "@tag2"), asList("~@notMe"))},
+            // SINGLE tag
+            {"\"@tag\"", asList(asList("@tag"))},
+            // OR
+            {"\"@tag1,@tag2\"", asList(asList("@tag1", "@tag2"))},
+            // AND
+            {"\"@tag1\",\"@tag2\"", asList(asList("@tag1"), asList("@tag2"))},
+            // mixture AND and OR
+            {
+                "\"@tag1,@tag2\",\"~@notMe\"",
+                asList(asList("@tag1", "@tag2"), asList("~@notMe"))},
 
-                {"\"@feature1,@feature2\"", asList(asList("@feature1", "@feature2"))}
+            {"\"@feature1,@feature2\"", asList(asList("@feature1", "@feature2"))}
 
         };
         // @formatter:on
@@ -49,7 +51,7 @@ public class TagParserShouldSplitQuotedTagsTest {
     @Test
     public void test() {
         Assert.assertThat(TagParser.splitQuotedTagsIntoParts(sourceTags),
-                Matchers.equalTo(expectedTags));
+                        Matchers.equalTo(expectedTags));
     }
 
 }
