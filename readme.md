@@ -143,7 +143,7 @@ To contribute:
     * Run `mvn clean install -Prun-its` to run the integration tests.
 * Implement the feature
 * When all tests are passing, submit a pull request.
-* Follow the [Google Style Guide](https://github.com/google/styleguide).  Formatters for Eclipse and IntelliJ are provided in the `doc/style` folder
+* Coding standards, based on the [Google Style Guide](https://github.com/google/styleguide) are enforced using Checkstyle.  Formatters for Eclipse and IntelliJ are provided in the `doc/style` folder
 
 Once the pull request has been merged, a new release will be performed as soon as practicable.
 
