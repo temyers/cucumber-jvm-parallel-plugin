@@ -79,6 +79,11 @@
             <version>1.4</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-core</artifactId>
+            <version>1.2.4</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -185,7 +190,6 @@
                         <arguments>${arguments} -Psonatype-oss-release -Prun-its</arguments>
                     </configuration>
                 </plugin>
-
             </plugins>
         </pluginManagement>
     </build>

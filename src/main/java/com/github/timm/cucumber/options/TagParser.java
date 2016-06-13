@@ -19,9 +19,7 @@ public class TagParser {
         if (tags.isEmpty()) {
             return "";
         }
-
         return '"' + join(tags, "\",\"") + '"';
-
     }
 
     public static List<List<String>> splitQuotedTagsIntoParts(final String quotedTags) {

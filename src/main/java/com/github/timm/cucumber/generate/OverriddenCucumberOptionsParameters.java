@@ -4,6 +4,7 @@ import com.github.timm.cucumber.options.RuntimeOptions;
 import com.github.timm.cucumber.options.TagParser;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OverriddenCucumberOptionsParameters {
@@ -13,6 +14,7 @@ public class OverriddenCucumberOptionsParameters {
     private boolean strict;
     private String format;
     private boolean monochrome;
+    private List<String> featurePaths = new ArrayList<String>();
 
     public OverriddenCucumberOptionsParameters setTags(final String tags) {
         this.tags = tags;
@@ -66,12 +68,16 @@ public class OverriddenCucumberOptionsParameters {
         if (options.isMonochrome()) {
             this.monochrome = true;
         }
+
+        if (!options.getFeaturePaths().isEmpty()) {
+            this.featurePaths = options.getFeaturePaths();
+        }
+
     }
 
     public boolean isStrict() {
         return strict;
     }
-
 
 
     public String getFormat() {
@@ -88,6 +94,10 @@ public class OverriddenCucumberOptionsParameters {
 
     public String getGlue() {
         return glue;
+    }
+
+    public List<String> getFeaturePaths() {
+        return featurePaths;
     }
 
 }
