@@ -17,6 +17,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * Generates Cucumber runner files using configuration from FileGeneratorConfig containing parameters passed into the
+ * Maven Plugin configuration.
+ */
+
 public class CucumberITGenerator {
 
     private final FileGeneratorConfig config;
@@ -28,10 +33,14 @@ public class CucumberITGenerator {
     private final ClassNamingScheme classNamingScheme;
 
 
-
+    /**
+     * @param config The configuration parameters passed to the Maven Mojo
+     * @param overriddenParameters Parameters overridden from Cucumber options VM parameter (-Dcucumber.options)
+     * @param classNamingScheme The naming scheme to use for the generated class files
+     */
     public CucumberITGenerator(final FileGeneratorConfig config,
-        final OverriddenCucumberOptionsParameters overriddenParameters,
-        final ClassNamingScheme classNamingScheme) {
+                    final OverriddenCucumberOptionsParameters overriddenParameters,
+                    final ClassNamingScheme classNamingScheme) {
         this.config = config;
         this.overriddenParameters = overriddenParameters;
         this.classNamingScheme = classNamingScheme;
@@ -42,19 +51,19 @@ public class CucumberITGenerator {
         final Properties props = new Properties();
         props.put("resource.loader", "class");
         props.put("class.resource.loader.class",
-            "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+                        "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
         final VelocityEngine engine = new VelocityEngine(props);
         engine.init();
         if (config.useTestNG()) {
             velocityTemplate =
-                engine.getTemplate("cucumber-testng-runner.vm", config.getEncoding());
+                            engine.getTemplate("cucumber-testng-runner.vm", config.getEncoding());
         } else {
             velocityTemplate = engine.getTemplate("cucumber-junit-runner.vm", config.getEncoding());
         }
     }
 
     void generateCucumberITFiles(final File outputDirectory, final Collection<File> featureFiles)
-        throws MojoExecutionException {
+                    throws MojoExecutionException {
         for (final File file : featureFiles) {
 
             if (shouldSkipFile(file)) {
@@ -98,7 +107,7 @@ public class CucumberITGenerator {
                 }
             } catch (final IOException e) {
                 config.getLog().info("Failed to read contents of " + file.getPath()
-                    + ". Parallel Test shall be created.");
+                                + ". Parallel Test shall be created.");
             }
         }
         return false;
@@ -107,7 +116,7 @@ public class CucumberITGenerator {
     private boolean fileContainsMatchingTags(final String fileContents) {
 
         final List<List<String>> tagGroupsAnded =
-            TagParser.splitQuotedTagsIntoParts(overriddenParameters.getTags());
+                        TagParser.splitQuotedTagsIntoParts(overriddenParameters.getTags());
 
         // Tag groups are and'd together
         for (final List<String> tagGroup : tagGroupsAnded) {
@@ -141,18 +150,17 @@ public class CucumberITGenerator {
     }
 
     /**
-     * Sets the feature file location based on the given file. The full file
-     * path is trimmed to only include the featuresDirectory. E.g.
-     * /myproject/src/test/resources/features/feature1.feature will be saved as
+     * Sets the feature file location based on the given file. The full file path is trimmed to only include the
+     * featuresDirectory. E.g. /myproject/src/test/resources/features/feature1.feature will be saved as
      * features/feature1.feature
      *
      * @param file The feature file
      */
     private void setFeatureFileLocation(final File file) {
         final File featuresDirectory = config.getFeaturesDirectory();
-        featureFileLocation =
-            file.getPath().replace(featuresDirectory.getPath(), featuresDirectory.getName())
-                .replace(File.separatorChar, '/');
+        featureFileLocation = file.getPath()
+                        .replace(featuresDirectory.getPath(), featuresDirectory.getName())
+                        .replace(File.separatorChar, '/');
     }
 
     private void writeContentFromTemplate(final Writer writer) {
@@ -181,7 +189,8 @@ public class CucumberITGenerator {
         for (int i = 0; i < formatStrs.length; i++) {
             final String formatStr = formatStrs[i].trim();
             sb.append(String.format("\"%s:%s/%s.%s\"", formatStr,
-                config.getCucumberOutputDir().replace('\\', '/'), fileCounter, formatStr));
+                            config.getCucumberOutputDir().replace('\\', '/'), fileCounter,
+                            formatStr));
 
             if (i < formatStrs.length - 1) {
                 sb.append(", ");
@@ -191,7 +200,7 @@ public class CucumberITGenerator {
     }
 
     /**
-     * Wraps each package in quotes for use in the template
+     * Wraps each package in quotes for use in the template.
      */
     private String quoteGlueStrings() {
         final String[] packageStrs = overriddenParameters.getGlue().split(",");

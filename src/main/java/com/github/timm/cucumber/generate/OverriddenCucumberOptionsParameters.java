@@ -6,7 +6,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
 
-public class OverriddenCucumberOptionsParameters {
+class OverriddenCucumberOptionsParameters {
 
     private String tags;
     private String glue;
@@ -71,7 +71,6 @@ public class OverriddenCucumberOptionsParameters {
     public boolean isStrict() {
         return strict;
     }
-
 
 
     public String getFormat() {

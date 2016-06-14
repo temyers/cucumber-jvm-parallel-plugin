@@ -17,11 +17,14 @@ import java.util.List;
 @RunWith(Parameterized.class)
 public class TagParserShouldSplitQuotedTagsTest {
 
-    @Parameter(0) public String sourceTags;
+    @Parameter(0)
+    public String sourceTags;
 
-    @Parameter(1) public List<List<String>> expectedTags;
+    @Parameter(1)
+    public List<List<String>> expectedTags;
 
-    @Parameters public static Collection<Object[]> params() {
+    @Parameters
+    public static Collection<Object[]> params() {
 
         // @formatter:off
         final Object[][] params = {
@@ -33,7 +36,9 @@ public class TagParserShouldSplitQuotedTagsTest {
             // AND
             {"\"@tag1\",\"@tag2\"", asList(asList("@tag1"), asList("@tag2"))},
             // mixture AND and OR
-            {"\"@tag1,@tag2\",\"~@notMe\"", asList(asList("@tag1", "@tag2"), asList("~@notMe"))},
+            {
+                "\"@tag1,@tag2\",\"~@notMe\"",
+                asList(asList("@tag1", "@tag2"), asList("~@notMe"))},
 
             {"\"@feature1,@feature2\"", asList(asList("@feature1", "@feature2"))}
 
@@ -43,9 +48,10 @@ public class TagParserShouldSplitQuotedTagsTest {
 
     }
 
-    @Test public void test() {
+    @Test
+    public void test() {
         Assert.assertThat(TagParser.splitQuotedTagsIntoParts(sourceTags),
-            Matchers.equalTo(expectedTags));
+                        Matchers.equalTo(expectedTags));
     }
 
 }

@@ -591,21 +591,18 @@
         <div class="section">
             <h2>Project Dependency Graph<a name="Project_Dependency_Graph"></a></h2>
             <script language="javascript" type="text/javascript">
-      function toggleDependencyDetail( divId, imgId )
-      {
-        var div = document.getElementById( divId );
-        var img = document.getElementById( imgId );
-        if( div.style.display == '' )
-        {
-          div.style.display = 'none';
-          img.src='./images/icon_info_sml.gif';
-        }
-        else
-        {
-          div.style.display = '';
-          img.src='./images/close.gif';
-        }
-      }
+                function toggleDependencyDetail(divId, imgId) {
+                    var div = document.getElementById(divId);
+                    var img = document.getElementById(imgId);
+                    if (div.style.display == '') {
+                        div.style.display = 'none';
+                        img.src = './images/icon_info_sml.gif';
+                    }
+                    else {
+                        div.style.display = '';
+                        img.src = './images/close.gif';
+                    }
+                }
 
             </script>
             <a name="Dependency_Tree"></a>
