@@ -4,41 +4,37 @@ import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace
 
 File suite01 = new File(basedir, "target/generated-test-sources/cucumber/Parallel01IT.java");
 File suite02 = new File(basedir, "target/generated-test-sources/cucumber/Parallel02IT.java");
+File suite03 = new File(basedir, "target/generated-test-sources/cucumber/Parallel03IT.java");
+File suite04 = new File(basedir, "target/generated-test-sources/cucumber/Parallel04IT.java");
+
+File expectedSuite01 = new File( basedir, "src/test/resources/expectedFiles/Parallel01IT.java" );
+File expectedSuite02 = new File( basedir, "src/test/resources/expectedFiles/Parallel02IT.java" );
+File expectedSuite03 = new File( basedir, "src/test/resources/expectedFiles/Parallel03IT.java" );
+File expectedSuite04 = new File( basedir, "src/test/resources/expectedFiles/Parallel04IT.java" );
+
 
 assert suite01.isFile()
 assert suite02.isFile()
+assert suite03.isFile()
+assert suite04.isFile()
 
-String expected01 =
-        """import org.junit.runner.RunWith;
-
-import cucumber.api.CucumberOptions;
-import cucumber.api.junit.Cucumber;
-
-@RunWith(Cucumber.class)
-@CucumberOptions(strict = true, features = {"classpath:features/feature1.feature"}, plugin = {"json:target/my-custom-dir/1.json",
-"pretty"}, monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo", "bar" })
-public class Parallel01IT {
-}"""
-
-String expected02 =
-        """import org.junit.runner.RunWith;
-
-import cucumber.api.CucumberOptions;
-import cucumber.api.junit.Cucumber;
-
-@RunWith(Cucumber.class)
-@CucumberOptions(strict = true, features = {"classpath:features/feature2.feature"}, plugin = {"json:target/my-custom-dir/2.json",
-"pretty"}, monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo", "bar" })
-public class Parallel02IT {
-}"""
-
-// Depending on the OS, listFiles can list files in different order.  The actual order of files isn't necessary
+Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expectedSuite01.text))
+Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expectedSuite02.text))
+Assert.assertThat(suite03.text, equalToIgnoringWhiteSpace(expectedSuite03.text))
+Assert.assertThat(suite04.text, equalToIgnoringWhiteSpace(expectedSuite04.text))
 
 if (suite01.text.contains("feature1")) {
-    Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected01))
-    Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expected02))
-} else {
-    Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expected01))
-    Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected02))
+    Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expectedSuite01.text))
 }
+if (suite02.text.contains("feature2")) {
+    Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expectedSuite02.text))
+}
+if (suite02.text.contains("feature3")) {
+    Assert.assertThat(suite03.text, equalToIgnoringWhiteSpace(expectedSuite03.text))
+}
+if (suite02.text.contains("feature4")) {
+    Assert.assertThat(suite04.text, equalToIgnoringWhiteSpace(expectedSuite04.text))
+}
+
+
 

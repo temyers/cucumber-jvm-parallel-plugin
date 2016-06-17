@@ -1,10 +1,12 @@
 package com.github.timm.cucumber.generate;
 
 import com.github.timm.cucumber.generate.name.ClassNamingScheme;
-import com.github.timm.cucumber.generate.name.TagNamingScheme;
-import com.github.timm.cucumber.options.RuntimeOptions;
 import com.github.timm.cucumber.options.TagParser;
-
+import gherkin.AstBuilder;
+import gherkin.Parser;
+import gherkin.TokenMatcher;
+import gherkin.ast.GherkinDocument;
+import gherkin.ast.Tag;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -12,14 +14,13 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+
+import static java.util.Arrays.asList;
 
 public class CucumberItGenerator {
 
@@ -79,90 +80,82 @@ public class CucumberItGenerator {
             featureFiles = FileUtils.listFiles(config.getFeaturesDirectory(),
                 new String[] {"feature"}, true);
         }
-        if (config.filterFeaturesByTags()) {
-            List<String> parsedTags = new ArrayList<String>();
-            String[] allTags = overriddenParameters.getTags().split(",");
-            for (String t : allTags) {
-                parsedTags.add(t.replaceAll("\"", ""));
-            }
-            for (final String tag : parsedTags) {
-                for (final File file : featureFiles) {
-                    String fileContents = null;
+        List<String> parsedTags = new ArrayList<String>();
+        String[] allTags = overriddenParameters.getTags().split(",");
+        for (String t : allTags) {
+            parsedTags.add(t.replaceAll("\"", ""));
+        }
+        for (final String tag : parsedTags) {
+            for (final File file : featureFiles) {
+                if (shouldSkipFile(file)) {
+                    System.out.println("File " + file.getName() + " contains tag " + tag);
+                    outputFileName = classNamingScheme.generate(file.getName());
+                    final File outputFile = new File(outputDirectory, outputFileName + ".java");
+                    setFeatureFileLocation(file);
+                    FileWriter writer = null;
                     try {
-                        fileContents = FileUtils.readFileToString(file);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if ( !shouldSkipFile(file) && fileContainsMatchingTags(fileContents, tag)) {
-                        System.out.println("File " + file.getName() + " contains tag " + tag);
-                        outputFileName = classNamingScheme.generate(file.getName());
-                        final File outputFile = new File(outputDirectory, outputFileName + ".java");
-                        setFeatureFileLocation(file);
-                        FileWriter writer = null;
-                        try {
-                            writer = new FileWriter(outputFile);
-                            writeContentFromTemplate(writer, tag);
-                        } catch (final IOException e) {
-                            throw new MojoExecutionException("Error creating file "
-                                + outputFile, e);
-                        } finally {
-                            if (writer != null) {
-                                try {
-                                    writer.close();
-                                } catch (final IOException e) {
-                                    // ignore
-                                }
+                        writer = new FileWriter(outputFile);
+                        writeContentFromTemplate(writer, tag);
+                    } catch (final IOException e) {
+                        throw new MojoExecutionException("Error creating file "
+                            + outputFile, e);
+                    } finally {
+                        if (writer != null) {
+                            try {
+                                writer.close();
+                            } catch (final IOException e) {
+                                // ignore
                             }
                         }
-                        fileCounter++;
                     }
+                    fileCounter++;
                 }
-            }
-        } else {
-            for (final File file : featureFiles) {
-
-                if (shouldSkipFile(file)) {
-                    continue;
-                }
-
-                outputFileName = classNamingScheme.generate(file.getName());
-
-                setFeatureFileLocation(file);
-
-                final File outputFile = new File(outputDirectory, outputFileName + ".java");
-                FileWriter writer = null;
-                try {
-                    writer = new FileWriter(outputFile);
-                    writeContentFromTemplate(writer);
-                } catch (final IOException exception) {
-                    throw new MojoExecutionException("Error creating file "
-                        + outputFile, exception);
-                } finally {
-                    if (writer != null) {
-                        try {
-                            writer.close();
-                        } catch (final IOException exception) {
-                            // ignore
-                            System.out.println("Failed to close file: " + outputFile);
-                        }
-                    }
-                }
-
-                fileCounter++;
             }
         }
+
     }
 
     private boolean shouldSkipFile(final File file) {
         if (config.filterFeaturesByTags()) {
-
             try {
-                final String fileContents = FileUtils.readFileToString(file);
 
-                if (!fileContainsMatchingTags(fileContents)) {
-                    return true;
+                final List<List<String>> tagGroupsAnded = TagParser
+                    .splitQuotedTagsIntoParts(overriddenParameters.getTags());
+
+                // Tag groups are and'd together
+                for (final List<String> tagGroup : tagGroupsAnded) {
+                    System.out.println("******************"
+                        + asList(tagGroup).toString());
+                    // individual tags are or'd together
+                    for (final String tag : tagGroup) {
+                        System.out.println("*************** Tag " + tag);
+
+                        if (tag.startsWith("~")) {
+                            // not tags must be ignored - cannot guarantee that a feature
+                            // file containing an ignored tag does not contain scenarios
+                            // that
+                            // should be included
+                            return true;
+                        }
+                        Parser<GherkinDocument> parser = new Parser<>(new AstBuilder());
+                        GherkinDocument gherkinDocument = null;
+                        try {
+                            gherkinDocument = parser.parse(new FileReader(file),
+                                new TokenMatcher());
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        List<Tag> featureTags = gherkinDocument.getFeature().getTags();
+                        for (Tag t : featureTags) {
+                            if (t.getName().contains(tag)) {
+                                return true;
+                            }
+                        }
+
+                    }
                 }
-            } catch (final IOException e) {
+
+            } catch (final Exception e) {
                 config.getLog().info(
                     "Failed to read contents of " + file.getPath()
                         + ". Parallel Test shall be created.");
@@ -171,50 +164,6 @@ public class CucumberItGenerator {
         return false;
     }
 
-    private boolean fileContainsMatchingTags(final String fileContents) {
-
-        final List<List<String>> tagGroupsAnded = TagParser
-            .splitQuotedTagsIntoParts(overriddenParameters.getTags());
-
-        // Tag groups are and'd together
-        for (final List<String> tagGroup : tagGroupsAnded) {
-            // individual tags are or'd together
-            if (!fileContainsAnyTags(fileContents, tagGroup)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private boolean fileContainsMatchingTags(final String fileContents, String tag) {
-
-        if (fileContents.contains(tag)) {
-            return true;
-        }
-        return false;
-    }
-
-
-    private boolean fileContainsAnyTags(final String fileContents, final List<String> tags) {
-
-        for (final String tag : tags) {
-
-            if (tag.startsWith("~")) {
-                // not tags must be ignored - cannot guarantee that a feature
-                // file containing an ignored tag does not contain scenarios
-                // that
-                // should be included
-                return true;
-            }
-
-            if (fileContents.contains(tag)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     /**
      * Sets the feature file location based on the given file. The full file path is trimmed to only
