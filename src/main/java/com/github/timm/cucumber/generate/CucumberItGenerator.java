@@ -177,36 +177,7 @@ public class CucumberItGenerator {
         fileCounter++;
     }
 
-    private boolean shouldSkipFile(final String tag, final File file) {
-        if (config.filterFeaturesByTags()) {
-            try {
-                Parser<GherkinDocument> parser = new Parser<>(new AstBuilder());
-                GherkinDocument gherkinDocument = null;
-                try {
-                    gherkinDocument = parser.parse(new FileReader(file),
-                        new TokenMatcher());
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                List<Tag> featureTags = gherkinDocument.getFeature().getTags();
-                for (Tag t : featureTags) {
-                    if (t.getName().contains(tag) && tag.startsWith("~")) {
-                        return false;
-                    }
-                    if (t.getName().contains(tag)) {
-                        return true;
-                    }
-                }
-
-            } catch (final Exception e) {
-                config.getLog().info(
-                    "Failed to read contents of " + file.getPath()
-                        + ". Parallel Test shall be created.");
-            }
-        }
-        return false;
-    }
-
+    
 
     /**
      * Sets the feature file location based on the given file. The full file path is trimmed to only
@@ -220,33 +191,6 @@ public class CucumberItGenerator {
         featureFileLocation = file.getPath()
             .replace(featuresDirectory.getPath(), featuresDirectory.getName())
             .replace(File.separatorChar, '/');
-    }
-
-    private void writeContentFromTemplate(final Writer writer) {
-
-        final VelocityContext context = new VelocityContext();
-        context.put("strict", overriddenParameters.isStrict());
-        context.put("featureFile", featureFileLocation);
-        context.put("reports", createFormatStrings());
-        context.put("tags", overriddenParameters.getTags());
-        context.put("monochrome", overriddenParameters.isMonochrome());
-        context.put("cucumberOutputDir", config.getCucumberOutputDir());
-        if (config.useReRun()) {
-            context.put("glue", overriddenParameters.getGlue());
-        } else {
-            context.put("glue", quoteGlueStrings());
-        }
-        context.put("className", FilenameUtils.removeExtension(outputFileName));
-        context.put(
-            "outPutPath",
-            config.getCucumberOutputDir().replace('\\', '/') + "/"
-                + FilenameUtils.removeExtension(outputFileName) + "/"
-                + FilenameUtils.removeExtension(outputFileName));
-        context.put("retryCount", overriddenRerunOptionsParameters.getRetryCount());
-        context.put("htmlFormat", this.htmlFormat);
-        context.put("jsonFormat", this.jsonFormat);
-        context.put("rerunFormat", this.rerunFormat);
-        velocityTemplate.merge(context, writer);
     }
 
     private void writeContentFromTemplate(final Writer writer, final String tag) {
