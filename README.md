@@ -5,7 +5,7 @@ A common approach for running Cucumber features in parallel is to create a suite
 
 This is a pain to maintain and not very DRY.
 
-This is where the cucumber-jvm-parallel-plugin comes in.  This plugin automatically generates a Cucumber JUnit or TestNG runner for each feature file found in your project.
+This is where the cucumber-jvm-parallel-plugin comes in.  This plugin automatically generates a Cucumber JUnit or TestNG runner for each scenario or scenario outline in a feature file or each runner per feature file found in your project.
 
 Usage
 -----
