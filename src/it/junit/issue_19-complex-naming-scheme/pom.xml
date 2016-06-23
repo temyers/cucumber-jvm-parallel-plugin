@@ -45,6 +45,8 @@
                             <glue>foo, bar</glue>
                             <namingScheme>pattern</namingScheme>
                             <namingPattern>Foo{f}{c}IT</namingPattern>
+							<tags>"@feature1,@feature2"</tags>
+                            <filterFeaturesByTags>true</filterFeaturesByTags>
                         </configuration>
                     </execution>
                 </executions>

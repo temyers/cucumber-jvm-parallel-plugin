@@ -1,3 +1,4 @@
+@accepted
 Feature: Feature1
 
   Scenario: Generate TestNG Runner for each feature file

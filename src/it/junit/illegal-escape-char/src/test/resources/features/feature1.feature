@@ -1,5 +1,6 @@
 Feature: Feature1
 
+  @complete
   Scenario: Generate Junit Runner for each feature file
     Given I have feature files
     When I generate Maven sources

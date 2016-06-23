@@ -12,7 +12,7 @@ String expected01 = """import cucumber.api.CucumberOptions;
 import cucumber.api.testng.AbstractTestNGCucumberTests;
 
 @CucumberOptions(strict = true, features = {"classpath:features/feature1.feature"}, plugin = {"json:target/cucumber-parallel/1.json",
-"pretty"}, monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo", "bar" })
+"pretty"}, monochrome = false, tags = {"@complete"}, glue = { "foo", "bar" })
 public class Feature101IT extends AbstractTestNGCucumberTests {
 }"""
 
@@ -20,7 +20,7 @@ String expected02 = """import cucumber.api.CucumberOptions;
 import cucumber.api.testng.AbstractTestNGCucumberTests;
 
 @CucumberOptions(strict = true, features = {"classpath:features/feature2.feature"}, plugin = {"json:target/cucumber-parallel/2.json",
-"pretty"}, monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo", "bar" })
+"pretty"}, monochrome = false, tags = {"@accepted"}, glue = { "foo", "bar" })
 public class Feature202IT extends AbstractTestNGCucumberTests {
 }"""
 

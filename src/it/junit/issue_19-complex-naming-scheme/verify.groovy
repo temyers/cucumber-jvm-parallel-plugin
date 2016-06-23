@@ -16,7 +16,7 @@ import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(strict = true, features = {"classpath:features/feature1.feature"}, plugin = {"json:target/cucumber-parallel/1.json",
-"pretty"}, monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo", "bar" })
+"pretty"}, monochrome = false, tags = {"@feature1"}, glue = { "foo", "bar" })
 public class FooFeature101IT {
 }"""
 
@@ -28,7 +28,7 @@ import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(strict = true, features = {"classpath:features/feature2.feature"}, plugin = {"json:target/cucumber-parallel/2.json",
-"pretty"}, monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo", "bar" })
+"pretty"}, monochrome = false, tags = {"@feature2"}, glue = { "foo", "bar" })
 public class FooFeature202IT {
 }"""
 

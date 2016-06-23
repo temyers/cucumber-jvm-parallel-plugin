@@ -1,3 +1,4 @@
+@feature1
 Feature: Feature2
 
   Scenario: Generate Junit Runner for each feature file

@@ -53,7 +53,10 @@
 						<configuration>
 							<glue>foo, bar</glue>
 							<retryCount>1</retryCount>
+							<tags>"@feature1,@feature2"</tags>
+							<filterFeaturesByTags>true</filterFeaturesByTags>
 						</configuration>
+						
 					</execution>
 				</executions>
 			</plugin>

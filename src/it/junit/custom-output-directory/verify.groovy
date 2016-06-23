@@ -23,18 +23,7 @@ Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expectedSuite02.text))
 Assert.assertThat(suite03.text, equalToIgnoringWhiteSpace(expectedSuite03.text))
 Assert.assertThat(suite04.text, equalToIgnoringWhiteSpace(expectedSuite04.text))
 
-if (suite01.text.contains("feature1")) {
-    Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expectedSuite01.text))
-}
-if (suite02.text.contains("feature2")) {
-    Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expectedSuite02.text))
-}
-if (suite02.text.contains("feature3")) {
-    Assert.assertThat(suite03.text, equalToIgnoringWhiteSpace(expectedSuite03.text))
-}
-if (suite02.text.contains("feature4")) {
-    Assert.assertThat(suite04.text, equalToIgnoringWhiteSpace(expectedSuite04.text))
-}
+
 
 
 

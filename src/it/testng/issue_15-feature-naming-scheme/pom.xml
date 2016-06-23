@@ -45,6 +45,8 @@
                             <glue>foo, bar</glue>
                             <namingScheme>feature-title</namingScheme>
                             <useTestNG>true</useTestNG>
+							<tags>"@complete,@accepted"</tags>
+							<filterFeaturesByTags>true</filterFeaturesByTags>
                         </configuration>
                     </execution>
                 </executions>

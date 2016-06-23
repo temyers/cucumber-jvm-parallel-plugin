@@ -47,6 +47,8 @@
                     <glue>foo</glue>
                     <format>html,json</format>
                     <useTestNG>true</useTestNG>
+					<tags>"@complete,@accepted"</tags>
+					<filterFeaturesByTags>true</filterFeaturesByTags>
                 </configuration>
             </plugin>
         </plugins>

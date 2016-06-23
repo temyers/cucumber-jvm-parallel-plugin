@@ -44,6 +44,8 @@
                         <configuration>
                             <glue>foo, bar</glue>
                             <useTestNG>true</useTestNG>
+							<tags>"@complete,@accepted"</tags>
+							<filterFeaturesByTags>true</filterFeaturesByTags>
                         </configuration>
                     </execution>
                 </executions>

@@ -1,11 +1,13 @@
 package com.github.timm.cucumber.generate;
 
 import com.github.timm.cucumber.generate.name.ClassNamingScheme;
-import com.github.timm.cucumber.options.TagParser;
 import gherkin.AstBuilder;
 import gherkin.Parser;
 import gherkin.TokenMatcher;
 import gherkin.ast.GherkinDocument;
+import gherkin.ast.Scenario;
+import gherkin.ast.ScenarioDefinition;
+import gherkin.ast.ScenarioOutline;
 import gherkin.ast.Tag;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -14,13 +16,16 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
-
-import static java.util.Arrays.asList;
 
 public class CucumberItGenerator {
 
@@ -73,7 +78,6 @@ public class CucumberItGenerator {
         Collection<File> featureFiles = new ArrayList<File>();
         if (overriddenParameters.getFeaturePaths().size() != 0) {
             for (String f : overriddenParameters.getFeaturePaths()) {
-                System.out.println("Features :- " + f);
                 featureFiles.add(new File(f));
             }
         } else {
@@ -83,75 +87,114 @@ public class CucumberItGenerator {
         List<String> parsedTags = new ArrayList<String>();
         String[] allTags = overriddenParameters.getTags().split(",");
         for (String t : allTags) {
-            parsedTags.add(t.replaceAll("\"", ""));
+            parsedTags.add(t.replaceAll("\"", "").replaceAll("\\s+", ""));
         }
         for (final String tag : parsedTags) {
             for (final File file : featureFiles) {
-                if (shouldSkipFile(file)) {
-                    System.out.println("File " + file.getName() + " contains tag " + tag);
-                    outputFileName = classNamingScheme.generate(file.getName());
-                    final File outputFile = new File(outputDirectory, outputFileName + ".java");
-                    setFeatureFileLocation(file);
-                    FileWriter writer = null;
+                try {
+                    Parser<GherkinDocument> parser = new Parser<>(new AstBuilder());
+                    GherkinDocument gherkinDocument = null;
                     try {
-                        writer = new FileWriter(outputFile);
-                        writeContentFromTemplate(writer, tag);
-                    } catch (final IOException e) {
-                        throw new MojoExecutionException("Error creating file "
-                            + outputFile, e);
-                    } finally {
-                        if (writer != null) {
-                            try {
-                                writer.close();
-                            } catch (final IOException e) {
-                                // ignore
+                        gherkinDocument = parser.parse(new FileReader(file),
+                            new TokenMatcher());
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    List<Tag> featureTags = gherkinDocument.getFeature().getTags();
+                    if (config.filterFeaturesByTags()) {
+                        for (Tag t : featureTags) {
+                            if (tag.startsWith("~") && ("~" + t.getName()).equalsIgnoreCase(tag)) {
+                                // Don't generate file
+                            }
+                            if (tag.equalsIgnoreCase(t.getName())) {
+                                generateItFiles(tag, file, outputDirectory);
+                            }
+                        }
+                    } else {
+                        List<ScenarioDefinition> definitions = gherkinDocument.getFeature()
+                            .getChildren();
+                        for (ScenarioDefinition definition : definitions) {
+                            if (definition instanceof ScenarioOutline) {
+                                ScenarioOutline scenarioOutline = (ScenarioOutline) definition;
+                                List<Tag> outlineTags = scenarioOutline.getTags();
+                                for (Tag t : outlineTags) {
+                                    if (tag.startsWith("~") && ("~" + t.getName())
+                                        .equalsIgnoreCase(tag)) {
+                                        // Don't generate file
+                                    }
+                                    if (tag.equalsIgnoreCase(t.getName())) {
+                                        generateItFiles(tag, file, outputDirectory);
+                                    }
+                                }
+                            }
+                            if (definition instanceof Scenario) {
+                                Scenario scenario = (Scenario) definition;
+                                List<Tag> scenarioTags = scenario.getTags();
+                                for (Tag t : scenarioTags) {
+                                    if (tag.startsWith("~") && ("~" + t.getName())
+                                        .equalsIgnoreCase(tag)) {
+                                        // Don't generate file
+                                    }
+                                    if (tag.equalsIgnoreCase(t.getName())) {
+                                        generateItFiles(tag, file, outputDirectory);
+                                    }
+                                }
                             }
                         }
                     }
-                    fileCounter++;
+
+                } catch (final Exception e) {
+                    config.getLog().info(
+                        "Failed to read contents of " + file.getPath()
+                            + ". Parallel Test shall be created.");
                 }
             }
         }
 
     }
 
-    private boolean shouldSkipFile(final File file) {
+    private void generateItFiles(final String tag, final File file, final File outputDirectory)
+        throws MojoExecutionException {
+        outputFileName = classNamingScheme.generate(file.getName());
+        final File outputFile = new File(outputDirectory, outputFileName + ".java");
+        setFeatureFileLocation(file);
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter(outputFile);
+            writeContentFromTemplate(writer, tag);
+        } catch (final IOException e) {
+            throw new MojoExecutionException("Error creating file "
+                + outputFile, e);
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (final IOException e) {
+                    // ignore
+                }
+            }
+        }
+        fileCounter++;
+    }
+
+    private boolean shouldSkipFile(final String tag, final File file) {
         if (config.filterFeaturesByTags()) {
             try {
-
-                final List<List<String>> tagGroupsAnded = TagParser
-                    .splitQuotedTagsIntoParts(overriddenParameters.getTags());
-
-                // Tag groups are and'd together
-                for (final List<String> tagGroup : tagGroupsAnded) {
-                    System.out.println("******************"
-                        + asList(tagGroup).toString());
-                    // individual tags are or'd together
-                    for (final String tag : tagGroup) {
-                        System.out.println("*************** Tag " + tag);
-
-                        if (tag.startsWith("~")) {
-                            // not tags must be ignored - cannot guarantee that a feature
-                            // file containing an ignored tag does not contain scenarios
-                            // that
-                            // should be included
-                            return true;
-                        }
-                        Parser<GherkinDocument> parser = new Parser<>(new AstBuilder());
-                        GherkinDocument gherkinDocument = null;
-                        try {
-                            gherkinDocument = parser.parse(new FileReader(file),
-                                new TokenMatcher());
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        List<Tag> featureTags = gherkinDocument.getFeature().getTags();
-                        for (Tag t : featureTags) {
-                            if (t.getName().contains(tag)) {
-                                return true;
-                            }
-                        }
-
+                Parser<GherkinDocument> parser = new Parser<>(new AstBuilder());
+                GherkinDocument gherkinDocument = null;
+                try {
+                    gherkinDocument = parser.parse(new FileReader(file),
+                        new TokenMatcher());
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                List<Tag> featureTags = gherkinDocument.getFeature().getTags();
+                for (Tag t : featureTags) {
+                    if (t.getName().contains(tag) && tag.startsWith("~")) {
+                        return false;
+                    }
+                    if (t.getName().contains(tag)) {
+                        return true;
                     }
                 }
 

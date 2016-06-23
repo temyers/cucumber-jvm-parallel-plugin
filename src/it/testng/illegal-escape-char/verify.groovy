@@ -11,7 +11,7 @@ String expected01 =
 import cucumber.api.testng.AbstractTestNGCucumberTests;
 
 @CucumberOptions(strict = true, features = {"classpath:features/feature1.feature"}, plugin = {"json:target/cucumber-reports/1.json",
-"pretty"}, monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo", "bar" })
+"pretty"}, monochrome = false, tags = {"@complete"}, glue = { "foo", "bar" })
 public class Parallel01IT extends AbstractTestNGCucumberTests {
 }"""
 

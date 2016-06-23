@@ -47,6 +47,8 @@
                     <glue>foo, bar</glue>
                     <cucumberOutputDir>target/my-custom-dir</cucumberOutputDir>
                     <useTestNG>true</useTestNG>
+					<tags>"@complete,@accepted"</tags>
+					<filterFeaturesByTags>true</filterFeaturesByTags>
                 </configuration>
             </plugin>
         </plugins>

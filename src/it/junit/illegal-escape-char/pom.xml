@@ -43,6 +43,7 @@
                         </goals>
                         <configuration>
                             <glue>foo, bar</glue>
+							<tags>"@complete"</tags>
                             <cucumberOutputDir>target\cucumber-reports</cucumberOutputDir>
                         </configuration>
                     </execution>

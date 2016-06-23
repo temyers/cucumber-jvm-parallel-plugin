@@ -45,6 +45,7 @@
                             <glue>foo, bar</glue>
                             <cucumberOutputDir>target\cucumber-reports</cucumberOutputDir>
                             <useTestNG>true</useTestNG>
+							<tags>"@complete"</tags>
                         </configuration>
                     </execution>
                 </executions>

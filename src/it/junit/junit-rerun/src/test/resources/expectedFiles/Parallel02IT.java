@@ -64,7 +64,7 @@ public class Parallel02IT {
     private void defaultRun() {
         List<String> arguments = new ArrayList<String>();
         arguments.add("classpath:features/feature2.feature");
-        String[] tags = {"@complete", "@accepted"};
+        String[] tags = {"@feature2"};
         for (String tag : tags) {
             arguments.add("--tags");
             arguments.add(tag);

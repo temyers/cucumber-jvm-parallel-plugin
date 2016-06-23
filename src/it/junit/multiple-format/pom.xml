@@ -46,7 +46,10 @@
                 <configuration>
                     <glue>foo</glue>
                     <format>html,json</format>
+					<tags>"@feature1,@feature2"</tags>
+					<filterFeaturesByTags>true</filterFeaturesByTags>
                 </configuration>
+				
             </plugin>
         </plugins>
     </build>

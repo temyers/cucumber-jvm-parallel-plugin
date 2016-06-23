@@ -43,7 +43,9 @@
                         </goals>
                         <configuration>
                             <glue>foo</glue>
-                        </configuration>
+							<tags>"@feature1,@feature2"</tags>
+							<filterFeaturesByTags>true</filterFeaturesByTags>
+                        </configuration>			
                     </execution>
                     <execution>
                         <id>generateRunners2</id>
@@ -53,6 +55,8 @@
                         </goals>
                         <configuration>
                             <glue>bar</glue>
+							<tags>"@feature1,@feature2"</tags>
+							<filterFeaturesByTags>true</filterFeaturesByTags>
                         </configuration>
                     </execution>
                 </executions>

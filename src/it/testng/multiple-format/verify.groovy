@@ -13,7 +13,7 @@ String expected01 =
 import cucumber.api.testng.AbstractTestNGCucumberTests;
 
 @CucumberOptions(strict = true, features = {"classpath:features/feature1.feature"}, plugin = {"html:target/cucumber-parallel/1.html", "json:target/cucumber-parallel/1.json",
-"pretty"}, monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo" })
+"pretty"}, monochrome = false, tags = {"@complete"}, glue = { "foo" })
 public class Parallel01IT extends AbstractTestNGCucumberTests {
 }"""
 
@@ -22,7 +22,7 @@ String expected02 =
 import cucumber.api.testng.AbstractTestNGCucumberTests;
 
 @CucumberOptions(strict = true, features = {"classpath:features/feature2.feature"}, plugin = {"html:target/cucumber-parallel/2.html", "json:target/cucumber-parallel/2.json",
-"pretty"}, monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo" })
+"pretty"}, monochrome = false, tags = {"@accepted"}, glue = { "foo" })
 public class Parallel02IT extends AbstractTestNGCucumberTests {
 }"""
 

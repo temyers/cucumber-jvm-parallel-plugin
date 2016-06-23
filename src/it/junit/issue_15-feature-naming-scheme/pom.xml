@@ -44,6 +44,8 @@
                         <configuration>
                             <glue>foo, bar</glue>
                             <namingScheme>feature-title</namingScheme>
+							<tags>"@feature1,@feature2"</tags>
+                            <filterFeaturesByTags>true</filterFeaturesByTags>
                         </configuration>
                     </execution>
                 </executions>

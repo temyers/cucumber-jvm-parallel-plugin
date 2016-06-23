@@ -43,6 +43,8 @@
                         </goals>
                         <configuration>
                             <glue>foo, bar</glue>
+							<tags>"@feature1,@feature2"</tags>
+							<filterFeaturesByTags>true</filterFeaturesByTags>
                         </configuration>
                     </execution>
                 </executions>
