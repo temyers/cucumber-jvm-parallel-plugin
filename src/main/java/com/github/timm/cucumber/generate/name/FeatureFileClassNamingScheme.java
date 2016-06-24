@@ -32,6 +32,7 @@ public class FeatureFileClassNamingScheme implements ClassNamingScheme {
 
         fileNameWithNoExtension = fileNameWithNoExtension.replaceAll("_", "-");
         fileNameWithNoExtension = fileNameWithNoExtension.replaceAll(" ", "");
+        fileNameWithNoExtension = fileNameWithNoExtension.replaceAll("\\.", "-");
 
         String className =
                         CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_CAMEL, fileNameWithNoExtension);
