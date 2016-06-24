@@ -4,33 +4,44 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
-import java.io.File;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.Collection;
 
 
+@RunWith(Parameterized.class)
 public class FeatureFileClassNamingSchemeTest {
 
+    @Parameterized.Parameter(0)
+    public String featureFileName;
+    @Parameterized.Parameter(1)
+    public String expectedClassName;
+
     ClassNamingScheme classNameGenerator = new FeatureFileClassNamingScheme();
+
+    /**
+     * Create params.
+     */
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        Object[][] params = {
+            {"my-domain_subSetScenarios.feature", "MyDomainSubsetscenarios"},
+            {"my-PERSONNALdomain subSetPersonnalScenarios.feature", "MyPersonnaldomainsubsetpersonnalscenarios"},
+            {"Avýplňový.feature", "Avýplňový"},
+            {"123.feature", "_123"},
+            {"some.test.feature", "SomeTest"},
+        };
+
+        return Arrays.asList(params);
+    }
 
     @Test
     public void shouldGenerateExpectedTestClassNames() throws Exception {
 
-        // using LinkedHasMap, as the order of insertion is important
-        final Map<File, String> inputOutput = new LinkedHashMap<File, String>();
+        assertThat(classNameGenerator.generate(featureFileName),
+            equalTo(expectedClassName));
 
-        inputOutput.put(new File("my-domain_subSetScenarios.feature"), "MyDomainSubsetscenarios");
-        inputOutput.put(new File("my-PERSONNALdomain subSetPersonnalScenarios.feature"),
-                        "MyPersonnaldomainsubsetpersonnalscenarios");
-        inputOutput.put(new File("Avýplňový.feature"), "Avýplňový");
-        inputOutput.put(new File("123.feature"), "_123");
-
-        for (final Map.Entry<File, String> example : inputOutput.entrySet()) {
-
-            assertThat(classNameGenerator.generate(example.getKey().getName()),
-                            equalTo(example.getValue()));
-
-        }
     }
 }
