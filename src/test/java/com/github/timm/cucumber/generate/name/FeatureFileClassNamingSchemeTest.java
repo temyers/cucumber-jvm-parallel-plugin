@@ -21,6 +21,9 @@ public class FeatureFileClassNamingSchemeTest {
 
     ClassNamingScheme classNameGenerator = new FeatureFileClassNamingScheme();
 
+    /**
+     * Create params.
+     */
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         Object[][] params = {
