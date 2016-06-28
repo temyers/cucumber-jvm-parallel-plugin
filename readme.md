@@ -111,6 +111,9 @@ Changelog
 =========
 1.3.0
 -----
+* Fix issue #49 - remove dots when using feature file naming scheme
+* PR #46 - Add checkstyle rules
+* Update to use CucumberOptions.plugin, rather than format
 * issue #19 Add support for custom naming scheme based on a pattern.
 * PR #28 Use "plugin" rather than "format" in Cucumber.Options.  Supports cucumber 1.2.2+
 
