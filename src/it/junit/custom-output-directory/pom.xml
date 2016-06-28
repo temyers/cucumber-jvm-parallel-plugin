@@ -45,6 +45,7 @@
                 </executions>
                 <configuration>
                     <glue>foo, bar</glue>
+                    <tags>"@complete", "@accepted"</tags>
                     <cucumberOutputDir>target/my-custom-dir</cucumberOutputDir>
                 </configuration>
             </plugin>

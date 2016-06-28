@@ -43,7 +43,8 @@
                         </goals>
                         <configuration>
                             <glue>foo, bar</glue>
-                            <tags>"@complete", "@accepted"</tags>
+                            <!-- No tags -->
+                            <tags></tags>
                             <useTestNG>true</useTestNG>
                         </configuration>
                     </execution>

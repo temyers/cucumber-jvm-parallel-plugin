@@ -45,6 +45,7 @@
                 </executions>
                 <configuration>
                     <glue>foo</glue>
+                    <tags>"@complete", "@accepted"</tags>
                     <format>html,json</format>
                     <useTestNG>true</useTestNG>
                 </configuration>

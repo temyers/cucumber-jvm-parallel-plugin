@@ -8,7 +8,7 @@ import cucumber.api.junit.Cucumber;
 features = {"classpath:$featureFile"},
 plugin = {$reports, "pretty"},
 monochrome = ${monochrome},
-tags = {$tags},
+tags = {#if($tags)$tags#end},
 glue = { $glue })
 public class $className {
 }

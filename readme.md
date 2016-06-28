@@ -42,7 +42,7 @@ Add the following to your POM file:
          <!-- CucumberOptions.monochrome property -->
          <monochrome>true</monochrome>
          <!-- The tags to run, maps to CucumberOptions.tags property -->
-         <tags>"@complete", "@accepted"</tags>
+         <tags></tags>
          <!-- If set to true, only feature files containing the required tags shall be generated. -->
          <!-- Excluded tags (~@notMe) are ignored. -->
          <filterFeaturesByTags>false</filterFeaturesByTags>
@@ -107,8 +107,18 @@ Q. Why isn't there much activity on this project
 
 A. The plugin is considered feature complete.  If you feel there is something missing, raise an issue.
 
+Migration from version 1.x
+==========================
+* The default for the `tags` property is now set to no tags.  This means that all scenarios shall be executed by default.  
+      If you did not specify the tags parameter, add `<tags>"@complete", "@accepted"</tags>` to the configuration section.
+
 Changelog
 =========
+2.0.0
+-----
+* issue 50 - Support generating runners without any tags.
+
+
 1.3.0
 -----
 * issue #19 Add support for custom naming scheme based on a pattern.

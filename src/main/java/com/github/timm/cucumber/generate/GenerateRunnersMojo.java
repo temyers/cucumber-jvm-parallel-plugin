@@ -104,8 +104,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
      * see cucumber.api.CucumberOptions.tags
      * </p>
      */
-    @Parameter(defaultValue = "\"@complete\", \"@accepted\"", property = "cucumber.tags",
-                    required = true)
+    @Parameter(property = "cucumber.tags",required = false)
     private String tags;
 
     @Parameter(defaultValue = "UTF-8", property = "project.build.sourceEncoding", readonly = true)
