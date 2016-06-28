@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 /**
  * Copyright (c) 2008-2014 The Cucumber Organisation
- * <p/>
+ *
  * Copy of Cucumber Shellwords
  */
 public class Shellwords {
