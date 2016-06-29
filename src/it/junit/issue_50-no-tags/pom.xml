@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>info.cukes</groupId>
-            <artifactId>cucumber-testng</artifactId>
+            <artifactId>cucumber-junit</artifactId>
             <version>${cucumber.version}</version>
         </dependency>
         <dependency>
@@ -43,8 +43,8 @@
                         </goals>
                         <configuration>
                             <glue>foo, bar</glue>
-                            <tags>"@complete", "@accepted"</tags>
-                            <useTestNG>true</useTestNG>
+                            <!-- No tags -->
+                            <tags></tags>
                         </configuration>
                     </execution>
                 </executions>

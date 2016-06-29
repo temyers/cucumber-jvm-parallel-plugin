@@ -43,6 +43,7 @@
                         </goals>
                         <configuration>
                             <glue>foo, bar</glue>
+                            <tags>"@complete", "@accepted"</tags>
                             <namingScheme>pattern</namingScheme>
                             <namingPattern>Foo{f}{c}IT</namingPattern>
                         </configuration>
