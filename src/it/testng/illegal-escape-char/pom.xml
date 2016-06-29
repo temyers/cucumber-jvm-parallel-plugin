@@ -43,6 +43,7 @@
                         </goals>
                         <configuration>
                             <glue>foo, bar</glue>
+                            <tags>"@complete", "@accepted"</tags>
                             <cucumberOutputDir>target\cucumber-reports</cucumberOutputDir>
                             <useTestNG>true</useTestNG>
                         </configuration>
