@@ -20,7 +20,7 @@ Add the following to your POM file:
   <executions>
     <execution>
       <id>generateRunners</id>
-      <phase>validate</phase>
+      <phase>generate-test-sources</phase>
       <goals>
         <goal>generateRunners</goal>
       </goals>
