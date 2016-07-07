@@ -112,12 +112,14 @@ Migration from version 1.x
 * The default for the `tags` property is now set to no tags.  This means that all scenarios shall be executed by default.  
       If you did not specify the tags parameter, add `<tags>"@complete", "@accepted"</tags>` to the configuration section.
 
+
+
 Changelog
 =========
 2.0.0
 -----
 * issue 50 - Support generating runners without any tags.
-
+* PR #57 - Use "generate-test-sources" maven build phase rather than "validate"
 
 1.3.0
 -----
