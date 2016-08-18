@@ -2,7 +2,12 @@ package com.github.timm.cucumber.generate;
 
 import com.github.timm.cucumber.generate.name.ClassNamingScheme;
 import com.github.timm.cucumber.options.TagParser;
-import org.apache.commons.io.FileUtils;
+import gherkin.AstBuilder;
+import gherkin.Parser;
+import gherkin.TokenMatcher;
+import gherkin.ast.Feature;
+import gherkin.ast.ScenarioDefinition;
+import gherkin.ast.Tag;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.velocity.Template;
@@ -10,6 +15,8 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -64,9 +71,21 @@ public class CucumberITGenerator {
 
     void generateCucumberITFiles(final File outputDirectory, final Collection<File> featureFiles)
                     throws MojoExecutionException {
+        final Parser<Feature> parser = new Parser<Feature>(new AstBuilder());
+        Feature feature = null;
         for (final File file : featureFiles) {
 
-            if (shouldSkipFile(file)) {
+            try {
+                feature = parser.parse(new FileReader(file), new TokenMatcher());
+            } catch (final FileNotFoundException e) {
+                // should never happen
+                // TODO - proper logging
+                System.out.println(String.format("WARNING: Failed to parse '%s'...IGNORING",
+                                file.getName()));
+            }
+
+
+            if (shouldSkipFeature(feature)) {
                 continue;
             }
 
@@ -96,43 +115,31 @@ public class CucumberITGenerator {
         }
     }
 
-    private boolean shouldSkipFile(final File file) {
+    private boolean shouldSkipFeature(final Feature feature) {
         if (config.filterFeaturesByTags()) {
-
-            try {
-                final String fileContents = FileUtils.readFileToString(file);
-
-                if (!fileContainsMatchingTags(fileContents)) {
-                    return true;
-                }
-            } catch (final IOException e) {
-                config.getLog().info("Failed to read contents of " + file.getPath()
-                                + ". Parallel Test shall be created.");
+            if (!featureContainsMatchingTags(feature)) {
+                return true;
             }
         }
         return false;
     }
 
-    private boolean fileContainsMatchingTags(final String fileContents) {
-
+    private boolean featureContainsMatchingTags(final Feature feature) {
         final List<List<String>> tagGroupsAnded =
                         TagParser.splitQuotedTagsIntoParts(overriddenParameters.getTags());
-
         // Tag groups are and'd together
         for (final List<String> tagGroup : tagGroupsAnded) {
             // individual tags are or'd together
-            if (!fileContainsAnyTags(fileContents, tagGroup)) {
+            if (!featureContainsAnyTags(feature, tagGroup)) {
                 return false;
             }
         }
-
         return true;
     }
 
-    private boolean fileContainsAnyTags(final String fileContents, final List<String> tags) {
-
-        for (final String tag : tags) {
-
+    private boolean featureContainsAnyTags(final Feature feature, final List<String> expectedTags) {
+        final List<ScenarioDefinition> scenarios = feature.getScenarioDefinitions();
+        for (final String tag : expectedTags) {
             if (tag.startsWith("~")) {
                 // not tags must be ignored - cannot guarantee that a feature
                 // file containing an ignored tag does not contain scenarios
@@ -140,12 +147,21 @@ public class CucumberITGenerator {
                 // should be included
                 return true;
             }
-
-            if (fileContents.contains(tag)) {
-                return true;
+            for (final Tag actualTag : feature.getTags()) {
+                if (actualTag.getName().equals(tag)) {
+                    return true;
+                }
             }
-        }
+            for (final ScenarioDefinition scenario : scenarios) {
 
+                for (final Tag actualTag : scenario.getTags()) {
+                    if (actualTag.getName().equals(tag)) {
+                        return true;
+                    }
+                }
+            }
+
+        }
         return false;
     }
 
