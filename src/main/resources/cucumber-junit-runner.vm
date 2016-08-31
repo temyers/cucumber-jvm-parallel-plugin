@@ -5,7 +5,7 @@ import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(strict = $strict,
-features = {"classpath:$featureFile"},
+features = {"$featureFile"},
 plugin = {$reports,},
 monochrome = ${monochrome},
 tags = {#if($tags)$tags#end},
