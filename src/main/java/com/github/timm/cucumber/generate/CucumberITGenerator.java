@@ -157,9 +157,7 @@ public class CucumberITGenerator {
      * @param file The feature file
      */
     private void setFeatureFileLocation(final File file) {
-        final File featuresDirectory = config.getFeaturesDirectory();
         featureFileLocation = file.getPath()
-                        .replace(featuresDirectory.getPath(), featuresDirectory.getName())
                         .replace(File.separatorChar, '/');
     }
 
