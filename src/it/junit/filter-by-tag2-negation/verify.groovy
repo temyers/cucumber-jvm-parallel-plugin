@@ -15,5 +15,4 @@ if (suite01.text.contains(expected01)) {
 } else {
     Assert.assertTrue(suite01.text.contains(expected02))
     Assert.assertTrue(suite02.text.contains(expected01))
-
 }
