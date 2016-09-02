@@ -12,7 +12,7 @@ String expected01 =
         """import cucumber.api.CucumberOptions;
 import cucumber.api.testng.AbstractTestNGCucumberTests;
 
-@CucumberOptions(strict = true, features = {\"""" + feature.absolutePath + """\"}, plugin = {"json:target/cucumber-reports/1.json"},
+@CucumberOptions(strict = true, features = {"${feature.absolutePath}"}, plugin = {"json:target/cucumber-reports/1.json"},
 monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo", "bar" })
 public class Parallel01IT extends AbstractTestNGCucumberTests {
 }"""

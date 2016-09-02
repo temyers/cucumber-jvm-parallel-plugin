@@ -21,7 +21,7 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(strict = true, features = {\"""" + feature1.absolutePath + """\"}, plugin = {"json:target/cucumber-parallel/1.json"},
+@CucumberOptions(strict = true, features = {"${feature1.absolutePath}"}, plugin = {"json:target/cucumber-parallel/1.json"},
 monochrome = false, tags = {"@override"}, glue = { "foo", "bar" })
 public class Parallel01IT {
 }"""
@@ -35,7 +35,7 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(strict = true, features = {\"""" + feature2.absolutePath + """\"}, plugin = {"json:target/cucumber-parallel/2.json"},
+@CucumberOptions(strict = true, features = {"${feature2.absolutePath}"}, plugin = {"json:target/cucumber-parallel/2.json"},
 monochrome = false, tags = {"@override"}, glue = { "foo", "bar" })
 public class Parallel02IT {
 }"""
