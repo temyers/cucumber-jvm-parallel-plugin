@@ -129,6 +129,9 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     @Parameter(property = "namingPattern", required = false)
     private String namingPattern;
 
+    @Parameter(defaultValue = "FEATURE", property = "parallelScheme", required = true)
+    private ParallelScheme parallelScheme;
+
     private CucumberITGenerator fileGenerator;
 
     /**
@@ -145,20 +148,23 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
         createOutputDirIfRequired();
 
-        final OverriddenCucumberOptionsParameters overriddenParameters =
-                        overrideParametersWithCucumberOptions();
-
-        final ClassNamingSchemeFactory factory = new ClassNamingSchemeFactory(new OneUpCounter());
-        final ClassNamingScheme classNamingScheme = factory.create(namingScheme, namingPattern);
-
-        fileGenerator = new CucumberITGenerator(this, overriddenParameters, classNamingScheme);
+        fileGenerator = createFileGenerator();
 
         fileGenerator.generateCucumberITFiles(outputDirectory, featureFiles);
 
-        getLog().info("Adding " + outputDirectory.getAbsolutePath()
-                        + " to test-compile source root");
+        getLog().info("Adding " + outputDirectory.getAbsolutePath() + " to test-compile source root");
 
         project.addTestCompileSourceRoot(outputDirectory.getAbsolutePath());
+    }
+
+    private CucumberITGenerator createFileGenerator() throws MojoExecutionException {
+        final OverriddenCucumberOptionsParameters overriddenParameters =
+                        overrideParametersWithCucumberOptions();
+        final ClassNamingSchemeFactory factory = new ClassNamingSchemeFactory(new OneUpCounter());
+        final ClassNamingScheme classNamingScheme = factory.create(namingScheme, namingPattern);
+
+        return new CucumberITGeneratorFactory(this,overriddenParameters,classNamingScheme).create(parallelScheme);
+
     }
 
     private void createOutputDirIfRequired() {
@@ -175,7 +181,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
         final OverriddenCucumberOptionsParameters overriddenParameters =
                         new OverriddenCucumberOptionsParameters();
         overriddenParameters.setTags(this.tags).setGlue(this.glue).setStrict(this.strict)
-                        .setFormat(this.format).setMonochrome(this.monochrome);
+        .setFormat(this.format).setMonochrome(this.monochrome);
 
         overriddenParameters.overrideParametersWithCucumberOptions(cucumberOptions);
 
