@@ -5,8 +5,12 @@ import com.github.timm.cucumber.options.TagParser;
 import gherkin.AstBuilder;
 import gherkin.Parser;
 import gherkin.TokenMatcher;
+import gherkin.ast.Examples;
 import gherkin.ast.Feature;
+import gherkin.ast.Location;
 import gherkin.ast.ScenarioDefinition;
+import gherkin.ast.ScenarioOutline;
+import gherkin.ast.TableRow;
 import gherkin.ast.Tag;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -71,6 +75,7 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
 
     /**
      * Generates a Cucumber runner for each scenario, or example in a scenario outline.
+     *
      * @param outputDirectory the output directory to place generated files
      * @param featureFiles The feature files to create runners for
      * @throws MojoExecutionException if something goes wrong
@@ -98,32 +103,49 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
             // TODO - refactor - not implemented
             for (final ScenarioDefinition scenario : feature.getScenarioDefinitions()) {
 
-                outputFileName = classNamingScheme.generate(file.getName());
+                if (scenario instanceof ScenarioOutline) {
+                    final List<Examples> examples = ((ScenarioOutline) scenario).getExamples();
+                    for (final Examples example : examples) {
+                        for (final TableRow tableRow : example.getTableBody()) {
+                            outputFileName = classNamingScheme.generate(file.getName());
+                            setFeatureFileLocation(file, tableRow.getLocation());
+                            writeFile(outputDirectory);
 
-                setFeatureFileLocation(file);
-
-                final File outputFile = new File(outputDirectory, outputFileName + ".java");
-                FileWriter w = null;
-                try {
-                    w = new FileWriter(outputFile);
-                    writeContentFromTemplate(w);
-                } catch (final IOException e) {
-                    throw new MojoExecutionException("Error creating file " + outputFile, e);
-                } finally {
-                    if (w != null) {
-                        try {
-                            w.close();
-                        } catch (final IOException e) {
-                            // ignore
-                            System.out.println("Failed to close file: " + outputFile);
                         }
+
                     }
+                } else {
+                    outputFileName = classNamingScheme.generate(file.getName());
+                    setFeatureFileLocation(file, scenario.getLocation());
+                    writeFile(outputDirectory);
                 }
 
-                fileCounter++;
+
             }
 
         }
+    }
+
+    private void writeFile(final File outputDirectory) throws MojoExecutionException {
+        final File outputFile = new File(outputDirectory, outputFileName + ".java");
+        FileWriter w = null;
+        try {
+            w = new FileWriter(outputFile);
+            writeContentFromTemplate(w);
+        } catch (final IOException e) {
+            throw new MojoExecutionException("Error creating file " + outputFile, e);
+        } finally {
+            if (w != null) {
+                try {
+                    w.close();
+                } catch (final IOException e) {
+                    // ignore
+                    System.out.println("Failed to close file: " + outputFile);
+                }
+            }
+        }
+
+        fileCounter++;
     }
 
     private boolean shouldSkipFeature(final Feature feature) {
@@ -183,11 +205,11 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
      *
      * @param file The feature file
      */
-    private void setFeatureFileLocation(final File file) {
+    private void setFeatureFileLocation(final File file, final Location location) {
         final File featuresDirectory = config.getFeaturesDirectory();
         featureFileLocation = file.getPath()
                         .replace(featuresDirectory.getPath(), featuresDirectory.getName())
-                        .replace(File.separatorChar, '/');
+                        .replace(File.separatorChar, '/').concat(":" + location.getLine());
     }
 
     private void writeContentFromTemplate(final Writer writer) {

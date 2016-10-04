@@ -42,6 +42,6 @@ public class CucumberITGeneratorFactory {
     }
 
     private CucumberITGenerator createFileGeneratorByScenario() throws MojoExecutionException {
-        return new CucumberITGeneratorByFeature(config, overriddenParameters, classNamingScheme);
+        return new CucumberITGeneratorByScenario(config, overriddenParameters, classNamingScheme);
     }
 }
