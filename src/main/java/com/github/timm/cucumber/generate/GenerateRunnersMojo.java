@@ -129,6 +129,13 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     @Parameter(property = "namingPattern", required = false)
     private String namingPattern;
 
+    /**
+     * The scheme to use when generating runner.  Valid values are:
+     * <ul>
+     * <li><code>FEATURE</code> - Generate one runner per feature</li>
+     * <li><code>SCENARIO</code> - Generate one runner per scenario.  A runner shall be created for each example of a scenario outline</li>
+     * @see ParallelScheme
+     */
     @Parameter(defaultValue = "FEATURE", property = "parallelScheme", required = true)
     private ParallelScheme parallelScheme;
 
