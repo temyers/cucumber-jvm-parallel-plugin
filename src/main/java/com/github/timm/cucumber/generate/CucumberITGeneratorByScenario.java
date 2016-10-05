@@ -98,9 +98,9 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
             }
 
 
-            if (shouldSkipFeature(feature)) {
-                continue;
-            }
+            // if (shouldSkipFeature(feature)) {
+            // continue;
+            // }
 
             // TODO - refactor - not implemented
             for (final ScenarioDefinition scenario : feature.getScenarioDefinitions()) {
@@ -191,10 +191,22 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
     private boolean scenarioContainsAnyTags(final Collection<Tag> tags,
                     final List<String> expectedTags) {
         for (final String tag : expectedTags) {
-            for (final Tag actualTag : tags) {
-                if (actualTag.getName().equals(tag)) {
-                    return true;
+            if (tag.startsWith("~")) {
+                for (final Tag actualTag : tags) {
+
+                    if (actualTag.getName().equals(tag.substring(1))) {
+                        return false;
+                    }
                 }
+                return true;
+            } else {
+                for (final Tag actualTag : tags) {
+
+                    if (actualTag.getName().equals(tag)) {
+                        return true;
+                    }
+                }
+
             }
         }
         return false;
