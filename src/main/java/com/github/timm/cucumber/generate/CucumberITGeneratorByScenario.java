@@ -25,8 +25,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * Generates Cucumber runner files using configuration from FileGeneratorConfig containing parameters passed into the
@@ -103,6 +105,13 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
             // TODO - refactor - not implemented
             for (final ScenarioDefinition scenario : feature.getScenarioDefinitions()) {
 
+
+                final Set<Tag> allTagsForScenario = new HashSet<Tag>(scenario.getTags());
+                allTagsForScenario.addAll(feature.getTags());
+                if (shouldSkipScenario(allTagsForScenario)) {
+                    continue;
+                }
+
                 if (scenario instanceof ScenarioOutline) {
                     final List<Examples> examples = ((ScenarioOutline) scenario).getExamples();
                     for (final Examples example : examples) {
@@ -152,6 +161,40 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
         if (config.filterFeaturesByTags()) {
             if (!featureContainsMatchingTags(feature)) {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean shouldSkipScenario(final Collection<Tag> tags) {
+        if (config.filterFeaturesByTags()) {
+            if (!scenarioContainsMatchingTags(tags)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean scenarioContainsMatchingTags(final Collection<Tag> tags) {
+        final List<List<String>> tagGroupsAnded =
+                        TagParser.splitQuotedTagsIntoParts(overriddenParameters.getTags());
+        // Tag groups are and'd together
+        for (final List<String> tagGroup : tagGroupsAnded) {
+            // individual tags are or'd together
+            if (!scenarioContainsAnyTags(tags, tagGroup)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean scenarioContainsAnyTags(final Collection<Tag> tags,
+                    final List<String> expectedTags) {
+        for (final String tag : expectedTags) {
+            for (final Tag actualTag : tags) {
+                if (actualTag.getName().equals(tag)) {
+                    return true;
+                }
             }
         }
         return false;

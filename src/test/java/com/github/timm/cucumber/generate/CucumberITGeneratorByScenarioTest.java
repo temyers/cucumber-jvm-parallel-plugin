@@ -17,7 +17,7 @@ import java.util.Arrays;
 public class CucumberITGeneratorByScenarioTest {
 
     CucumberITGeneratorByScenario classUnderTest;
-    private FileGeneratorConfig config;
+    private TestFileGeneratorConfig config;
     private File outputDirectory;
 
     @Before
@@ -93,7 +93,7 @@ public class CucumberITGeneratorByScenarioTest {
                         Arrays.asList(new File(featureFile)));
 
         final File scenario3 = new File(outputDirectory, "Parallel03IT.java");
-        assertThat(scenario3).satisfies(new FileContains("classpath:features/feature2.feature:16"));
+        assertThat(scenario3).satisfies(new FileContains("classpath:features/feature2.feature:17"));
     }
 
     private class FileContains extends Condition<File> {
