@@ -105,7 +105,6 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
             // TODO - refactor - not implemented
             for (final ScenarioDefinition scenario : feature.getScenarioDefinitions()) {
 
-
                 final Set<Tag> allTagsForScenario = new HashSet<Tag>(scenario.getTags());
                 allTagsForScenario.addAll(feature.getTags());
                 if (shouldSkipScenario(allTagsForScenario)) {

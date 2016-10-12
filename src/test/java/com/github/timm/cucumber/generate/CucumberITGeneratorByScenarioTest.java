@@ -74,6 +74,19 @@ public class CucumberITGeneratorByScenarioTest {
     }
 
     @Test
+    public void shouldIncludeAllExamplesWhenMultipleExampleBlocksAreUsed() throws Exception {
+        config.setFeaturesDirectory(new File("src/test/resources/features/"));
+        final String featureFile =
+                        "src/test/resources/features/multiple-example.feature";
+        classUnderTest.generateCucumberITFiles(outputDirectory,
+                        Arrays.asList(new File(featureFile)));
+
+        final File example4 = new File(outputDirectory, "Parallel04IT.java");
+        assertThat(example4).satisfies(new FileContains("classpath:features/multiple-example.feature:18"));
+        assertThat(outputDirectory.listFiles()).hasSize(6);
+    }
+
+    @Test
     public void shouldIncludeTheScenarioLineNumberInGeneratedRunner() throws Exception {
         final String featureFile =
                         "src/it/junit/issue_43-outline_runner/src/test/resources/features/feature2.feature";
