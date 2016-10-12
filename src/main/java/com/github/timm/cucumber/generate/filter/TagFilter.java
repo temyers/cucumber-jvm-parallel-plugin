@@ -59,7 +59,7 @@ public class TagFilter {
     }
 
     /**
-     * Find the scenarios that match the required tags in the feature
+     * Find the scenarios that match the required tags in the feature.
      *
      * @param feature
      * @return

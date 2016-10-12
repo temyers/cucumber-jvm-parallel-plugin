@@ -82,7 +82,7 @@ public class CucumberITGeneratorByScenarioTest {
                         Arrays.asList(new File(featureFile)));
 
         final File example4 = new File(outputDirectory, "Parallel04IT.java");
-        assertThat(example4).satisfies(new FileContains("classpath:features/multiple-example.feature:18"));
+        assertThat(example4).satisfies(new FileContains("classpath:features/multiple-example.feature:19"));
         assertThat(outputDirectory.listFiles()).hasSize(6);
     }
 

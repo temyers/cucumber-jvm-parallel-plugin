@@ -1,3 +1,4 @@
+@featureTag
 Feature: filter by tag
 
 @tag1 @tag2

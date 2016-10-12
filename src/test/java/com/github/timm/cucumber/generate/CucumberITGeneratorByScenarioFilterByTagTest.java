@@ -119,6 +119,69 @@ public class CucumberITGeneratorByScenarioFilterByTagTest {
 
     }
 
+    @Test
+    // TODO - refactor SRP
+    public void shouldIncludeScenariosWhenFilteringByOrTags() throws Exception {
+
+        overriddenParameters.setTags("\"@tag1,@tag2\"");
+        config.setFeaturesDirectory(
+                        new File("src/test/resources/features/"));
+
+        final String featureFile1 =
+                        "src/test/resources/features/filterByTag.feature";
+        classUnderTest.generateCucumberITFiles(outputDirectory,
+                        Arrays.asList(new File(featureFile1)));
+
+        final File scenario1 = new File(outputDirectory, "Parallel01IT.java");
+        assertThat(scenario1).satisfies(new FileContains("classpath:features/filterByTag.feature:5"));
+        final File scenario2 = new File(outputDirectory, "Parallel02IT.java");
+        assertThat(scenario2).satisfies(new FileContains("classpath:features/filterByTag.feature:10"));
+        final File scenario3 = new File(outputDirectory, "Parallel03IT.java");
+        assertThat(scenario3).satisfies(new FileContains("classpath:features/filterByTag.feature:16"));
+
+        assertThat(outputDirectory.listFiles()).hasSize(3);
+
+    }
+
+    @Test
+    // TODO - refactor SRP
+    public void shouldIncludeScenariosWhenFilteringByAndTags() throws Exception {
+
+        overriddenParameters.setTags("\"@tag1\",\"@tag2\"");
+        config.setFeaturesDirectory(
+                        new File("src/test/resources/features/"));
+
+        final String featureFile1 =
+                        "src/test/resources/features/filterByTag.feature";
+        classUnderTest.generateCucumberITFiles(outputDirectory,
+                        Arrays.asList(new File(featureFile1)));
+
+        final File scenario1 = new File(outputDirectory, "Parallel01IT.java");
+        assertThat(scenario1).satisfies(new FileContains("classpath:features/filterByTag.feature:5"));
+
+        assertThat(outputDirectory.listFiles()).hasSize(1);
+
+    }
+
+    @Test
+    // TODO - refactor SRP
+    public void shouldIncludeScenariosWhenFilteringByNotTags() throws Exception {
+
+        overriddenParameters.setTags("\"@tag1\",\"~@tag2\"");
+        config.setFeaturesDirectory(
+                        new File("src/test/resources/features/"));
+
+        final String featureFile1 =
+                        "src/test/resources/features/filterByTag.feature";
+        classUnderTest.generateCucumberITFiles(outputDirectory,
+                        Arrays.asList(new File(featureFile1)));
+
+        final File scenario1 = new File(outputDirectory, "Parallel01IT.java");
+        assertThat(scenario1).satisfies(new FileContains("classpath:features/filterByTag.feature:10"));
+
+        assertThat(outputDirectory.listFiles()).hasSize(1);
+
+    }
 
     private class FileContains extends Condition<File> {
 

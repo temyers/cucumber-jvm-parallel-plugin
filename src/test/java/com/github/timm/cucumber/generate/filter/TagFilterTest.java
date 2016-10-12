@@ -21,7 +21,8 @@ public class TagFilterTest {
         final TagFilter tagFilter = new TagFilter("\"@tag1\",\"@tag2\"");
         final Feature feature = parseFeature("src/test/resources/features/filterByTag.feature");
 
-        final Collection<Node> matchingScenariosAndExamples = tagFilter.matchingScenariosAndExamples(feature);
+        final Collection<Node> matchingScenariosAndExamples =
+                        tagFilter.matchingScenariosAndExamples(feature);
 
         assertThat(matchingScenariosAndExamples).hasSize(1);
     }
@@ -32,10 +33,12 @@ public class TagFilterTest {
         final TagFilter tagFilter = new TagFilter("\"@tag1\",\"~@tag2\"");
         final Feature feature = parseFeature("src/test/resources/features/filterByTag.feature");
 
-        final Collection<Node> matchingScenariosAndExamples = tagFilter.matchingScenariosAndExamples(feature);
+        final Collection<Node> matchingScenariosAndExamples =
+                        tagFilter.matchingScenariosAndExamples(feature);
 
         assertThat(matchingScenariosAndExamples).hasSize(1);
-        assertThat(((ScenarioDefinition)(matchingScenariosAndExamples.iterator().next())).getName()).isEqualTo("with one tag");
+        assertThat(((ScenarioDefinition) (matchingScenariosAndExamples.iterator().next()))
+                        .getName()).isEqualTo("with one tag");
 
     }
 
@@ -45,7 +48,8 @@ public class TagFilterTest {
         final TagFilter tagFilter = new TagFilter("\"@tag1,@tag2\"");
         final Feature feature = parseFeature("src/test/resources/features/filterByTag.feature");
 
-        final Collection<Node> matchingScenariosAndExamples = tagFilter.matchingScenariosAndExamples(feature);
+        final Collection<Node> matchingScenariosAndExamples =
+                        tagFilter.matchingScenariosAndExamples(feature);
 
         assertThat(matchingScenariosAndExamples).hasSize(3);
     }
@@ -54,21 +58,63 @@ public class TagFilterTest {
     public void shouldIncludeExamplesWhenFilteringByTagsAtExampleLevel() throws Exception {
 
         final TagFilter tagFilter = new TagFilter("\"@english\"");
-        final Feature feature = parseFeature("src/test/resources/features/multiple-example.feature");
+        final Feature feature =
+                        parseFeature("src/test/resources/features/multiple-example.feature");
 
-        final Collection<Node> matchingScenariosAndExamples = tagFilter.matchingScenariosAndExamples(feature);
+        final Collection<Node> matchingScenariosAndExamples =
+                        tagFilter.matchingScenariosAndExamples(feature);
 
         assertThat(matchingScenariosAndExamples).hasSize(3);
 
-        assertThat(matchingScenariosAndExamples.iterator().next().getLocation().getLine()).isEqualTo(11);
+        assertThat(matchingScenariosAndExamples.iterator().next().getLocation().getLine())
+                        .isEqualTo(12);
     }
 
+    @Test
+    public void shouldIncludeScenariosWhenFilteringByTagsAtFeatureLevel() throws Exception {
 
-    public Feature parseFeature(final String file) {
+        final TagFilter tagFilter = new TagFilter("\"@featureTag\"");
+        final Feature feature = parseFeature("src/test/resources/features/filterByTag.feature");
+
+        final Collection<Node> matchingScenariosAndExamples =
+                        tagFilter.matchingScenariosAndExamples(feature);
+
+        assertThat(matchingScenariosAndExamples).hasSize(3);
+
+    }
+
+    @Test
+    public void shouldIncludeScenariosWhenFilteringByTagsAtScenarioLevel() throws Exception {
+
+        final TagFilter tagFilter = new TagFilter("\"@tag1\"");
+        final Feature feature = parseFeature("src/test/resources/features/filterByTag.feature");
+
+        final Collection<Node> matchingScenariosAndExamples =
+                        tagFilter.matchingScenariosAndExamples(feature);
+
+        assertThat(matchingScenariosAndExamples).hasSize(2);
+
+    }
+
+    @Test
+    public void shouldIncludeScenariosWhenFilteringByTagsAtScenarioOutlineLevel() throws Exception {
+
+        final TagFilter tagFilter = new TagFilter("\"@outlineTag\"");
+        final Feature feature =
+                        parseFeature("src/test/resources/features/multiple-example.feature");
+
+        final Collection<Node> matchingScenariosAndExamples =
+                        tagFilter.matchingScenariosAndExamples(feature);
+
+        assertThat(matchingScenariosAndExamples).hasSize(6);
+
+    }
+
+    private Feature parseFeature(final String file) {
         try {
             final Parser<Feature> parser = new Parser<Feature>(new AstBuilder());
             return parser.parse(new FileReader(file), new TokenMatcher());
-        }catch(final Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
     }

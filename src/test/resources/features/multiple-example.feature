@@ -1,5 +1,6 @@
 Feature: Multiple Examples
 
+@outlineTag
 Scenario Outline: Multiple example blocks
   Given example <number>
   When I generate runners
