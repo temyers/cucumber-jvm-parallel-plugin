@@ -1,5 +1,6 @@
 package com.github.timm.cucumber.generate;
 
+import com.github.timm.cucumber.generate.filter.TagFilter;
 import com.github.timm.cucumber.generate.name.ClassNamingScheme;
 import com.github.timm.cucumber.options.TagParser;
 import gherkin.AstBuilder;
@@ -27,8 +28,11 @@ import java.util.Properties;
 /**
  * Generates Cucumber runner files using configuration from FileGeneratorConfig containing parameters passed into the
  * Maven Plugin configuration.
+ *
+ * @deprecated Generating runners by feature is deprecated, creating runners per scenario is preferred. This class shall
+ *             be removed in a future version.
  */
-
+@Deprecated
 public class CucumberITGeneratorByFeature implements CucumberITGenerator {
 
     private final FileGeneratorConfig config;
@@ -71,12 +75,13 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
 
     /**
      * Generates a single Cucumber runner for each separate feature file.
+     *
      * @param outputDirectory the output directory to place generated files
      * @param featureFiles The feature files to create runners for
      * @throws MojoExecutionException if something goes wrong
      */
-    public void generateCucumberITFiles(final File outputDirectory, final Collection<File> featureFiles)
-                    throws MojoExecutionException {
+    public void generateCucumberITFiles(final File outputDirectory,
+                    final Collection<File> featureFiles) throws MojoExecutionException {
         final Parser<Feature> parser = new Parser<Feature>(new AstBuilder());
         Feature feature = null;
         for (final File file : featureFiles) {
@@ -128,9 +133,15 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
 
     private boolean shouldSkipFeature(final Feature feature) {
         if (config.filterFeaturesByTags()) {
-            if (!featureContainsMatchingTags(feature)) {
+            final TagFilter tagFilter = new TagFilter(overriddenParameters.getTags());
+            if (tagFilter.matchingScenariosAndExamples(feature).isEmpty()) {
                 return true;
             }
+
+            //
+            // if (!featureContainsMatchingTags(feature)) {
+            // return true;
+            // }
         }
         return false;
     }

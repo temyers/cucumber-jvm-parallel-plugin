@@ -44,7 +44,6 @@ Add the following to your POM file:
          <!-- The tags to run, maps to CucumberOptions.tags property -->
          <tags></tags>
          <!-- If set to true, only feature files containing the required tags shall be generated. -->
-         <!-- Excluded tags (~@notMe) are ignored. -->
          <filterFeaturesByTags>false</filterFeaturesByTags>
          <!-- Generate TestNG runners instead of JUnit ones. --> 
          <useTestNG>false</useTestNG>
