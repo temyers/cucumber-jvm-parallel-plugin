@@ -15,13 +15,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * The TagFilter is responsible for identifying matching Scenarios/Outline Examples that match the given set of tags.
+ */
 public class TagFilter {
 
     private final List<List<String>> tagGroupsAnded;
 
+    /**
+     * Constructor. If <code>tags</code> is null, no filtering shall be performed.
+     *
+     * @param tags The tags to filter by.
+     */
     public TagFilter(final String tags) {
 
-        tagGroupsAnded = TagParser.splitQuotedTagsIntoParts(tags);
+        final String nullsafeTags = tags == null ? "" : tags;
+        tagGroupsAnded = TagParser.splitQuotedTagsIntoParts(nullsafeTags);
     }
 
     private boolean matches(final Collection<Tag> tags) {

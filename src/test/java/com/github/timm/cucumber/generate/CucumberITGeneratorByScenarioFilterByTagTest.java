@@ -28,7 +28,7 @@ public class CucumberITGeneratorByScenarioFilterByTagTest {
                         .setCucumberOutputDir(this.getClass());
 
         overriddenParameters = new OverriddenCucumberOptionsParameters();
-        overriddenParameters.setGlue("foo").setStrict(true).setFormat("json")
+        overriddenParameters.setGlue("foo").setStrict(true).setFormat("json").setTags("")
         .setMonochrome(false);
 
         final ClassNamingScheme classNamingScheme =

@@ -16,6 +16,17 @@ import java.util.Collection;
 public class TagFilterTest {
 
     @Test
+    public void shouldFindAllScenariosWhenTagsAreNull() {
+        final TagFilter tagFilter = new TagFilter(null);
+        final Feature feature = parseFeature("src/test/resources/features/filterByTag.feature");
+
+        final Collection<Node> matchingScenariosAndExamples =
+                        tagFilter.matchingScenariosAndExamples(feature);
+
+        assertThat(matchingScenariosAndExamples).hasSize(3);
+    }
+
+    @Test
     public void shouldFindScenariosWithAndedTags() {
 
         final TagFilter tagFilter = new TagFilter("\"@tag1\",\"@tag2\"");
