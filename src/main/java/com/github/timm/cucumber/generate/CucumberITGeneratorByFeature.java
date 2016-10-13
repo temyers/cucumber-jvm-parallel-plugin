@@ -2,13 +2,11 @@ package com.github.timm.cucumber.generate;
 
 import com.github.timm.cucumber.generate.filter.TagFilter;
 import com.github.timm.cucumber.generate.name.ClassNamingScheme;
-import com.github.timm.cucumber.options.TagParser;
 import gherkin.AstBuilder;
 import gherkin.Parser;
 import gherkin.TokenMatcher;
 import gherkin.ast.Feature;
 import gherkin.ast.ScenarioDefinition;
-import gherkin.ast.Tag;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.velocity.Template;
@@ -22,7 +20,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
-import java.util.List;
 import java.util.Properties;
 
 /**
@@ -95,7 +92,6 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
                                 file.getName()));
             }
 
-
             if (shouldSkipFeature(feature)) {
                 continue;
             }
@@ -142,47 +138,6 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
             // if (!featureContainsMatchingTags(feature)) {
             // return true;
             // }
-        }
-        return false;
-    }
-
-    private boolean featureContainsMatchingTags(final Feature feature) {
-        final List<List<String>> tagGroupsAnded =
-                        TagParser.splitQuotedTagsIntoParts(overriddenParameters.getTags());
-        // Tag groups are and'd together
-        for (final List<String> tagGroup : tagGroupsAnded) {
-            // individual tags are or'd together
-            if (!featureContainsAnyTags(feature, tagGroup)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean featureContainsAnyTags(final Feature feature, final List<String> expectedTags) {
-        final List<ScenarioDefinition> scenarios = feature.getScenarioDefinitions();
-        for (final String tag : expectedTags) {
-            if (tag.startsWith("~")) {
-                // not tags must be ignored - cannot guarantee that a feature
-                // file containing an ignored tag does not contain scenarios
-                // that
-                // should be included
-                return true;
-            }
-            for (final Tag actualTag : feature.getTags()) {
-                if (actualTag.getName().equals(tag)) {
-                    return true;
-                }
-            }
-            for (final ScenarioDefinition scenario : scenarios) {
-
-                for (final Tag actualTag : scenario.getTags()) {
-                    if (actualTag.getName().equals(tag)) {
-                        return true;
-                    }
-                }
-            }
-
         }
         return false;
     }
