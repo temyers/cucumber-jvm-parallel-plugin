@@ -46,7 +46,7 @@
                 <configuration>
                     <glue>foo</glue>
                     <tags>"@complete", "@accepted"</tags>
-                    <format>html,json</format>
+                    <format>html,json,pretty</format>
                 </configuration>
             </plugin>
         </plugins>

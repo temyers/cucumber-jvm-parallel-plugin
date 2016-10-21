@@ -150,9 +150,7 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
      * @param file The feature file
      */
     private void setFeatureFileLocation(final File file) {
-        final File featuresDirectory = config.getFeaturesDirectory();
         featureFileLocation = file.getPath()
-                        .replace(featuresDirectory.getPath(), featuresDirectory.getName())
                         .replace(File.separatorChar, '/');
     }
 
@@ -181,9 +179,14 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
 
         for (int i = 0; i < formatStrs.length; i++) {
             final String formatStr = formatStrs[i].trim();
-            sb.append(String.format("\"%s:%s/%s.%s\"", formatStr,
-                            config.getCucumberOutputDir().replace('\\', '/'), fileCounter,
-                            formatStr));
+
+            if ("pretty".equalsIgnoreCase(formatStr)) {
+                sb.append("\"pretty\"");
+            } else {
+                sb.append(String.format("\"%s:%s/%s.%s\"", formatStr,
+                        config.getCucumberOutputDir().replace('\\', '/'), fileCounter,
+                        formatStr));
+            }
 
             if (i < formatStrs.length - 1) {
                 sb.append(", ");

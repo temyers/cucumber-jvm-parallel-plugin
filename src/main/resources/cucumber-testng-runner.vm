@@ -2,8 +2,8 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.testng.AbstractTestNGCucumberTests;
 
 @CucumberOptions(strict = $strict,
-features = {"classpath:$featureFile"},
-plugin = {$reports, "pretty"},
+features = {"$featureFile"},
+plugin = {$reports},
 monochrome = ${monochrome},
 tags = {#if($tags)$tags#end},
 glue = { $glue })
