@@ -82,7 +82,7 @@ public class CucumberITGeneratorByScenarioTest {
                         Arrays.asList(new File(featureFile)));
 
         final File example4 = new File(outputDirectory, "Parallel04IT.java");
-        assertThat(example4).satisfies(new FileContains("classpath:features/multiple-example.feature:19"));
+        assertThat(example4).satisfies(new FileContains("features/multiple-example.feature:19"));
         assertThat(outputDirectory.listFiles()).hasSize(6);
     }
 
@@ -94,7 +94,7 @@ public class CucumberITGeneratorByScenarioTest {
                         Arrays.asList(new File(featureFile)));
 
         final File scenario1 = new File(outputDirectory, "Parallel01IT.java");
-        assertThat(scenario1).satisfies(new FileContains("classpath:features/feature2.feature:3"));
+        assertThat(scenario1).satisfies(new FileContains("features/feature2.feature:3"));
     }
 
     @Test
@@ -106,7 +106,7 @@ public class CucumberITGeneratorByScenarioTest {
                         Arrays.asList(new File(featureFile)));
 
         final File scenario3 = new File(outputDirectory, "Parallel03IT.java");
-        assertThat(scenario3).satisfies(new FileContains("classpath:features/feature2.feature:17"));
+        assertThat(scenario3).satisfies(new FileContains("features/feature2.feature:17"));
     }
 
     private class FileContains extends Condition<File> {

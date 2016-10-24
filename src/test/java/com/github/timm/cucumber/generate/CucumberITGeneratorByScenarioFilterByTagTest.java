@@ -63,7 +63,7 @@ public class CucumberITGeneratorByScenarioFilterByTagTest {
                         Arrays.asList(new File(featureFile1),new File(featureFile2),new File(featureFile3)));
 
         final File scenario1 = new File(outputDirectory, "Parallel01IT.java");
-        assertThat(scenario1).satisfies(new FileContains("classpath:features/feature1.feature:5"));
+        assertThat(scenario1).satisfies(new FileContains("features/feature1.feature:5"));
 
         assertThat(outputDirectory.listFiles()).hasSize(1);
 
@@ -87,9 +87,9 @@ public class CucumberITGeneratorByScenarioFilterByTagTest {
                         Arrays.asList(new File(featureFile1),new File(featureFile2),new File(featureFile3)));
 
         final File scenario1 = new File(outputDirectory, "Parallel01IT.java");
-        assertThat(scenario1).satisfies(new FileContains("classpath:features/feature1.feature:5"));
+        assertThat(scenario1).satisfies(new FileContains("features/feature1.feature:5"));
         final File scenario2 = new File(outputDirectory, "Parallel02IT.java");
-        assertThat(scenario2).satisfies(new FileContains("classpath:features/feature2.feature:5"));
+        assertThat(scenario2).satisfies(new FileContains("features/feature2.feature:5"));
 
         assertThat(outputDirectory.listFiles()).hasSize(2);
 
@@ -111,9 +111,9 @@ public class CucumberITGeneratorByScenarioFilterByTagTest {
                         Arrays.asList(new File(featureFile1),new File(featureFile2)));
 
         final File scenario1 = new File(outputDirectory, "Parallel01IT.java");
-        assertThat(scenario1).satisfies(new FileContains("classpath:features/feature2.feature:16"));
+        assertThat(scenario1).satisfies(new FileContains("features/feature2.feature:16"));
         final File scenario2 = new File(outputDirectory, "Parallel02IT.java");
-        assertThat(scenario2).satisfies(new FileContains("classpath:features/feature2.feature:17"));
+        assertThat(scenario2).satisfies(new FileContains("features/feature2.feature:17"));
 
         assertThat(outputDirectory.listFiles()).hasSize(3);
 
@@ -133,11 +133,11 @@ public class CucumberITGeneratorByScenarioFilterByTagTest {
                         Arrays.asList(new File(featureFile1)));
 
         final File scenario1 = new File(outputDirectory, "Parallel01IT.java");
-        assertThat(scenario1).satisfies(new FileContains("classpath:features/filterByTag.feature:5"));
+        assertThat(scenario1).satisfies(new FileContains("features/filterByTag.feature:5"));
         final File scenario2 = new File(outputDirectory, "Parallel02IT.java");
-        assertThat(scenario2).satisfies(new FileContains("classpath:features/filterByTag.feature:10"));
+        assertThat(scenario2).satisfies(new FileContains("features/filterByTag.feature:10"));
         final File scenario3 = new File(outputDirectory, "Parallel03IT.java");
-        assertThat(scenario3).satisfies(new FileContains("classpath:features/filterByTag.feature:16"));
+        assertThat(scenario3).satisfies(new FileContains("features/filterByTag.feature:16"));
 
         assertThat(outputDirectory.listFiles()).hasSize(3);
 
@@ -157,7 +157,7 @@ public class CucumberITGeneratorByScenarioFilterByTagTest {
                         Arrays.asList(new File(featureFile1)));
 
         final File scenario1 = new File(outputDirectory, "Parallel01IT.java");
-        assertThat(scenario1).satisfies(new FileContains("classpath:features/filterByTag.feature:5"));
+        assertThat(scenario1).satisfies(new FileContains("features/filterByTag.feature:5"));
 
         assertThat(outputDirectory.listFiles()).hasSize(1);
 
@@ -177,7 +177,7 @@ public class CucumberITGeneratorByScenarioFilterByTagTest {
                         Arrays.asList(new File(featureFile1)));
 
         final File scenario1 = new File(outputDirectory, "Parallel01IT.java");
-        assertThat(scenario1).satisfies(new FileContains("classpath:features/filterByTag.feature:10"));
+        assertThat(scenario1).satisfies(new FileContains("features/filterByTag.feature:10"));
 
         assertThat(outputDirectory.listFiles()).hasSize(1);
 
