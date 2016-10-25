@@ -5,7 +5,7 @@ A common approach for running Cucumber features in parallel is to create a suite
 
 This is a pain to maintain and not very DRY.
 
-This is where the cucumber-jvm-parallel-plugin comes in.  This plugin automatically generates a Cucumber JUnit or TestNG runner for each feature file found in your project.
+This is where the cucumber-jvm-parallel-plugin comes in.  This plugin automatically generates a Cucumber JUnit or TestNG runner for each scenario/feature file found in your project.
 
 Usage
 -----
@@ -28,7 +28,7 @@ Add the following to your POM file:
           <!-- Mandatory -->
           <!-- comma separated list of package names to scan for glue code -->
          <glue>foo, bar</glue>
-         <!-- These are the default values -->
+         <!-- These are optional, with the default values -->
           <!-- Where to output the generated tests -->
            <outputDirectory>${project.build.directory}/generated-test-sources/cucumber</outputDirectory>
            <!-- The diectory, which must be in the root of the runtime classpath, containing your feature files.  -->
@@ -44,7 +44,6 @@ Add the following to your POM file:
          <!-- The tags to run, maps to CucumberOptions.tags property -->
          <tags></tags>
          <!-- If set to true, only feature files containing the required tags shall be generated. -->
-         <!-- Excluded tags (~@notMe) are ignored. -->
          <filterFeaturesByTags>false</filterFeaturesByTags>
          <!-- Generate TestNG runners instead of JUnit ones. --> 
          <useTestNG>false</useTestNG>
@@ -52,6 +51,8 @@ Add the following to your POM file:
          <namingScheme>simple</namingScheme>
          <!-- The class naming pattern to use.  Only required/used if naming scheme is 'pattern'.-->
          <namingPattern>Parallel{c}IT</namingPattern>
+         <!-- One of [SCENARIO, FEATURE]. SCENARIO generates one runner per scenario.  FEATURE generates a runner per feature. -->
+         <parallelScheme>SCENARIO<parallelScheme>
       </configuration>
     </execution>
   </executions>
@@ -111,7 +112,7 @@ Migration from version 1.x
 ==========================
 * The default for the `tags` property is now set to no tags.  This means that all scenarios shall be executed by default.  
       If you did not specify the tags parameter, add `<tags>"@complete", "@accepted"</tags>` to the configuration section.
-
+* A new property `parallelScheme` has been introduced to provide a mechanism for choosing how the feature runners are created.  The default is set to SCENARIO, meaning that a runner will be created for each scenario in a feature file, including any examples.  This greatly increases the possibility for running scenarios in parallel, but has the impact that any fragile, interdependent, tests may fail unexpectedly.  Use the FEATURE property to generate runners as per 1.x
 
 
 Changelog
@@ -120,6 +121,7 @@ Changelog
 -----
 * issue 50 - Support generating runners without any tags.
 * PR #57 - Use "generate-test-sources" maven build phase rather than "validate"
+* PR #xx - Support generating runners per scenario
 
 1.3.0
 -----

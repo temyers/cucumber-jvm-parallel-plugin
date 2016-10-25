@@ -104,7 +104,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
      * see cucumber.api.CucumberOptions.tags
      * </p>
      */
-    @Parameter(property = "cucumber.tags",required = false)
+    @Parameter(property = "cucumber.tags", required = false)
     private String tags;
 
     @Parameter(defaultValue = "UTF-8", property = "project.build.sourceEncoding", readonly = true)
@@ -129,6 +129,18 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     @Parameter(property = "namingPattern", required = false)
     private String namingPattern;
 
+    /**
+     * The scheme to use when generating runner. Valid values are:
+     * <ul>
+     * <li><code>FEATURE</code> - Generate one runner per feature</li>
+     * <li><code>SCENARIO</code> - Generate one runner per scenario. A runner shall be created for each example of a
+     * scenario outline</li>
+     * </ul>
+     * @see ParallelScheme
+     */
+    @Parameter(defaultValue = "FEATURE", property = "parallelScheme", required = true)
+    private ParallelScheme parallelScheme;
+
     private CucumberITGenerator fileGenerator;
 
     /**
@@ -145,13 +157,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
         createOutputDirIfRequired();
 
-        final OverriddenCucumberOptionsParameters overriddenParameters =
-                        overrideParametersWithCucumberOptions();
-
-        final ClassNamingSchemeFactory factory = new ClassNamingSchemeFactory(new OneUpCounter());
-        final ClassNamingScheme classNamingScheme = factory.create(namingScheme, namingPattern);
-
-        fileGenerator = new CucumberITGenerator(this, overriddenParameters, classNamingScheme);
+        fileGenerator = createFileGenerator();
 
         fileGenerator.generateCucumberITFiles(outputDirectory, featureFiles);
 
@@ -159,6 +165,17 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
                         + " to test-compile source root");
 
         project.addTestCompileSourceRoot(outputDirectory.getAbsolutePath());
+    }
+
+    private CucumberITGenerator createFileGenerator() throws MojoExecutionException {
+        final OverriddenCucumberOptionsParameters overriddenParameters =
+                        overrideParametersWithCucumberOptions();
+        final ClassNamingSchemeFactory factory = new ClassNamingSchemeFactory(new OneUpCounter());
+        final ClassNamingScheme classNamingScheme = factory.create(namingScheme, namingPattern);
+
+        return new CucumberITGeneratorFactory(this, overriddenParameters, classNamingScheme)
+                        .create(parallelScheme);
+
     }
 
     private void createOutputDirIfRequired() {
