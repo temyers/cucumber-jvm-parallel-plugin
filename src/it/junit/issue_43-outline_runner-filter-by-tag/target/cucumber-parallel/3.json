@@ -1,0 +1,73 @@
+[
+  {
+    "line": 1,
+    "elements": [
+      {
+        "line": 18,
+        "name": "Generate runners per example in a scenario outline",
+        "description": "",
+        "id": "feature1;generate-runners-per-example-in-a-scenario-outline;;4",
+        "type": "scenario",
+        "keyword": "Scenario Outline",
+        "steps": [
+          {
+            "result": {
+              "duration": 2372881,
+              "status": "passed"
+            },
+            "line": 10,
+            "name": "I have a scenario with 3 examples",
+            "match": {
+              "arguments": [
+                {
+                  "val": "3",
+                  "offset": 23
+                }
+              ],
+              "location": "Steps.i_have_a_scenario_with_examples(int)"
+            },
+            "keyword": "Given "
+          },
+          {
+            "result": {
+              "duration": 49439,
+              "status": "passed"
+            },
+            "line": 11,
+            "name": "I generate runners per scenario",
+            "match": {
+              "location": "Steps.i_generate_runners_per_scenario()"
+            },
+            "keyword": "When "
+          },
+          {
+            "result": {
+              "duration": 19630,
+              "status": "passed"
+            },
+            "line": 12,
+            "name": "a runner should be created for baz example",
+            "match": {
+              "location": "Steps.a_runner_should_be_created_for_baz_example()"
+            },
+            "matchedColumns": [
+              0
+            ],
+            "keyword": "Then "
+          }
+        ],
+        "tags": [
+          {
+            "line": 8,
+            "name": "@outlineTag"
+          }
+        ]
+      }
+    ],
+    "name": "Feature1",
+    "description": "",
+    "id": "feature1",
+    "keyword": "Feature",
+    "uri": "/Users/tim/data/projects/personal/cucumber-jvm-parallel-plugin/src/it/junit/issue_43-outline_runner-filter-by-tag/src/test/resources/features/feature2.feature"
+  }
+]
