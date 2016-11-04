@@ -253,7 +253,7 @@
 							<addTestClassPath>true</addTestClassPath>
 							<goals>
 								<goal>clean</goal>
-								<goal>test-compile</goal>
+								<goal>integration-test</goal>
 							</goals>
 							<parallelThreads>5</parallelThreads>
 						</configuration>

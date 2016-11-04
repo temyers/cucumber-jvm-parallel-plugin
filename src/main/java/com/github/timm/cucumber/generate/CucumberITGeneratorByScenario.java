@@ -135,8 +135,8 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
      * @param file The feature file
      */
     private void setFeatureFileLocation(final File file, final Location location) {
-        featureFileLocation = file.getPath()
-                        .replace(File.separatorChar, '/').concat(":" + location.getLine());
+        featureFileLocation = file.getPath().replace(File.separatorChar, '/')
+                        .concat(":" + location.getLine());
     }
 
     private void writeContentFromTemplate(final Writer writer) {
@@ -145,7 +145,9 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
         context.put("strict", overriddenParameters.isStrict());
         context.put("featureFile", featureFileLocation);
         context.put("reports", createFormatStrings());
-        context.put("tags", overriddenParameters.getTags());
+        if (!config.filterFeaturesByTags()) {
+            context.put("tags", overriddenParameters.getTags());
+        }
         context.put("monochrome", overriddenParameters.isMonochrome());
         context.put("cucumberOutputDir", config.getCucumberOutputDir());
         context.put("glue", quoteGlueStrings());
@@ -169,8 +171,8 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
                 sb.append("\"pretty\"");
             } else {
                 sb.append(String.format("\"%s:%s/%s.%s\"", formatStr,
-                        config.getCucumberOutputDir().replace('\\', '/'), fileCounter,
-                        formatStr));
+                                config.getCucumberOutputDir().replace('\\', '/'), fileCounter,
+                                formatStr));
             }
 
             if (i < formatStrs.length - 1) {
