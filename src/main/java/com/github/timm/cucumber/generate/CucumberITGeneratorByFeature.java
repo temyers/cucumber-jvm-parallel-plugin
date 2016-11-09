@@ -6,7 +6,6 @@ import gherkin.AstBuilder;
 import gherkin.Parser;
 import gherkin.TokenMatcher;
 import gherkin.ast.Feature;
-import gherkin.ast.ScenarioDefinition;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.velocity.Template;
@@ -96,33 +95,30 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
                 continue;
             }
 
-            // TODO - refactor - not implemented
-            for (final ScenarioDefinition scenario : feature.getScenarioDefinitions()) {
 
-                outputFileName = classNamingScheme.generate(file.getName());
+            outputFileName = classNamingScheme.generate(file.getName());
 
-                setFeatureFileLocation(file);
+            setFeatureFileLocation(file);
 
-                final File outputFile = new File(outputDirectory, outputFileName + ".java");
-                FileWriter w = null;
-                try {
-                    w = new FileWriter(outputFile);
-                    writeContentFromTemplate(w);
-                } catch (final IOException e) {
-                    throw new MojoExecutionException("Error creating file " + outputFile, e);
-                } finally {
-                    if (w != null) {
-                        try {
-                            w.close();
-                        } catch (final IOException e) {
-                            // ignore
-                            System.out.println("Failed to close file: " + outputFile);
-                        }
+            final File outputFile = new File(outputDirectory, outputFileName + ".java");
+            FileWriter w = null;
+            try {
+                w = new FileWriter(outputFile);
+                writeContentFromTemplate(w);
+            } catch (final IOException e) {
+                throw new MojoExecutionException("Error creating file " + outputFile, e);
+            } finally {
+                if (w != null) {
+                    try {
+                        w.close();
+                    } catch (final IOException e) {
+                        // ignore
+                        System.out.println("Failed to close file: " + outputFile);
                     }
                 }
-
-                fileCounter++;
             }
+
+            fileCounter++;
 
         }
     }
@@ -150,8 +146,7 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
      * @param file The feature file
      */
     private void setFeatureFileLocation(final File file) {
-        featureFileLocation = file.getPath()
-                        .replace(File.separatorChar, '/');
+        featureFileLocation = file.getPath().replace(File.separatorChar, '/');
     }
 
     private void writeContentFromTemplate(final Writer writer) {
@@ -184,8 +179,8 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
                 sb.append("\"pretty\"");
             } else {
                 sb.append(String.format("\"%s:%s/%s.%s\"", formatStr,
-                        config.getCucumberOutputDir().replace('\\', '/'), fileCounter,
-                        formatStr));
+                                config.getCucumberOutputDir().replace('\\', '/'), fileCounter,
+                                formatStr));
             }
 
             if (i < formatStrs.length - 1) {
