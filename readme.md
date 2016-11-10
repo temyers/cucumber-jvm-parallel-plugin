@@ -52,7 +52,7 @@ Add the following to your POM file:
          <!-- The class naming pattern to use.  Only required/used if naming scheme is 'pattern'.-->
          <namingPattern>Parallel{c}IT</namingPattern>
          <!-- One of [SCENARIO, FEATURE]. SCENARIO generates one runner per scenario.  FEATURE generates a runner per feature. -->
-         <parallelScheme>SCENARIO<parallelScheme>
+         <parallelScheme>SCENARIO</parallelScheme>
       </configuration>
     </execution>
   </executions>
