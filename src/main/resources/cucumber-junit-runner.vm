@@ -2,13 +2,17 @@ import org.junit.runner.RunWith;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
-
+#set( $condition = $generateByLineNumber)
 @RunWith(Cucumber.class)
 @CucumberOptions(strict = $strict,
-features = {"$featureFile"},
+#if ($condition)
+    features = {"$featureFile"},
+#else
+    features = {"$featureFile"},
+    tags = {#if($tags)$tags#end},
+#end
 plugin = {$reports},
 monochrome = ${monochrome},
-tags = {#if($tags)$tags#end},
 glue = { $glue })
 public class $className {
 }
