@@ -16,7 +16,7 @@ Add the following to your POM file:
 <plugin>
   <groupId>com.github.temyers</groupId>
   <artifactId>cucumber-jvm-parallel-plugin</artifactId>
-  <version>1.2.1</version>
+  <version>2.0.2</version>
   <executions>
     <execution>
       <id>generateRunners</id>
@@ -117,11 +117,21 @@ Migration from version 1.x
 
 Changelog
 =========
+
+2.0.2
+-----
+* PR #74 - generate classes by feature creates duplicates
+
+2.0.1
+-----
+
+* PR #72 - parallel scenario filter by tag
+
 2.0.0
 -----
 * issue 50 - Support generating runners without any tags.
 * PR #57 - Use "generate-test-sources" maven build phase rather than "validate"
-* PR #xx - Support generating runners per scenario
+* PR #68 - Support generating runners per scenario
 
 1.3.0
 -----
