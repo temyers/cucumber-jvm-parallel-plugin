@@ -113,7 +113,6 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     @Parameter(defaultValue = "false", property = "cucumber.tags.filterOutput", required = true)
     private boolean filterFeaturesByTags;
 
-
     @Parameter(defaultValue = "false", property = "useTestNG", required = true)
     private boolean useTestNG;
 
@@ -140,6 +139,9 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
      */
     @Parameter(defaultValue = "FEATURE", property = "parallelScheme", required = true)
     private ParallelScheme parallelScheme;
+
+    @Parameter(property = "customVmTemplate", required = false)
+    private String customVmTemplate;
 
     private CucumberITGenerator fileGenerator;
 
@@ -175,7 +177,6 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
         return new CucumberITGeneratorFactory(this, overriddenParameters, classNamingScheme)
                         .create(parallelScheme);
-
     }
 
     private void createOutputDirIfRequired() {
@@ -197,7 +198,6 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
         overriddenParameters.overrideParametersWithCucumberOptions(cucumberOptions);
 
         return overriddenParameters;
-
     }
 
     public boolean filterFeaturesByTags() {
@@ -228,5 +228,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
         return namingPattern;
     }
 
-
+    public String getCustomVmTemplate() {
+        return customVmTemplate;
+    }
 }

@@ -22,4 +22,5 @@ public interface FileGeneratorConfig {
 
     String getNamingPattern();
 
+    String getCustomVmTemplate();
 }
