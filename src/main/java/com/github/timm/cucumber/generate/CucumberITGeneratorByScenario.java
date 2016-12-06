@@ -9,6 +9,7 @@ import gherkin.ast.Feature;
 import gherkin.ast.Location;
 import gherkin.ast.Node;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -32,7 +33,7 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
 
     private final FileGeneratorConfig config;
     private final OverriddenCucumberOptionsParameters overriddenParameters;
-    int fileCounter = 1;
+    private int fileCounter = 1;
     private String featureFileLocation;
     private Template velocityTemplate;
     private String outputFileName;
@@ -57,15 +58,20 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
         final Properties props = new Properties();
         props.put("resource.loader", "class");
         props.put("class.resource.loader.class",
-                        "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+                "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        final String name;
+        if (StringUtils.isNotBlank(config.getCustomVmTemplate())) {
+            // Look for custom template on the classpath or as a relative file path
+            props.put("resource.loader", "class, file");
+            name = config.getCustomVmTemplate();
+        } else if (config.useTestNG()) {
+            name = "cucumber-testng-runner.vm";
+        } else {
+            name = "cucumber-junit-runner.vm";
+        }
         final VelocityEngine engine = new VelocityEngine(props);
         engine.init();
-        if (config.useTestNG()) {
-            velocityTemplate =
-                            engine.getTemplate("cucumber-testng-runner.vm", config.getEncoding());
-        } else {
-            velocityTemplate = engine.getTemplate("cucumber-junit-runner.vm", config.getEncoding());
-        }
+        velocityTemplate = engine.getTemplate(name, config.getEncoding());
     }
 
     /**

@@ -25,34 +25,36 @@ Add the following to your POM file:
         <goal>generateRunners</goal>
       </goals>
       <configuration>
-          <!-- Mandatory -->
-          <!-- comma separated list of package names to scan for glue code -->
-         <glue>foo, bar</glue>
-         <!-- These are optional, with the default values -->
-          <!-- Where to output the generated tests -->
-           <outputDirectory>${project.build.directory}/generated-test-sources/cucumber</outputDirectory>
-           <!-- The diectory, which must be in the root of the runtime classpath, containing your feature files.  -->
-          <featuresDirectory>src/test/resources/features/</featuresDirectory>
-           <!-- Directory where the cucumber report files shall be written  -->
-          <cucumberOutputDir>target/cucumber-parallel</cucumberOutputDir>
-          <!-- comma separated list of output formats -->
-         <format>json</format>
-         <!-- CucumberOptions.strict property -->
-         <strict>true</strict>
-         <!-- CucumberOptions.monochrome property -->
-         <monochrome>true</monochrome>
-         <!-- The tags to run, maps to CucumberOptions.tags property -->
-         <tags></tags>
-         <!-- If set to true, only feature files containing the required tags shall be generated. -->
-         <filterFeaturesByTags>false</filterFeaturesByTags>
-         <!-- Generate TestNG runners instead of JUnit ones. --> 
-         <useTestNG>false</useTestNG>
-         <!-- The naming scheme to use for the generated test classes.  One of 'simple' or 'feature-title' --> 
-         <namingScheme>simple</namingScheme>
-         <!-- The class naming pattern to use.  Only required/used if naming scheme is 'pattern'.-->
-         <namingPattern>Parallel{c}IT</namingPattern>
-         <!-- One of [SCENARIO, FEATURE]. SCENARIO generates one runner per scenario.  FEATURE generates a runner per feature. -->
-         <parallelScheme>SCENARIO</parallelScheme>
+        <!-- Mandatory -->
+        <!-- comma separated list of package names to scan for glue code -->
+        <glue>foo, bar</glue>
+        <!-- These are optional, with the default values -->
+        <!-- Where to output the generated tests -->
+        <outputDirectory>${project.build.directory}/generated-test-sources/cucumber</outputDirectory>
+        <!-- The directory, which must be in the root of the runtime classpath, containing your feature files.  -->
+        <featuresDirectory>src/test/resources/features/</featuresDirectory>
+        <!-- Directory where the cucumber report files shall be written  -->
+        <cucumberOutputDir>target/cucumber-parallel</cucumberOutputDir>
+        <!-- comma separated list of output formats -->
+        <format>json</format>
+        <!-- CucumberOptions.strict property -->
+        <strict>true</strict>
+        <!-- CucumberOptions.monochrome property -->
+        <monochrome>true</monochrome>
+        <!-- The tags to run, maps to CucumberOptions.tags property -->
+        <tags></tags>
+        <!-- If set to true, only feature files containing the required tags shall be generated. -->
+        <filterFeaturesByTags>false</filterFeaturesByTags>
+        <!-- Generate TestNG runners instead of JUnit ones. --> 
+        <useTestNG>false</useTestNG>
+        <!-- The naming scheme to use for the generated test classes.  One of 'simple' or 'feature-title' --> 
+        <namingScheme>simple</namingScheme>
+        <!-- The class naming pattern to use.  Only required/used if naming scheme is 'pattern'.-->
+        <namingPattern>Parallel{c}IT</namingPattern>
+        <!-- One of [SCENARIO, FEATURE]. SCENARIO generates one runner per scenario.  FEATURE generates a runner per feature. -->
+        <parallelScheme>SCENARIO</parallelScheme>
+        <!-- Specify a custom template for the generated sources (this is a relative path) -->
+        <customVmTemplate>src/test/resources/cucumber-custom-runner.vm</customVmTemplate>
       </configuration>
     </execution>
   </executions>
@@ -165,8 +167,8 @@ Contributing
 To contribute:
 
 * Create an integration test to demonstrate the behaviour under `src/it/`.  For example, to add support for multiple output formats for junit runners:
-    * Create src/it/junit/multiple-format
-    * copy the contents of the src/it/junit/simple-it directory and update the pom/src as appropriate to demonstrate the configuration.  Update the verify.groovy to implement the test for your feature.
+    * Create `src/it/junit/multiple-format`
+    * copy the contents of the `src/it/junit/simple-it` directory and update the `pom/src` as appropriate to demonstrate the configuration.  Update `verify.groovy` to implement the test for your feature.
     * Run `mvn clean install -Prun-its` to run the integration tests.
 * Implement the feature
 * When all tests are passing, submit a pull request.

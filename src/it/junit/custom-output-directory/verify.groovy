@@ -2,11 +2,11 @@ import org.junit.Assert
 
 import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace
 
-File suite01 = new File(basedir, "target/generated-test-sources/cucumber/Parallel01IT.java");
-File suite02 = new File(basedir, "target/generated-test-sources/cucumber/Parallel02IT.java");
+File suite01 = new File(basedir, "target/generated-test-sources/cucumber/Parallel01IT.java")
+File suite02 = new File(basedir, "target/generated-test-sources/cucumber/Parallel02IT.java")
 
-File feature1 = new File(basedir, "/src/test/resources/features/feature1.feature");
-File feature2 = new File(basedir, "/src/test/resources/features/feature2.feature");
+File feature1 = new File(basedir, "/src/test/resources/features/feature1.feature")
+File feature2 = new File(basedir, "/src/test/resources/features/feature2.feature")
 
 assert suite01.isFile()
 assert suite02.isFile()
@@ -35,8 +35,8 @@ monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo", "bar" })
 public class Parallel02IT {
 }"""
 
-// Depending on the OS, listFiles can list files in different order.  The actual order of files isn't necessary
-
+// The order of the files isn't important but listFiles may list files in any order
+// This ensures we assert correctly despite file ordering
 if (suite01.text.contains("feature1")) {
     Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected01))
     Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expected02))
