@@ -16,7 +16,7 @@ Add the following to your POM file:
 <plugin>
   <groupId>com.github.temyers</groupId>
   <artifactId>cucumber-jvm-parallel-plugin</artifactId>
-  <version>2.0.2</version>
+  <version>2.1.0</version>
   <executions>
     <execution>
       <id>generateRunners</id>
@@ -119,6 +119,10 @@ Migration from version 1.x
 
 Changelog
 =========
+
+2.1.0
+-----
+* PR #81 - Allow custom templates. Closes #61.
 
 2.0.2
 -----
