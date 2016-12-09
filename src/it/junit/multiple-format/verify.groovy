@@ -18,8 +18,8 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(strict = true, features = {"${feature1.absolutePath}"}, plugin = {"html:target/cucumber-parallel/1.html", "json:target/cucumber-parallel/1.json", "pretty"},
-monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo" })
+@CucumberOptions(strict = true, features = {"${feature1.absolutePath}"}, tags = {"@complete", "@accepted"}, plugin = {"html:target/cucumber-parallel/1.html", "json:target/cucumber-parallel/1.json", "pretty"},
+monochrome = false, glue = { "foo" })
 public class Parallel01IT {
 }"""
 
@@ -30,8 +30,8 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(strict = true, features = {"${feature2.absolutePath}"}, plugin = {"html:target/cucumber-parallel/2.html", "json:target/cucumber-parallel/2.json", "pretty"},
-monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo" })
+@CucumberOptions(strict = true, features = {"${feature2.absolutePath}"}, tags = {"@complete", "@accepted"}, plugin = {"html:target/cucumber-parallel/2.html", "json:target/cucumber-parallel/2.json", "pretty"},
+monochrome = false, glue = { "foo" })
 public class Parallel02IT {
 }"""
 
