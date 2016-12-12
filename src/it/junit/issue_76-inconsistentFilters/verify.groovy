@@ -30,7 +30,7 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(strict = true, features = {"${feature1.absolutePath}:18"}, plugin = {"json:target/cucumber-parallel/2.json"},
+@CucumberOptions(strict = true, features = {"${feature2.absolutePath}:18"}, plugin = {"json:target/cucumber-parallel/2.json"},
 monochrome = false, glue = { "foo", "bar" })
 public class Parallel02IT {
 }"""
