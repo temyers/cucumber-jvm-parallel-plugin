@@ -43,7 +43,7 @@
                         </goals>
                         <configuration>
                             <glue>foo, bar</glue>
-                            <tags>"@complete", "@accepted","@inconsistentFilter1","@inconsistentFilter2"</tags>
+                            <tags>"@complete,@accepted,@inconsistentFilter1,@inconsistentFilter2"</tags>
                             <parallelScheme>SCENARIO</parallelScheme>
                         </configuration>
                     </execution>
