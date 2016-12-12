@@ -15,6 +15,11 @@ assert suite02.isFile()
 assert suite03.isFile()
 assert suite04.isFile()
 
+System.out.println(suite01.text);
+System.out.println(suite02.text);
+System.out.println(suite03.text);
+System.out.println(suite04.text);
+
 String expected01 =
         """import org.junit.runner.RunWith;
 
