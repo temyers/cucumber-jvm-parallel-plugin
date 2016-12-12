@@ -66,14 +66,20 @@ public class Parallel02IT {
 // Depending on the OS, listFiles can list files in different order.  The actual order of files isn't necessary
 
 if (suite01.text.contains("feature1")) {
+    System.out.println(suite01.text);
     Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected01))
-    Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expected02))
-    Assert.assertThat(suite03.text, equalToIgnoringWhiteSpace(expected03))
-    Assert.assertThat(suite04.text, equalToIgnoringWhiteSpace(expected04))
-} else {
-    Assert.assertThat(suite04.text, equalToIgnoringWhiteSpace(expected01))
-    Assert.assertThat(suite03.text, equalToIgnoringWhiteSpace(expected02))
-    Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expected03))
-    Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected04))
-}
+} 
+if (suite02.text.contains("feature2")) {
+        System.out.println(suite02.text);
+   Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expected02))
+} 
+if (suite03.text.contains("feature3")) {
+        System.out.println(suite03.text);
+   Assert.assertThat(suite03.text, equalToIgnoringWhiteSpace(expected03))
+} 
+
+if (suite04.text.contains("feature4")) {
+        System.out.println(suite04.text);
+   Assert.assertThat(suite04.text, equalToIgnoringWhiteSpace(expected04))
+} 
 
