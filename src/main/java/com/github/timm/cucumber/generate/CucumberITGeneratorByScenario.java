@@ -38,6 +38,7 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
     private Template velocityTemplate;
     private String outputFileName;
     private final ClassNamingScheme classNamingScheme;
+    private final boolean generateByLineNumber = true;
 
 
     /**
@@ -151,6 +152,7 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
         context.put("strict", overriddenParameters.isStrict());
         context.put("featureFile", featureFileLocation);
         context.put("reports", createFormatStrings());
+        context.put("generateByLineNumber", generateByLineNumber);
         if (!config.filterFeaturesByTags()) {
             context.put("tags", overriddenParameters.getTags());
         }

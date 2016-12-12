@@ -18,7 +18,7 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(strict = true, features = {"${feature1.absolutePath}"}, tags = {"@complete", "@accepted"}, plugin = {"json:target/cucumber-parallel/1.json"},
+@CucumberOptions(strict = true, features = {"${feature1.absolutePath}:4"}, plugin = {"json:target/cucumber-parallel/1.json"},
 monochrome = false, glue = { "foo", "bar" })
 public class Parallel01IT {
 }"""
@@ -30,12 +30,10 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(strict = true, features = {"${feature2.absolutePath}"}, tags = {"@complete", "@accepted"}, plugin = {"json:target/cucumber-parallel/2.json"},
+@CucumberOptions(strict = true, features = {"${feature2.absolutePath}:18"}, plugin = {"json:target/cucumber-parallel/2.json"},
 monochrome = false, glue = { "foo", "bar" })
 public class Parallel02IT {
 }"""
-
-// Depending on the OS, listFiles can list files in different order.  The actual order of files isn't necessary
 
 if (suite01.text.contains("feature1")) {
     Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected01))

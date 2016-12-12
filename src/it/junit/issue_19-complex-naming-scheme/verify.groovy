@@ -18,8 +18,8 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(strict = true, features = {"${feature1.absolutePath}"}, plugin = {"json:target/cucumber-parallel/1.json"},
-monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo", "bar" })
+@CucumberOptions(strict = true, features = {"${feature1.absolutePath}"}, tags = {"@complete", "@accepted"}, plugin = {"json:target/cucumber-parallel/1.json"},
+monochrome = false, glue = { "foo", "bar" })
 public class FooFeature101IT {
 }"""
 
@@ -30,8 +30,8 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(strict = true, features = {"${feature2.absolutePath}"}, plugin = {"json:target/cucumber-parallel/2.json"},
-monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo", "bar" })
+@CucumberOptions(strict = true, features = {"${feature2.absolutePath}"}, tags = {"@complete", "@accepted"}, plugin = {"json:target/cucumber-parallel/2.json"},
+monochrome = false, glue = { "foo", "bar" })
 public class FooFeature202IT {
 }"""
 
