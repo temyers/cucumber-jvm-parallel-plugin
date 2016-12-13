@@ -5,7 +5,7 @@ import cucumber.api.testng.AbstractTestNGCucumberTests;
 features = {"$featureFile"},
 plugin = {$reports},
 monochrome = ${monochrome},
-#if(!$featureFile.contains(".feature:") ) tags = {#if($tags)$tags#end},#end
- glue = { $glue })
+#if(!$featureFile.contains(".feature:") ) tags = {#if($tags)$tags#end}, #end
+glue = { $glue })
 public class $className extends AbstractTestNGCucumberTests {
 }
