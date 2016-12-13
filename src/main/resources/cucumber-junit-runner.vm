@@ -9,6 +9,6 @@ features = {"$featureFile"},
 plugin = {$reports},
 monochrome = ${monochrome},
 #if(!$featureFile.contains(".feature:") ) tags = {$tags},#end
-glue = { $glue })
+ glue = { $glue })
 public class $className {
 }
