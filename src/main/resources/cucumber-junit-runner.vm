@@ -1,3 +1,6 @@
+#if ($packageName)package $packageName;
+
+#end##
 import org.junit.runner.RunWith;
 
 import cucumber.api.CucumberOptions;
