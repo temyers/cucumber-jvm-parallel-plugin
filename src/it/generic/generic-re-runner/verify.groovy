@@ -32,6 +32,7 @@ import java.util.List;
 public class Parallel01IT {
 
     private String outputPath = "target/cucumber-parallel/Parallel01IT/Parallel01IT";
+    private String glue = "com.foo.bar";
 
     @Test
     public void reRun() {
@@ -80,8 +81,13 @@ public class Parallel01IT {
             arguments.add("json:target/cucumber-parallel/Parallel01IT/Parallel01IT.json");
             arguments.add("--plugin");
             arguments.add("rerun:target/cucumber-parallel/Parallel01IT/Parallel01IT.txt");
-            arguments.add("--glue");
-            arguments.add("foo,bar");
+            String[] gluepackages = glue.split(",");
+            for (String packages : gluepackages) {
+                if (!packages.contains("none")) {
+                    arguments.add("--glue");
+                    arguments.add(packages);
+                }
+            }
             final String[] argv = arguments.toArray(new String[0]);
             try {
                 executeCLIMain(argv);
@@ -156,8 +162,13 @@ public void executeReRerun(String rerunFile, String targetJson, String targetRer
     arguments.add("json:" + targetJson);
     arguments.add("--plugin");
     arguments.add("rerun:" + targetRerun);
-    arguments.add("--glue");
-    arguments.add("foo, bar");
+    String[] gluepackages = glue.split(",");
+    for (String packages : gluepackages) {
+        if (!packages.contains("none")) {
+            arguments.add("--glue");
+            arguments.add(packages);
+        }
+    }
     final String[] argv = arguments.toArray(new String[0]);
     try {
         executeCLIMain(argv);
@@ -273,7 +284,7 @@ import java.util.List;
 public class Parallel02IT {
 
     private String outputPath = "target/cucumber-parallel/Parallel02IT/Parallel02IT";
-
+    private String glue = "com.foo.bar";
     @Test
     public void reRun() {
 
@@ -321,8 +332,13 @@ public class Parallel02IT {
         arguments.add("json:target/cucumber-parallel/Parallel02IT/Parallel02IT.json");
         arguments.add("--plugin");
         arguments.add("rerun:target/cucumber-parallel/Parallel02IT/Parallel02IT.txt");
-        arguments.add("--glue");
-        arguments.add("foo,bar");
+        String[] gluepackages = glue.split(",");
+        for (String packages : gluepackages) {
+            if (!packages.contains("none")) {
+                arguments.add("--glue");
+                arguments.add(packages);
+            }
+        }
         final String[] argv = arguments.toArray(new String[0]);
         try {
             executeCLIMain(argv);
@@ -397,8 +413,13 @@ public class Parallel02IT {
         arguments.add("json:" + targetJson);
         arguments.add("--plugin");
         arguments.add("rerun:" + targetRerun);
-        arguments.add("--glue");
-        arguments.add("foo,bar");
+        String[] gluepackages = glue.split(",");
+        for (String packages : gluepackages) {
+            if (!packages.contains("none")) {
+                arguments.add("--glue");
+                arguments.add(packages);
+            }
+        }
         final String[] argv = arguments.toArray(new String[0]);
         try {
             executeCLIMain(argv);

@@ -22,7 +22,7 @@ import java.util.List;
 public class $className {
 
     private String outputPath = "$outputPath";
-    private String glue = "$glue";
+    private String glue = $glue;
 
     @Test
     public void reRun() {

@@ -57,7 +57,7 @@
                             <goal>generateRunners</goal>
                         </goals>
                         <configuration>
-                            <glue>foo, bar</glue>
+                            <glue>com.foo.bar</glue>
                             <tags>"@complete,@accepted"</tags>
                             <parallelScheme>SCENARIO</parallelScheme>
                             <retryCount>1</retryCount>

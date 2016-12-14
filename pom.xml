@@ -259,7 +259,7 @@
 								<goal>clean</goal>
 								<goal>integration-test</goal>
 							</goals>
-							<parallelThreads>1</parallelThreads>
+							<parallelThreads>5</parallelThreads>
 						</configuration>
 						<executions>
 							<execution>
