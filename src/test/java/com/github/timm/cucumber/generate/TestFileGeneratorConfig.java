@@ -69,4 +69,9 @@ public class TestFileGeneratorConfig implements FileGeneratorConfig {
     public String getPackageName() {
         return null;
     }
+
+    public File getProjectBasedir() {
+        return new File(".");
+    }
+
 }
