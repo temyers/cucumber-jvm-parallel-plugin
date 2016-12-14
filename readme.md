@@ -120,6 +120,11 @@ Migration from version 1.x
 Changelog
 =========
 
+2.2.0
+-----
+* PR #87 - allow setting of packageName for runners. Closes #45 
+* PR #85 - Resolve inconsistent filters: Fix issue Issue #76
+
 2.1.0
 -----
 * PR #81 - Allow custom templates. Closes #61.
