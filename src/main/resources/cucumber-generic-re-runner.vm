@@ -22,6 +22,7 @@ import java.util.List;
 public class $className {
 
     private String outputPath = "$outputPath";
+    private String glue = "$glue";
 
     @Test
     public void reRun() {
@@ -77,8 +78,13 @@ public class $className {
         arguments.add($jsonFormat);
         arguments.add("--plugin");
         arguments.add($rerunFormat);
-        arguments.add("--glue");
-        arguments.add($glue);
+        String[] gluepackages = glue.split(",");
+        for (String packages : gluepackages) {
+            if (!packages.contains("none")) {
+                arguments.add("--glue");
+                arguments.add(packages);
+            }
+        }
         final String[] argv = arguments.toArray(new String[0]);
         try {
             executeCLIMain(argv);
@@ -153,8 +159,13 @@ public class $className {
         arguments.add("json:" + targetJson);
         arguments.add("--plugin");
         arguments.add("rerun:" + targetRerun);
-        arguments.add("--glue");
-        arguments.add($glue);
+        String[] gluepackages = glue.split(",");
+        for (String packages : gluepackages) {
+            if (!packages.contains("none")) {
+                arguments.add("--glue");
+                arguments.add(packages);
+            }
+        }
         final String[] argv = arguments.toArray(new String[0]);
         try {
             executeCLIMain(argv);
