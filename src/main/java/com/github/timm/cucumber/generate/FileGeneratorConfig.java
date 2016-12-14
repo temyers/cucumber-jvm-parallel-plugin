@@ -25,4 +25,6 @@ public interface FileGeneratorConfig {
     String getCustomVmTemplate();
 
     String getPackageName();
+
+    boolean useReRun() ;
 }

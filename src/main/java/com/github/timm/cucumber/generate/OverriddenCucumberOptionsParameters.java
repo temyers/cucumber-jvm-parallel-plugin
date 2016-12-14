@@ -13,6 +13,7 @@ class OverriddenCucumberOptionsParameters {
     private boolean strict;
     private String format;
     private boolean monochrome;
+    private int retryCount;
 
     public OverriddenCucumberOptionsParameters setTags(final String tags) {
         this.tags = tags;
@@ -36,6 +37,11 @@ class OverriddenCucumberOptionsParameters {
 
     public OverriddenCucumberOptionsParameters setMonochrome(final boolean monochrome) {
         this.monochrome = monochrome;
+        return this;
+    }
+
+    public OverriddenCucumberOptionsParameters setRetryCount(final int retryCount) {
+        this.retryCount = retryCount;
         return this;
     }
 
@@ -89,4 +95,7 @@ class OverriddenCucumberOptionsParameters {
         return glue;
     }
 
+    public int getRetryCount() {
+        return retryCount;
+    }
 }

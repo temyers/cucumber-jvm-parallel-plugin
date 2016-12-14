@@ -14,6 +14,7 @@ public class TestFileGeneratorConfig implements FileGeneratorConfig {
     private final String namingScheme = "simple";
     private final String namingPattern = null;
     private final String customVmTemplate = "";
+    private final boolean useReRun = false;
 
     public TestFileGeneratorConfig setFeaturesDirectory(final File directory) {
         this.featuresDirectory = directory;
@@ -68,5 +69,9 @@ public class TestFileGeneratorConfig implements FileGeneratorConfig {
 
     public String getPackageName() {
         return null;
+    }
+
+    public boolean useReRun() {
+        return useReRun;
     }
 }

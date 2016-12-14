@@ -46,10 +46,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     /**
      * Comma separated list of containing the packages to use for the cucumber glue code. E.g. <code>my.package,
      * my.second.package</code>
-     *
-     * <P>
-     * see cucumber.api.CucumberOptions.glue
-     * </P>
+     * <p> see cucumber.api.CucumberOptions.glue </P>
      */
     @Parameter(property = "cucumber.glue", required = true)
     private String glue;
@@ -58,21 +55,21 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
      * Location of the generated files.
      */
     @Parameter(defaultValue = "${project.build.directory}/generated-test-sources/cucumber",
-                    property = "outputDir", required = true)
+        property = "outputDir", required = true)
     private File outputDirectory;
 
     /**
      * Directory where the cucumber report files shall be written.
      */
     @Parameter(defaultValue = "target/cucumber-parallel", property = "cucumberOutputDir",
-                    required = true)
+        required = true)
     private String cucumberOutputDir;
 
     /**
      * Directory containing the feature files.
      */
     @Parameter(defaultValue = "src/test/resources/features/", property = "featuresDir",
-                    required = true)
+        required = true)
     private File featuresDirectory;
 
     /**
@@ -83,10 +80,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
     /**
      * Comma separated list of formats used for the output. Currently only html and json formats are supported.
-     *
-     * <p>
-     * see cucumber.api.CucumberOptions.format
-     * </p>
+     * <p> see cucumber.api.CucumberOptions.format </p>
      */
     @Parameter(defaultValue = "json", property = "cucumber.format", required = true)
     private String format;
@@ -138,6 +132,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
      * <li><code>SCENARIO</code> - Generate one runner per scenario. A runner shall be created for each example of a
      * scenario outline</li>
      * </ul>
+     *
      * @see ParallelScheme
      */
     @Parameter(defaultValue = "FEATURE", property = "parallelScheme", required = true)
@@ -146,7 +141,11 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     @Parameter(property = "customVmTemplate", required = false)
     private String customVmTemplate;
 
+    @Parameter(defaultValue = "0", property = "retryCount", required = false)
+    private int retryCount;
+
     private CucumberITGenerator fileGenerator;
+    private boolean useReRun = false;
 
     /**
      * Called by Maven to run this mojo after parameters have been injected.
@@ -157,16 +156,20 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
             throw new MojoExecutionException("Features directory does not exist");
         }
 
+        if (retryCount > 0 && retryCount <= 5) {
+            useReRun = true;
+        }
+
         final Collection<File> featureFiles =
-                        FileUtils.listFiles(featuresDirectory, new String[] {"feature"}, true);
+            FileUtils.listFiles(featuresDirectory, new String[] {"feature"}, true);
 
         createOutputDirIfRequired();
 
         fileGenerator = createFileGenerator();
 
         File packageDirectory = packageName == null
-                ? outputDirectory
-                : new File(outputDirectory, packageName.replace('.','/'));
+            ? outputDirectory
+            : new File(outputDirectory, packageName.replace('.', '/'));
 
         if (!packageDirectory.exists()) {
             packageDirectory.mkdirs();
@@ -175,19 +178,19 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
         fileGenerator.generateCucumberITFiles(packageDirectory, featureFiles);
 
         getLog().info("Adding " + outputDirectory.getAbsolutePath()
-                        + " to test-compile source root");
+            + " to test-compile source root");
 
         project.addTestCompileSourceRoot(outputDirectory.getAbsolutePath());
     }
 
     private CucumberITGenerator createFileGenerator() throws MojoExecutionException {
         final OverriddenCucumberOptionsParameters overriddenParameters =
-                        overrideParametersWithCucumberOptions();
+            overrideParametersWithCucumberOptions();
         final ClassNamingSchemeFactory factory = new ClassNamingSchemeFactory(new OneUpCounter());
         final ClassNamingScheme classNamingScheme = factory.create(namingScheme, namingPattern);
 
         return new CucumberITGeneratorFactory(this, overriddenParameters, classNamingScheme)
-                        .create(parallelScheme);
+            .create(parallelScheme);
     }
 
     private void createOutputDirIfRequired() {
@@ -202,9 +205,15 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     private OverriddenCucumberOptionsParameters overrideParametersWithCucumberOptions() {
 
         final OverriddenCucumberOptionsParameters overriddenParameters =
-                        new OverriddenCucumberOptionsParameters();
+            new OverriddenCucumberOptionsParameters();
         overriddenParameters.setTags(this.tags).setGlue(this.glue).setStrict(this.strict)
-                        .setFormat(this.format).setMonochrome(this.monochrome);
+            .setMonochrome(this.monochrome);
+
+        if (useReRun) {
+            overriddenParameters.setRetryCount(retryCount).setFormat("json,html,rerun");
+        } else {
+            overriddenParameters.setFormat(this.format);
+        }
 
         overriddenParameters.overrideParametersWithCucumberOptions(cucumberOptions);
 
@@ -245,5 +254,9 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
     public String getPackageName() {
         return packageName;
+    }
+
+    public boolean useReRun() {
+        return useReRun;
     }
 }
