@@ -1,7 +1,11 @@
+#if ($packageName)package $packageName;
+
+#end##
 import com.github.timm.cucumber.options.ExtendedRuntimeOptions;
 import cucumber.runtime.Runtime;
 import cucumber.runtime.io.MultiLoader;
 import cucumber.runtime.io.ResourceLoaderClassFinder;
+import net.masterthought.cucumber.Configuration;
 import net.masterthought.cucumber.ReportBuilder;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
@@ -234,10 +238,10 @@ public class $className {
             for (File json : jsons) {
                 jsonReports.add(json.getAbsolutePath());
             }
-            //List<String> jsonReports, File reportDirectory, String pluginUrlPath, String buildNumber, String buildProject, boolean skippedFails, boolean undefinedFails, boolean flashCharts, boolean runWithJenkins, boolean artifactsEnabled, String artifactConfig, boolean highCharts
-            ReportBuilder reportBuilder = new ReportBuilder(jsonReports, rd, "", run, "cucumber-reporting", true, true, true, false, false, "", false);
+            Configuration configuration = new Configuration(rd,"cucumber-reporting");
+            configuration.setBuildNumber(run);
+            ReportBuilder reportBuilder = new ReportBuilder(jsonReports, configuration);
             reportBuilder.generateReports();
-            System.out.println(run + " consolidated reports are generated under directory $cucumberOutputDir/Consolidated-Report");
         } catch (Exception e) {
             e.printStackTrace();
         }
