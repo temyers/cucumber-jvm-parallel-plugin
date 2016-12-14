@@ -128,6 +128,9 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     @Parameter(property = "namingPattern", required = false)
     private String namingPattern;
 
+    @Parameter(property = "packageName", required = false)
+    private String packageName;
+
     /**
      * The scheme to use when generating runner. Valid values are:
      * <ul>
@@ -161,7 +164,15 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
         fileGenerator = createFileGenerator();
 
-        fileGenerator.generateCucumberITFiles(outputDirectory, featureFiles);
+        File packageDirectory = packageName == null
+                ? outputDirectory
+                : new File(outputDirectory, packageName.replace('.','/'));
+
+        if (!packageDirectory.exists()) {
+            packageDirectory.mkdirs();
+        }
+
+        fileGenerator.generateCucumberITFiles(packageDirectory, featureFiles);
 
         getLog().info("Adding " + outputDirectory.getAbsolutePath()
                         + " to test-compile source root");
@@ -230,5 +241,9 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
     public String getCustomVmTemplate() {
         return customVmTemplate;
+    }
+
+    public String getPackageName() {
+        return packageName;
     }
 }

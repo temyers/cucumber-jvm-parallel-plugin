@@ -66,4 +66,7 @@ public class TestFileGeneratorConfig implements FileGeneratorConfig {
         return this;
     }
 
+    public String getPackageName() {
+        return null;
+    }
 }

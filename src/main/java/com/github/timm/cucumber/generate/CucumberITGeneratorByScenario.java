@@ -158,6 +158,7 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
         context.put("cucumberOutputDir", config.getCucumberOutputDir());
         context.put("glue", quoteGlueStrings());
         context.put("className", FilenameUtils.removeExtension(outputFileName));
+        context.put("packageName", config.getPackageName());
 
         velocityTemplate.merge(context, writer);
     }

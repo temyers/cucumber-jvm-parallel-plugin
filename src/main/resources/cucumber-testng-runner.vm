@@ -1,3 +1,6 @@
+#if ($packageName)package $packageName;
+
+#end##
 import cucumber.api.CucumberOptions;
 import cucumber.api.testng.AbstractTestNGCucumberTests;
 
