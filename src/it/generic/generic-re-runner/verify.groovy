@@ -11,8 +11,8 @@ File feature2 = new File(basedir, "/src/test/resources/features/feature2.feature
 assert suite01.isFile()
 assert suite02.isFile()
 
-String expected01 =
-        """import com.github.timm.cucumber.options.ExtendedRuntimeOptions;
+String expected01 = """
+import com.github.timm.cucumber.options.ExtendedRuntimeOptions;
 import cucumber.runtime.Runtime;
 import cucumber.runtime.io.MultiLoader;
 import cucumber.runtime.io.ResourceLoaderClassFinder;
@@ -264,8 +264,8 @@ public static void generateRunWiseReport(List<File> jsons, String run) {
 }
 """
 
-String expected02 =
-        """import com.github.timm.cucumber.options.ExtendedRuntimeOptions;
+String expected02 = """
+import com.github.timm.cucumber.options.ExtendedRuntimeOptions;
 import cucumber.runtime.Runtime;
 import cucumber.runtime.io.MultiLoader;
 import cucumber.runtime.io.ResourceLoaderClassFinder;
