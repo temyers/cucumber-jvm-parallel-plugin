@@ -519,10 +519,10 @@ public class Parallel02IT {
 // Depending on the OS, listFiles can list files in different order.  The actual order of files isn't necessary
 
 if (suite01.text.contains("feature1")) {
-    Assert.assertThat(equalToIgnoringWhiteSpace(suite01.text), equalToIgnoringWhiteSpace(expected01))
-    Assert.assertThat(equalToIgnoringWhiteSpace(suite02.text), equalToIgnoringWhiteSpace(expected02))
+    Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected01))
+    Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expected02))
 } else {
-    Assert.assertThat(equalToIgnoringWhiteSpace(suite02.text), equalToIgnoringWhiteSpace(expected01))
-    Assert.assertThat(equalToIgnoringWhiteSpace(suite01.text), equalToIgnoringWhiteSpace(expected02))
+    Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expected01))
+    Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected02))
 }
 
