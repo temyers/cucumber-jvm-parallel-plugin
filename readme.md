@@ -55,6 +55,8 @@ Add the following to your POM file:
         <parallelScheme>SCENARIO</parallelScheme>
         <!-- Specify a custom template for the generated sources (this is a relative path) -->
         <customVmTemplate>src/test/resources/cucumber-custom-runner.vm</customVmTemplate>
+        <!-- Specify count from 1 to 5 to enable re-run functionality, by default it is 0 if not specified-->
+        <retryCount>0</retryCount>
       </configuration>
     </execution>
   </executions>
@@ -103,6 +105,18 @@ It is up to you to ensure that class names generated are valid and there are no 
 
 The `namingPattern` property is for the **class name** only.  Do not add the `.java` suffix.
 
+###Re-Run Functionality
+
+* **Why it's bad to keep re-running more than 1 or more time ?**
+When we run test cases first time, we got some failure due to environment issues or network issues or grid management issues or Browsers issues such test cases we do not considering as **Flaky**, but if we are running again and again and getting same failure result on each run such test cases considered as Flaky, It is useless to keep re-running such test cases, Hence with the help of this plugin you can try only max 5 time.
+
+* **What it does?**
+It re-run only failed test cases on each run and after complete run it generate consolidated report.
+
+![alt tag](https://cloud.githubusercontent.com/assets/4283293/15507135/ecb4db80-218f-11e6-97e8-be95413bda86.png)
+
+* **How to enable it?:**
+specify retryCount property counts between 1 to 5. `<retryCount>1</retryCount>`
 
 FAQ
 ===
