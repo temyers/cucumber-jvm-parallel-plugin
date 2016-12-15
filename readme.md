@@ -13,6 +13,13 @@ Usage
 Add the following to your POM file:
 
 ```xml
+<dependency>
+  <groupId>com.github.temyers</groupId>
+  <artifactId>cucumber-jvm-parallel-plugin</artifactId>
+  <version>2.1.0</version>
+</dependency>
+
+
 <plugin>
   <groupId>com.github.temyers</groupId>
   <artifactId>cucumber-jvm-parallel-plugin</artifactId>
@@ -117,6 +124,7 @@ It re-run only failed test cases on each run and after complete run it generate 
 
 * **How to enable it?:**
 specify retryCount property counts between 1 to 5. `<retryCount>1</retryCount>`
+
 
 FAQ
 ===
