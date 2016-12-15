@@ -1,7 +1,5 @@
 import org.junit.Assert
 
-import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace
-
 File suite01 = new File(basedir, "target/generated-test-sources/cucumber/Parallel01IT.java");
 File suite02 = new File(basedir, "target/generated-test-sources/cucumber/Parallel02IT.java");
 
@@ -519,10 +517,10 @@ public class Parallel02IT {
 // Depending on the OS, listFiles can list files in different order.  The actual order of files isn't necessary
 
 if (suite01.text.contains("feature1")) {
-    Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected01))
-    Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expected02))
+    Assert.assertThat((suite01.text).replace("\\s+", ""), equalToIgnoringCase(expected01.replace("\\s+", "")))
+    Assert.assertThat((suite02.text).replace("\\s+", ""), equalToIgnoringCase(expected02.replace("\\s+", "")))
 } else {
-    Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expected01))
-    Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected02))
+    Assert.assertThat((suite02.text).replace("\\s+", ""), equalToIgnoringCase(expected01.replace("\\s+", "")))
+    Assert.assertThat((suite01.text).replace("\\s+", ""), equalToIgnoringCase(expected02.replace("\\s+", "")))
 }
 
