@@ -246,4 +246,8 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     public String getPackageName() {
         return packageName;
     }
+
+    public File getProjectBasedir() {
+        return project.getBasedir();
+    }
 }
