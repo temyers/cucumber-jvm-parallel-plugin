@@ -124,11 +124,11 @@ Changelog
 -----
 * PR #87 - allow setting of packageName for runners. Closes #45 
 * PR #85 - Resolve inconsistent filters: Fix issue Issue #76
+* PR #86 - use the baseDir of the current project for velocity
 
 2.1.0
 -----
 * PR #81 - Allow custom templates. Closes #61.
-* PR #86 - use the baseDir of the current project for velocity
 
 2.0.2
 -----
