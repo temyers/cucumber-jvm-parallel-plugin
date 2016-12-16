@@ -123,6 +123,7 @@ Changelog
 2.1.0
 -----
 * PR #81 - Allow custom templates. Closes #61.
+* PR #86 - use the baseDir of the current project for velocity
 
 2.0.2
 -----
