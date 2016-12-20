@@ -98,7 +98,6 @@ public class $className {
     public void firstRun() {
         try {
             if (new File(outputPath + ".txt").exists() && new BufferedReader(new FileReader(outputPath + ".txt")).readLine() != null) {
-                //executeReRerun first arg: refactored input file ; second arg:- output json file path for getting result
                 executeReRerun("@" + outputPath + ".txt", outputPath + "/cucumber1.json", outputPath + "/rerun1.txt");
             }
         } catch (Exception e) {
@@ -109,7 +108,6 @@ public class $className {
     public void secondRun() {
         try {
             if (new File(outputPath + "/rerun1.txt").exists() && new BufferedReader(new FileReader(outputPath + "/rerun1.txt")).readLine() != null) {
-                //executeReRerun first arg: refactored input file ; second arg:- output json file path for getting result
                 executeReRerun("@" + outputPath + "/rerun1.txt", outputPath + "/cucumber2.json", outputPath + "/rerun2.txt");
             }
         } catch (Exception e) {
@@ -120,7 +118,6 @@ public class $className {
     public void thirdRun() {
         try {
             if (new File(outputPath + "/rerun2.txt").exists() && new BufferedReader(new FileReader(outputPath + "/rerun2.txt")).readLine() != null) {
-                //executeReRerun first arg: refactored input file ; second arg:- output json file path for getting result
                 executeReRerun("@" + outputPath + "/rerun2.txt", outputPath + "/cucumber3.json", outputPath + "/rerun3.txt");
             }
         } catch (Exception e) {
@@ -131,7 +128,6 @@ public class $className {
     public void fourthRun() {
         try {
             if (new File(outputPath + "/rerun3.txt").exists() && new BufferedReader(new FileReader(outputPath + "/rerun3.txt")).readLine() != null) {
-                //executeReRerun first arg: refactored input file ; second arg:- output json file path for getting result
                 executeReRerun("@" + outputPath + "/rerun3.txt", outputPath + "/cucumber4.json", outputPath + "/rerun4.txt");
             }
         } catch (Exception e) {
@@ -142,7 +138,6 @@ public class $className {
     public void fifthRun() {
         try {
             if (new File(outputPath + "/rerun4.txt").exists() && new BufferedReader(new FileReader(outputPath + "/rerun4.txt")).readLine() != null) {
-                //executeReRerun first arg: refactored input file ; second arg:- output json file path for getting result
                 executeReRerun("@" + outputPath + "/rerun4.txt", outputPath + "/cucumber5.json", outputPath + "/rerun5.txt");
             }
         } catch (Exception e) {

@@ -102,7 +102,6 @@ public class Parallel01IT {
 public void firstRun() {
     try {
         if (new File(outputPath + ".txt").exists() && new BufferedReader(new FileReader(outputPath + ".txt")).readLine() != null) {
-            //executeReRerun first arg: refactored input file ; second arg:- output json file path for getting result
             executeReRerun("@" + outputPath + ".txt", outputPath + "/cucumber1.json", outputPath + "/rerun1.txt");
         }
     } catch (Exception e) {
@@ -113,8 +112,7 @@ public void firstRun() {
 public void secondRun() {
     try {
         if (new File(outputPath + "/rerun1.txt").exists() && new BufferedReader(new FileReader(outputPath + "/rerun1.txt")).readLine() != null) {
-            //executeReRerun first arg: refactored input file ; second arg:- output json file path for getting result
-            executeReRerun("@" + outputPath + "/rerun1.txt", outputPath + "/cucumber2.json", outputPath + "/rerun2.txt");
+           executeReRerun("@" + outputPath + "/rerun1.txt", outputPath + "/cucumber2.json", outputPath + "/rerun2.txt");
         }
     } catch (Exception e) {
         e.printStackTrace();
@@ -124,7 +122,6 @@ public void secondRun() {
 public void thirdRun() {
     try {
         if (new File(outputPath + "/rerun2.txt").exists() && new BufferedReader(new FileReader(outputPath + "/rerun2.txt")).readLine() != null) {
-            //executeReRerun first arg: refactored input file ; second arg:- output json file path for getting result
             executeReRerun("@" + outputPath + "/rerun2.txt", outputPath + "/cucumber3.json", outputPath + "/rerun3.txt");
         }
     } catch (Exception e) {
@@ -135,8 +132,7 @@ public void thirdRun() {
 public void fourthRun() {
     try {
         if (new File(outputPath + "/rerun3.txt").exists() && new BufferedReader(new FileReader(outputPath + "/rerun3.txt")).readLine() != null) {
-            //executeReRerun first arg: refactored input file ; second arg:- output json file path for getting result
-            executeReRerun("@" + outputPath + "/rerun3.txt", outputPath + "/cucumber4.json", outputPath + "/rerun4.txt");
+           executeReRerun("@" + outputPath + "/rerun3.txt", outputPath + "/cucumber4.json", outputPath + "/rerun4.txt");
         }
     } catch (Exception e) {
         e.printStackTrace();
@@ -146,8 +142,7 @@ public void fourthRun() {
 public void fifthRun() {
     try {
         if (new File(outputPath + "/rerun4.txt").exists() && new BufferedReader(new FileReader(outputPath + "/rerun4.txt")).readLine() != null) {
-            //executeReRerun first arg: refactored input file ; second arg:- output json file path for getting result
-            executeReRerun("@" + outputPath + "/rerun4.txt", outputPath + "/cucumber5.json", outputPath + "/rerun5.txt");
+           executeReRerun("@" + outputPath + "/rerun4.txt", outputPath + "/cucumber5.json", outputPath + "/rerun5.txt");
         }
     } catch (Exception e) {
         e.printStackTrace();
@@ -246,21 +241,21 @@ public static List<File> finder(String dirName) {
     return (List<File>) FileUtils.listFiles(new File(dirName), new String[] {"json"}, true);
 }
 
-public static void generateRunWiseReport(List<File> jsons, String run) {
-    try {
-        File rd = new File("target/cucumber-parallel/Consolidated-Report/" + run);
-        List<String> jsonReports = new ArrayList<String>();
-        for (File json : jsons) {
-            jsonReports.add(json.getAbsolutePath());
+    public static void generateRunWiseReport(List < File > jsons, String run) {
+     try {
+          File rd = new File("target/cucumber-parallel/Consolidated-Report/" + run);
+          List < String > jsonReports = new ArrayList < String > ();
+          for (File json: jsons) {
+           jsonReports.add(json.getAbsolutePath());
+          }
+          Configuration configuration = new Configuration(rd, "cucumber-reporting");
+          configuration.setBuildNumber(run);
+          ReportBuilder reportBuilder = new ReportBuilder(jsonReports, configuration);
+          reportBuilder.generateReports();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        //List<String> jsonReports, File reportDirectory, String pluginUrlPath, String buildNumber, String buildProject, boolean skippedFails, boolean undefinedFails, boolean flashCharts, boolean runWithJenkins, boolean artifactsEnabled, String artifactConfig, boolean highCharts
-        ReportBuilder reportBuilder = new ReportBuilder(jsonReports, rd, "", run, "cucumber-reporting", true, true, true, false, false, "", false);
-        reportBuilder.generateReports();
-        System.out.println(run + " consolidated reports are generated under directory target/cucumber-parallel/Consolidated-Report");
-    } catch (Exception e) {
-        e.printStackTrace();
     }
-}
 }
 """
 
@@ -354,7 +349,6 @@ public class Parallel02IT {
     public void firstRun() {
         try {
             if (new File(outputPath + ".txt").exists() && new BufferedReader(new FileReader(outputPath + ".txt")).readLine() != null) {
-                //executeReRerun first arg: refactored input file ; second arg:- output json file path for getting result
                 executeReRerun("@" + outputPath + ".txt", outputPath + "/cucumber1.json", outputPath + "/rerun1.txt");
             }
         } catch (Exception e) {
@@ -365,8 +359,7 @@ public class Parallel02IT {
     public void secondRun() {
         try {
             if (new File(outputPath + "/rerun1.txt").exists() && new BufferedReader(new FileReader(outputPath + "/rerun1.txt")).readLine() != null) {
-                //executeReRerun first arg: refactored input file ; second arg:- output json file path for getting result
-                executeReRerun("@" + outputPath + "/rerun1.txt", outputPath + "/cucumber2.json", outputPath + "/rerun2.txt");
+               executeReRerun("@" + outputPath + "/rerun1.txt", outputPath + "/cucumber2.json", outputPath + "/rerun2.txt");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -376,7 +369,6 @@ public class Parallel02IT {
     public void thirdRun() {
         try {
             if (new File(outputPath + "/rerun2.txt").exists() && new BufferedReader(new FileReader(outputPath + "/rerun2.txt")).readLine() != null) {
-                //executeReRerun first arg: refactored input file ; second arg:- output json file path for getting result
                 executeReRerun("@" + outputPath + "/rerun2.txt", outputPath + "/cucumber3.json", outputPath + "/rerun3.txt");
             }
         } catch (Exception e) {
@@ -387,7 +379,6 @@ public class Parallel02IT {
     public void fourthRun() {
         try {
             if (new File(outputPath + "/rerun3.txt").exists() && new BufferedReader(new FileReader(outputPath + "/rerun3.txt")).readLine() != null) {
-                //executeReRerun first arg: refactored input file ; second arg:- output json file path for getting result
                 executeReRerun("@" + outputPath + "/rerun3.txt", outputPath + "/cucumber4.json", outputPath + "/rerun4.txt");
             }
         } catch (Exception e) {
@@ -398,8 +389,7 @@ public class Parallel02IT {
     public void fifthRun() {
         try {
             if (new File(outputPath + "/rerun4.txt").exists() && new BufferedReader(new FileReader(outputPath + "/rerun4.txt")).readLine() != null) {
-                //executeReRerun first arg: refactored input file ; second arg:- output json file path for getting result
-                executeReRerun("@" + outputPath + "/rerun4.txt", outputPath + "/cucumber5.json", outputPath + "/rerun5.txt");
+               executeReRerun("@" + outputPath + "/rerun4.txt", outputPath + "/cucumber5.json", outputPath + "/rerun5.txt");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -498,17 +488,17 @@ public class Parallel02IT {
         return (List<File>) FileUtils.listFiles(new File(dirName), new String[] {"json"}, true);
     }
 
-    public static void generateRunWiseReport(List<File> jsons, String run) {
-        try {
-            File rd = new File("target/cucumber-parallel/Consolidated-Report/" + run);
-            List<String> jsonReports = new ArrayList<String>();
-            for (File json : jsons) {
-                jsonReports.add(json.getAbsolutePath());
-            }
-            //List<String> jsonReports, File reportDirectory, String pluginUrlPath, String buildNumber, String buildProject, boolean skippedFails, boolean undefinedFails, boolean flashCharts, boolean runWithJenkins, boolean artifactsEnabled, String artifactConfig, boolean highCharts
-            ReportBuilder reportBuilder = new ReportBuilder(jsonReports, rd, "", run, "cucumber-reporting", true, true, true, false, false, "", false);
-            reportBuilder.generateReports();
-            System.out.println(run + " consolidated reports are generated under directory target/cucumber-parallel/Consolidated-Report");
+    public static void generateRunWiseReport(List < File > jsons, String run) {
+     try {
+          File rd = new File("target/cucumber-parallel/Consolidated-Report/" + run);
+          List < String > jsonReports = new ArrayList < String > ();
+          for (File json: jsons) {
+           jsonReports.add(json.getAbsolutePath());
+          }
+          Configuration configuration = new Configuration(rd, "cucumber-reporting");
+          configuration.setBuildNumber(run);
+          ReportBuilder reportBuilder = new ReportBuilder(jsonReports, configuration);
+          reportBuilder.generateReports();
         } catch (Exception e) {
             e.printStackTrace();
         }
