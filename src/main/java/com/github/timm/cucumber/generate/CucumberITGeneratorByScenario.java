@@ -65,6 +65,7 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
         if (StringUtils.isNotBlank(config.getCustomVmTemplate())) {
             // Look for custom template on the classpath or as a relative file path
             props.put("resource.loader", "class, file");
+            props.put("file.resource.loader.path", config.getProjectBasedir().getAbsolutePath());
             name = config.getCustomVmTemplate();
         } else if (config.useReRun()) {
             name = "cucumber-generic-re-runner.vm";

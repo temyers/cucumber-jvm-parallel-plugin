@@ -53,8 +53,10 @@ Add the following to your POM file:
         <namingPattern>Parallel{c}IT</namingPattern>
         <!-- One of [SCENARIO, FEATURE]. SCENARIO generates one runner per scenario.  FEATURE generates a runner per feature. -->
         <parallelScheme>SCENARIO</parallelScheme>
-        <!-- Specify a custom template for the generated sources (this is a relative path) -->
+        <!-- Specify a custom template for the generated sources (this is a path relative to the project base directory) -->
         <customVmTemplate>src/test/resources/cucumber-custom-runner.vm</customVmTemplate>
+        <!-- Specify a custom package name for generated sources. Default is no package.-->
+        <packageName></packageName>
       </configuration>
     </execution>
   </executions>
@@ -119,6 +121,12 @@ Migration from version 1.x
 
 Changelog
 =========
+
+2.2.0
+-----
+* PR #87 - allow setting of packageName for runners. Closes #45 
+* PR #85 - Resolve inconsistent filters: Fix issue Issue #76
+* PR #86 - use the baseDir of the current project for velocity
 
 2.1.0
 -----

@@ -71,6 +71,10 @@ public class TestFileGeneratorConfig implements FileGeneratorConfig {
         return null;
     }
 
+    public File getProjectBasedir() {
+        return new File(".");
+    }
+
     public boolean useReRun() {
         return useReRun;
     }

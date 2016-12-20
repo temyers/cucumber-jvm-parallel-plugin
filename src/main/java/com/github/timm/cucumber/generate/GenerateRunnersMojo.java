@@ -256,6 +256,9 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
         return packageName;
     }
 
+    public File getProjectBasedir() {
+        return project.getBasedir();
+    }
     public boolean useReRun() {
         return useReRun;
     }
