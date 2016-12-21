@@ -18,6 +18,11 @@ Add the following to your POM file:
   <artifactId>cucumber-jvm-parallel-plugin</artifactId>
   <version>2.1.0</version>
 </dependency>
+<dependency>
+  <groupId>net.masterthought</groupId>
+  <artifactId>cucumber-reporting</artifactId>
+  <version>3.3.0</version>
+</dependency>
 
 
 <plugin>
@@ -127,6 +132,21 @@ It re-run only failed test cases on each run and after complete run it generate 
 * **How to enable it?:**
 specify retryCount property counts between 1 to 5. `<retryCount>1</retryCount>`
 
+* **Dependency required for this functionality:**
+```
+<!-- Required for ExtendedRuntimeOption, if user executing by mvn command which avoids resetting of mvn parameters.-->
+<dependency>
+  <groupId>com.github.temyers</groupId>
+  <artifactId>cucumber-jvm-parallel-plugin</artifactId>
+  <version>same version of this plugin</version>
+</dependency>
+<!-- Required for generating consolidate reports of all run at one place-->
+<dependency>
+  <groupId>net.masterthought</groupId>
+  <artifactId>cucumber-reporting</artifactId>
+  <version>3.3.0</version>
+</dependency>
+```
 
 FAQ
 ===
