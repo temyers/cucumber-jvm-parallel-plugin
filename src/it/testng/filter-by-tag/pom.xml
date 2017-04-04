@@ -42,9 +42,14 @@
                             <goal>generateRunners</goal>
                         </goals>
                         <configuration>
-                            <glue>foo, bar</glue>
-                            <!-- Only 1 feature contains this tag -->
-                            <tags>"@feature1"</tags>
+                            <glue>
+                                <package>foo</package>
+                                <package>bar</package>
+                            </glue>
+                            <tags>
+                                <!-- Only 1 feature contains this tag -->
+                                <tag>@feature1</tag>
+                            </tags>
                             <filterFeaturesByTags>true</filterFeaturesByTags>
                             <useTestNG>true</useTestNG>
                         </configuration>

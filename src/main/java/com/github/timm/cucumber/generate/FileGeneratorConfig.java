@@ -14,7 +14,7 @@ public interface FileGeneratorConfig {
 
     String getEncoding();
 
-    String getCucumberOutputDir();
+    File getCucumberOutputDir();
 
     boolean useTestNG();
 

@@ -83,13 +83,6 @@ public class RuntimeOptionsTest {
     }
 
     @Test
-    public void shouldParseNoTagsAsEmptyString() {
-        final List<String> emptyList = asList();
-        final String tags = TagParser.parseTags(emptyList);
-        assertTrue(tags.isEmpty());
-    }
-
-    @Test
     public void shouldParseTagsWhenMultipleWhitespaceBetweenOptionArgs() {
         final RuntimeOptions parser =
                         new RuntimeOptions(CUCUMBER_OPTS_WITH_MULTI_WHITESPACE_BETWEEN_ARGS);

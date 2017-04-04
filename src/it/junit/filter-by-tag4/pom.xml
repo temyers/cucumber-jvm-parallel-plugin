@@ -42,9 +42,15 @@
                             <goal>generateRunners</goal>
                         </goals>
                         <configuration>
-                            <glue>foo, bar</glue>
-                            <!-- Negation - filter out scenarios tagged with ~@unwanted -->
-                            <tags>"~@unwanted","@includeMe"</tags>
+                            <glue>
+                                <package>foo</package>
+                                <package>bar</package>
+                            </glue>
+                            <tags>
+                                <!-- Negation - filter out scenarios tagged with ~@unwanted -->
+                                <tag>~@unwanted</tag>
+                                <tag>@includeMe</tag>
+                            </tags>
                             <filterFeaturesByTags>true</filterFeaturesByTags>
                         </configuration>
                     </execution>

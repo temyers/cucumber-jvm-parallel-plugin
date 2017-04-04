@@ -42,7 +42,10 @@
                             <goal>generateRunners</goal>
                         </goals>
                         <configuration>
-                            <glue>foo, bar</glue>
+                            <glue>
+                                <package>foo</package>
+                                <package>bar</package>
+                            </glue>
                             <parallelScheme>SCENARIO</parallelScheme>
                         </configuration>
                     </execution>

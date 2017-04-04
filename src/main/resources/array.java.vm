@@ -1,0 +1,1 @@
+#macro( stringArray $array ){#foreach( $element in $array )"$element"#if( $foreach.hasNext ), #end#end}#end

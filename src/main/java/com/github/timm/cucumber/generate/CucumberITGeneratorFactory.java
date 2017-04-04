@@ -37,6 +37,7 @@ public class CucumberITGeneratorFactory {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private CucumberITGenerator createFileGeneratorByFeature() throws MojoExecutionException {
         return new CucumberITGeneratorByFeature(config, overriddenParameters, classNamingScheme);
     }

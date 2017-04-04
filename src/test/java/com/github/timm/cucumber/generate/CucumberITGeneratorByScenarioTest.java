@@ -1,5 +1,6 @@
 package com.github.timm.cucumber.generate;
 
+import static java.util.Collections.singletonList;
 import static org.fest.assertions.Assertions.assertThat;
 
 import com.github.timm.cucumber.generate.name.ClassNamingScheme;
@@ -13,6 +14,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class CucumberITGeneratorByScenarioTest {
 
@@ -28,9 +30,12 @@ public class CucumberITGeneratorByScenarioTest {
                         .setCucumberOutputDir(this.getClass());
 
         final OverriddenCucumberOptionsParameters overriddenParameters =
-                        new OverriddenCucumberOptionsParameters();
-        overriddenParameters.setTags("").setGlue("foo").setStrict(true).setFormat("json")
-        .setMonochrome(false);
+                new OverriddenCucumberOptionsParameters()
+                        .setTags(Collections.<String>emptyList())
+                        .setGlue(singletonList("foo"))
+                        .setStrict(true)
+                        .setPlugins(singletonList("json"))
+                        .setMonochrome(false);
 
         final ClassNamingScheme classNamingScheme =
                         new ClassNamingSchemeFactory(new InstanceCounter()).create("simple", null);
@@ -38,7 +43,7 @@ public class CucumberITGeneratorByScenarioTest {
         classUnderTest = new CucumberITGeneratorByScenario(config, overriddenParameters,
                         classNamingScheme);
 
-        outputDirectory = new File(config.getCucumberOutputDir());
+        outputDirectory = config.getCucumberOutputDir();
         outputDirectory.mkdirs();
         FileUtils.cleanDirectory(outputDirectory);
     }
@@ -51,12 +56,9 @@ public class CucumberITGeneratorByScenarioTest {
         final int expectedGeneratedFiles = 1;
 
         outputDirectory.deleteOnExit();
-        classUnderTest.generateCucumberITFiles(outputDirectory,
-                        Arrays.asList(new File(featureFile)));
+        classUnderTest.generateCucumberITFiles(outputDirectory, singletonList(new File(featureFile)));
 
         assertThat(outputDirectory.listFiles()).hasSize(expectedGeneratedFiles);
-
-
     }
 
     @Test
@@ -66,8 +68,7 @@ public class CucumberITGeneratorByScenarioTest {
                         "src/it/junit/issue_43-outline_runner/src/test/resources/features/feature2.feature";
         final int expectedGeneratedFiles = 4;
 
-        classUnderTest.generateCucumberITFiles(outputDirectory,
-                        Arrays.asList(new File(featureFile)));
+        classUnderTest.generateCucumberITFiles(outputDirectory, singletonList(new File(featureFile)));
 
         assertThat(outputDirectory.listFiles()).hasSize(expectedGeneratedFiles);
 
@@ -78,8 +79,7 @@ public class CucumberITGeneratorByScenarioTest {
         config.setFeaturesDirectory(new File("src/test/resources/features/"));
         final String featureFile =
                         "src/test/resources/features/multiple-example.feature";
-        classUnderTest.generateCucumberITFiles(outputDirectory,
-                        Arrays.asList(new File(featureFile)));
+        classUnderTest.generateCucumberITFiles(outputDirectory, singletonList(new File(featureFile)));
 
         final File example4 = new File(outputDirectory, "Parallel04IT.java");
         assertThat(example4).satisfies(new FileContains("features/multiple-example.feature:19"));
@@ -90,8 +90,7 @@ public class CucumberITGeneratorByScenarioTest {
     public void shouldIncludeTheScenarioLineNumberInGeneratedRunner() throws Exception {
         final String featureFile =
                         "src/it/junit/issue_43-outline_runner/src/test/resources/features/feature2.feature";
-        classUnderTest.generateCucumberITFiles(outputDirectory,
-                        Arrays.asList(new File(featureFile)));
+        classUnderTest.generateCucumberITFiles(outputDirectory, singletonList(new File(featureFile)));
 
         final File scenario1 = new File(outputDirectory, "Parallel01IT.java");
         assertThat(scenario1).satisfies(new FileContains("features/feature2.feature:3"));
@@ -102,18 +101,17 @@ public class CucumberITGeneratorByScenarioTest {
                     throws Exception {
         final String featureFile =
                         "src/it/junit/issue_43-outline_runner/src/test/resources/features/feature2.feature";
-        classUnderTest.generateCucumberITFiles(outputDirectory,
-                        Arrays.asList(new File(featureFile)));
+        classUnderTest.generateCucumberITFiles(outputDirectory, singletonList(new File(featureFile)));
 
         final File scenario3 = new File(outputDirectory, "Parallel03IT.java");
         assertThat(scenario3).satisfies(new FileContains("features/feature2.feature:17"));
     }
 
-    private class FileContains extends Condition<File> {
+    private static final class FileContains extends Condition<File> {
 
         private final String expectedContent;
 
-        public FileContains(final String expectedContent) {
+        FileContains(final String expectedContent) {
             this.expectedContent = expectedContent;
         }
 

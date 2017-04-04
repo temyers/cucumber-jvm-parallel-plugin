@@ -12,11 +12,13 @@ package com.github.timm.cucumber.generate;
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+import static java.util.Arrays.asList;
+import static org.apache.commons.io.FileUtils.listFiles;
 
 import com.github.timm.cucumber.generate.name.ClassNamingScheme;
 import com.github.timm.cucumber.generate.name.ClassNamingSchemeFactory;
 import com.github.timm.cucumber.generate.name.OneUpCounter;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.comparator.NameFileComparator;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -25,7 +27,9 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Goal which generates a Cucumber JUnit runner for each Gherkin feature file in your project.
@@ -44,15 +48,19 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     private MavenProject project;
 
     /**
-     * Comma separated list of containing the packages to use for the cucumber glue code. E.g. <code>my.package,
-     * my.second.package</code>
+     * List of packages to use for the cucumber glue code. E.g. <code>
+     *     <glue>
+     *         <package>my.package</package>
+     *         <package>my.other.package</package>
+     *     </glue>
+     * </code>
      *
-     * <P>
+     * <p>
      * see cucumber.api.CucumberOptions.glue
-     * </P>
+     * </p>
      */
     @Parameter(property = "cucumber.glue", required = true)
-    private String glue;
+    private List<String> glue;
 
     /**
      * Location of the generated files.
@@ -64,9 +72,9 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     /**
      * Directory where the cucumber report files shall be written.
      */
-    @Parameter(defaultValue = "target/cucumber-parallel", property = "cucumberOutputDir",
-                    required = true)
-    private String cucumberOutputDir;
+    @Parameter(defaultValue = "${project.build.directory}/cucumber-parallel", property = "cucumberOutputDir",
+            required = true)
+    private File cucumberOutputDir;
 
     /**
      * Directory containing the feature files.
@@ -82,10 +90,13 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     private boolean strict;
 
     /**
-     * Comma separated list of formats used for the output. Currently only html and json formats are supported.
+     * Comma separated list of format used for the output. Currently only html, json and pretty format are supported.
+     * Default is json.<code>
+     * <format>html,json</format>
+     * </code>
      *
      * <p>
-     * see cucumber.api.CucumberOptions.format
+     * see cucumber.api.CucumberOptions.plugin
      * </p>
      */
     @Parameter(defaultValue = "json", property = "cucumber.format", required = true)
@@ -100,12 +111,21 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     private boolean monochrome;
 
     /**
+     * List of tags used to select scenarios to run. E.g. <code>
+     *     <tags>
+     *         <tag>@billing</tag>
+     *         <tag>~@billing</tag>
+     *         <tag>@important</tag>
+     *         <tag>@important,@billing</tag>
+     *     </tags>
+     * </code>
+     *
      * <p>
      * see cucumber.api.CucumberOptions.tags
      * </p>
      */
     @Parameter(property = "cucumber.tags", required = false)
-    private String tags;
+    private List<String> tags;
 
     @Parameter(defaultValue = "UTF-8", property = "project.build.sourceEncoding", readonly = true)
     private String encoding;
@@ -146,8 +166,6 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     @Parameter(property = "customVmTemplate", required = false)
     private String customVmTemplate;
 
-    private CucumberITGenerator fileGenerator;
-
     /**
      * Called by Maven to run this mojo after parameters have been injected.
      */
@@ -157,12 +175,10 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
             throw new MojoExecutionException("Features directory does not exist");
         }
 
-        final Collection<File> featureFiles =
-                        FileUtils.listFiles(featuresDirectory, new String[] {"feature"}, true);
+        final Collection<File> featureFiles = listFiles(featuresDirectory, new String[] {"feature"}, true);
+        final List<File> sortedFeatureFiles = new NameFileComparator().sort(new ArrayList<File>(featureFiles));
 
         createOutputDirIfRequired();
-
-        fileGenerator = createFileGenerator();
 
         File packageDirectory = packageName == null
                 ? outputDirectory
@@ -172,7 +188,8 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
             packageDirectory.mkdirs();
         }
 
-        fileGenerator.generateCucumberITFiles(packageDirectory, featureFiles);
+        final CucumberITGenerator fileGenerator = createFileGenerator();
+        fileGenerator.generateCucumberITFiles(packageDirectory, sortedFeatureFiles);
 
         getLog().info("Adding " + outputDirectory.getAbsolutePath()
                         + " to test-compile source root");
@@ -199,16 +216,27 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     /**
      * Overrides the parameters with cucumber.options if they have been specified. Currently only tags are supported.
      */
-    private OverriddenCucumberOptionsParameters overrideParametersWithCucumberOptions() {
+    private OverriddenCucumberOptionsParameters overrideParametersWithCucumberOptions() throws MojoExecutionException {
 
-        final OverriddenCucumberOptionsParameters overriddenParameters =
-                        new OverriddenCucumberOptionsParameters();
-        overriddenParameters.setTags(this.tags).setGlue(this.glue).setStrict(this.strict)
-                        .setFormat(this.format).setMonochrome(this.monochrome);
+        final List<String> cleanPlugins = new ArrayList<String>();
+        for (String plugin : this.format.split(",")) {
+            cleanPlugins.add(plugin.trim());
+        }
 
-        overriddenParameters.overrideParametersWithCucumberOptions(cucumberOptions);
+        try {
+            final OverriddenCucumberOptionsParameters overriddenParameters =
+                    new OverriddenCucumberOptionsParameters()
+                            .setTags(this.tags)
+                            .setGlue(this.glue)
+                            .setStrict(this.strict)
+                            .setPlugins(cleanPlugins)
+                            .setMonochrome(this.monochrome);
 
-        return overriddenParameters;
+            overriddenParameters.overrideParametersWithCucumberOptions(cucumberOptions);
+            return overriddenParameters;
+        } catch (IllegalArgumentException e) {
+            throw new MojoExecutionException(e, e.getMessage(), e.getMessage());
+        }
     }
 
     public boolean filterFeaturesByTags() {
@@ -223,7 +251,7 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
         return encoding;
     }
 
-    public String getCucumberOutputDir() {
+    public File getCucumberOutputDir() {
         return cucumberOutputDir;
     }
 
@@ -250,4 +278,5 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     public File getProjectBasedir() {
         return project.getBasedir();
     }
+
 }

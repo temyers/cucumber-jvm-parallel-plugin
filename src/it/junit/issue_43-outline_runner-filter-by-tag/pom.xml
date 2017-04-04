@@ -54,10 +54,14 @@
                             <goal>generateRunners</goal>
                         </goals>
                         <configuration>
-                            <glue>com.github.timm</glue>
+                            <glue>
+                                <package>com.github.timm</package>
+                            </glue>
                             <parallelScheme>SCENARIO</parallelScheme>
                             <filterFeaturesByTags>true</filterFeaturesByTags>
-                            <tags>"@outlineTag"</tags>
+                            <tags>
+                                <tag>@outlineTag</tag>
+                            </tags>
                         </configuration>
                     </execution>
                 </executions>

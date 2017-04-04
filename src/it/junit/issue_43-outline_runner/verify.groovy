@@ -1,7 +1,3 @@
-import org.junit.Assert
-
-import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace
-
 File suite01 = new File(basedir, "target/generated-test-sources/cucumber/Parallel01IT.java");
 File suite02 = new File(basedir, "target/generated-test-sources/cucumber/Parallel02IT.java");
 File suite03 = new File(basedir, "target/generated-test-sources/cucumber/Parallel03IT.java");

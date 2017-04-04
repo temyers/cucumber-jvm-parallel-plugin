@@ -1,5 +1,6 @@
 package com.github.timm.cucumber.generate;
 
+import static java.util.Collections.singletonList;
 import static org.fest.assertions.Assertions.assertThat;
 
 import com.github.timm.cucumber.generate.name.ClassNamingScheme;
@@ -8,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.Collections;
 
 public class CucumberITGeneratorFactoryTest {
 
@@ -20,9 +22,12 @@ public class CucumberITGeneratorFactoryTest {
                                         "src/it/junit/issue_43-outline_runner/src/test/resources/features/"));
 
         final OverriddenCucumberOptionsParameters overriddenParameters =
-                        new OverriddenCucumberOptionsParameters();
-        overriddenParameters.setTags("").setGlue("foo").setStrict(true).setFormat("json")
-        .setMonochrome(false);
+                        new OverriddenCucumberOptionsParameters()
+                                .setTags(Collections.<String>emptyList())
+                                .setGlue(singletonList("foo"))
+                                .setStrict(true)
+                                .setPlugins(singletonList("json"))
+                                .setMonochrome(false);
 
         final ClassNamingScheme classNamingScheme =
                         new ClassNamingSchemeFactory(new InstanceCounter()).create("simple", null);
