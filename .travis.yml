@@ -1,6 +1,14 @@
 language: java
+sudo: false
 jdk:
   - oraclejdk8
 
 script:
-  mvn verify -Prun-its
+  mvn clean verify -Prun-its
+
+cache:
+  directories:
+   - $HOME/.m2
+
+before_cache:
+  - rm -rf $HOME/.m2/repository/com/github/temyers/cucumber-jvm-parallel-plugin/
