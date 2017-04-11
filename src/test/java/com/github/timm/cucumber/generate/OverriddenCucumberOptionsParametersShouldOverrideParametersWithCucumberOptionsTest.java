@@ -1,5 +1,7 @@
 package com.github.timm.cucumber.generate;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -17,19 +19,19 @@ public class OverriddenCucumberOptionsParametersShouldOverrideParametersWithCucu
 
     @Test
     public void tagsParameterIsOverridden() {
-        params.setTags("\"@replaceMe\"");
+        params.setTags(singletonList("\"@replaceMe\""));
 
         params.overrideParametersWithCucumberOptions("--tags @tag1 --tags @tag2");
 
-        assertThat(params.getTags(), equalTo("\"@tag1\",\"@tag2\""));
+        assertThat(params.getTags(), equalTo(asList("@tag1","@tag2")));
     }
 
     @Test
     public void glueParameterIsOverridden() {
-        params.setGlue("a.b.c,d.e.f");
+        params.setGlue(asList("a.b.c","d.e.f"));
 
-        params.overrideParametersWithCucumberOptions("--glue somewhere,somewhere.else");
-        assertThat(params.getGlue(), equalTo("somewhere,somewhere.else"));
+        params.overrideParametersWithCucumberOptions("--glue somewhere --glue somewhere.else");
+        assertThat(params.getGlue(), equalTo(asList("somewhere","somewhere.else")));
     }
 
     @Test
@@ -60,10 +62,10 @@ public class OverriddenCucumberOptionsParametersShouldOverrideParametersWithCucu
     @Test
     public void formatParameterIsOverridden() {
 
-        params.setFormat("somethingElse");
+        params.setPlugins(singletonList("somethingElse"));
         params.overrideParametersWithCucumberOptions(
                         "--format html --plugin pretty --glue somewhere");
-        assertThat(params.getFormat(), equalTo("html,pretty"));
+        assertThat(params.getPlugins(), equalTo(asList("html","pretty")));
     }
 
     @Test

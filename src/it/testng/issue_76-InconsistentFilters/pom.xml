@@ -42,8 +42,13 @@
                             <goal>generateRunners</goal>
                         </goals>
                         <configuration>
-                            <glue>foo, bar</glue>
-                            <tags>"@complete,@accepted"</tags>
+                            <glue>
+                                <package>foo</package>
+                                <package>bar</package>
+                            </glue>
+                            <tags>
+                                <tag>@complete,@accepted</tag>
+                            </tags>
                             <useTestNG>true</useTestNG>
                             <parallelScheme>SCENARIO</parallelScheme>
                         </configuration>

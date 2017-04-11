@@ -2,6 +2,8 @@ import org.junit.Assert
 
 import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace
 
+File buildDirectory = new File(basedir, "target");
+
 File suite01 = new File(basedir, "target/generated-test-sources/cucumber/Feature101IT.java");
 File suite02 = new File(basedir, "target/generated-test-sources/cucumber/Feature202IT.java");
 
@@ -18,8 +20,13 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(strict = true, features = {"${feature1.absolutePath}"}, plugin = {"json:target/cucumber-parallel/1.json"},
-monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo", "bar" })
+@CucumberOptions(
+        strict = true,
+        features = {"${feature1.absolutePath}"},
+        plugin = {"json:${buildDirectory.absolutePath}/cucumber-parallel/1.json"},
+        monochrome = false,
+        tags = {"@complete", "@accepted"},
+        glue = {"foo", "bar"})
 public class Feature101IT {
 }"""
 
@@ -30,8 +37,13 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(strict = true, features = {"${feature2.absolutePath}"}, plugin = {"json:target/cucumber-parallel/2.json"},
-monochrome = false, tags = {"@complete", "@accepted"}, glue = { "foo", "bar" })
+@CucumberOptions(
+        strict = true,
+        features = {"${feature2.absolutePath}"},
+        plugin = {"json:${buildDirectory.absolutePath}/cucumber-parallel/2.json"},
+        monochrome = false,
+        tags = {"@complete", "@accepted"},
+        glue = {"foo", "bar"})
 public class Feature202IT {
 }"""
 

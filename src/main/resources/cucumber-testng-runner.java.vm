@@ -1,0 +1,19 @@
+#parse("/array.java.vm")
+#if ($packageName)
+package $packageName;
+
+#end##
+import cucumber.api.CucumberOptions;
+import cucumber.api.testng.AbstractTestNGCucumberTests;
+
+@CucumberOptions(
+        strict = $strict,
+        features = {"$featureFile"},
+        plugin = #stringArray($plugins),
+        monochrome = ${monochrome},
+#if(!$featureFile.contains(".feature:") && $tags)
+        tags = #stringArray($tags),
+#end
+        glue = #stringArray($glue))
+public class $className extends AbstractTestNGCucumberTests {
+}

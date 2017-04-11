@@ -1,26 +1,30 @@
 package com.github.timm.cucumber.generate;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 import com.github.timm.cucumber.options.RuntimeOptions;
-import com.github.timm.cucumber.options.TagParser;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
 
 class OverriddenCucumberOptionsParameters {
 
-    private String tags;
-    private String glue;
+    private List<String> tags;
+    private List<String> glue;
     private boolean strict;
-    private String format;
+    private List<String> plugins;
     private boolean monochrome;
 
-    public OverriddenCucumberOptionsParameters setTags(final String tags) {
-        this.tags = tags;
+    public OverriddenCucumberOptionsParameters setTags(final List<String> tags) {
+        this.tags = requireNoneBlank(tags, "The parameters 'tags' are missing or invalid");
         return this;
     }
 
-    public OverriddenCucumberOptionsParameters setGlue(final String glue) {
-        this.glue = glue;
+    public OverriddenCucumberOptionsParameters setGlue(final List<String> glue) {
+        if (glue == null || glue.isEmpty()) {
+            throw new IllegalArgumentException("The parameters 'glue' are missing or invalid");
+        }
+        this.glue = requireNoneBlank(glue, "The parameters 'glue' are invalid");
+
         return this;
     }
 
@@ -29,8 +33,8 @@ class OverriddenCucumberOptionsParameters {
         return this;
     }
 
-    public OverriddenCucumberOptionsParameters setFormat(final String format) {
-        this.format = format;
+    public OverriddenCucumberOptionsParameters setPlugins(final List<String> plugins) {
+        this.plugins = requireNoneBlank(plugins, "The parameters 'plugins' are missing or invalid");
         return this;
     }
 
@@ -39,20 +43,19 @@ class OverriddenCucumberOptionsParameters {
         return this;
     }
 
-    public void overrideParametersWithCucumberOptions(final String cucumberOptions) {
-        if (cucumberOptions == null || cucumberOptions.isEmpty()) {
+    void overrideParametersWithCucumberOptions(final String cucumberOptions) {
+        if (cucumberOptions == null || cucumberOptions.length() == 0) {
             return;
         }
         final RuntimeOptions options = new RuntimeOptions(cucumberOptions);
         final List<String> tags = options.getFilters();
-        final String parsedTags = TagParser.parseTags(tags);
-        if (!parsedTags.isEmpty()) {
-            this.tags = parsedTags;
+        if (!tags.isEmpty()) {
+            setTags(options.getFilters());
         }
 
         final List<String> glue = options.getGlue();
         if (!glue.isEmpty()) {
-            this.glue = StringUtils.join(glue, ",");
+            setGlue(glue);
         }
 
         if (options.isStrict()) {
@@ -60,7 +63,7 @@ class OverriddenCucumberOptionsParameters {
         }
 
         if (!options.getPluginNames().isEmpty()) {
-            this.format = StringUtils.join(options.getPluginNames(), ",");
+            setPlugins(options.getPluginNames());
         }
 
         if (options.isMonochrome()) {
@@ -73,11 +76,11 @@ class OverriddenCucumberOptionsParameters {
     }
 
 
-    public String getFormat() {
-        return format;
+    public List<String> getPlugins() {
+        return plugins;
     }
 
-    public String getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
@@ -85,8 +88,16 @@ class OverriddenCucumberOptionsParameters {
         return monochrome;
     }
 
-    public String getGlue() {
+    public List<String> getGlue() {
         return glue;
     }
 
+    private static List<String> requireNoneBlank(List<String> list, String message) {
+        for (String element : list) {
+            if (isBlank(element)) {
+                throw new IllegalArgumentException(message + ": " + list);
+            }
+        }
+        return list;
+    }
 }

@@ -42,9 +42,14 @@
                             <goal>generateRunners</goal>
                         </goals>
                         <configuration>
-                            <glue>foo, bar</glue>
-                            <!-- Negation - filter out scenarios tagged with @feature1 -->
-                            <tags>"~@feature1"</tags>
+                            <glue>
+                                <package>foo</package>
+                                <package>bar</package>
+                            </glue>
+                            <tags>
+                                <!-- Negation - filter out scenarios tagged with @feature1 -->
+                                <tag>~@feature1</tag>
+                            </tags>
                             <filterFeaturesByTags>true</filterFeaturesByTags>
                         </configuration>
                     </execution>

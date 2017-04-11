@@ -1,5 +1,7 @@
 package com.github.timm.cucumber.generate;
 
+import static java.lang.String.format;
+
 import com.github.timm.cucumber.generate.filter.TagFilter;
 import com.github.timm.cucumber.generate.name.ClassNamingScheme;
 import gherkin.AstBuilder;
@@ -10,10 +12,13 @@ import gherkin.ast.Location;
 import gherkin.ast.Node;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.app.event.EventCartridge;
+import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,7 +26,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -41,13 +48,13 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
 
 
     /**
-     * @param config The configuration parameters passed to the Maven Mojo
+     * @param config               The configuration parameters passed to the Maven Mojo
      * @param overriddenParameters Parameters overridden from Cucumber options VM parameter (-Dcucumber.options)
-     * @param classNamingScheme The naming scheme to use for the generated class files
+     * @param classNamingScheme    The naming scheme to use for the generated class files
      */
     public CucumberITGeneratorByScenario(final FileGeneratorConfig config,
-                    final OverriddenCucumberOptionsParameters overriddenParameters,
-                    final ClassNamingScheme classNamingScheme) {
+                                        final OverriddenCucumberOptionsParameters overriddenParameters,
+                                        final ClassNamingScheme classNamingScheme) {
         this.config = config;
         this.overriddenParameters = overriddenParameters;
         this.classNamingScheme = classNamingScheme;
@@ -66,9 +73,9 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
             props.put("file.resource.loader.path", config.getProjectBasedir().getAbsolutePath());
             name = config.getCustomVmTemplate();
         } else if (config.useTestNG()) {
-            name = "cucumber-testng-runner.vm";
+            name = "cucumber-testng-runner.java.vm";
         } else {
-            name = "cucumber-junit-runner.vm";
+            name = "cucumber-junit-runner.java.vm";
         }
         final VelocityEngine engine = new VelocityEngine(props);
         engine.init();
@@ -79,11 +86,11 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
      * Generates a Cucumber runner for each scenario, or example in a scenario outline.
      *
      * @param outputDirectory the output directory to place generated files
-     * @param featureFiles The feature files to create runners for
+     * @param featureFiles    The feature files to create runners for
      * @throws MojoExecutionException if something goes wrong
      */
     public void generateCucumberITFiles(final File outputDirectory,
-                    final Collection<File> featureFiles) throws MojoExecutionException {
+                                        final Collection<File> featureFiles) throws MojoExecutionException {
         final Parser<Feature> parser = new Parser<Feature>(new AstBuilder());
         Feature feature = null;
         final TagFilter tagFilter = new TagFilter(overriddenParameters.getTags());
@@ -95,7 +102,7 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
             } catch (final FileNotFoundException e) {
                 // should never happen
                 // TODO - proper logging
-                System.out.println(String.format("WARNING: Failed to parse '%s'...IGNORING",
+                System.out.println(format("WARNING: Failed to parse '%s'...IGNORING",
                                 file.getName()));
             }
 
@@ -142,22 +149,29 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
      * @param file The feature file
      */
     private void setFeatureFileLocation(final File file, final Location location) {
-        featureFileLocation = file.getPath().replace(File.separatorChar, '/')
-                        .concat(":" + location.getLine());
+        featureFileLocation = normalizePathSeparator(file).concat(":" + location.getLine());
+    }
+
+    private static String normalizePathSeparator(File file) {
+        return file.getPath().replace(File.separatorChar, '/');
     }
 
     private void writeContentFromTemplate(final Writer writer) {
+        // to escape java
+        EventCartridge ec = new EventCartridge();
+        ec.addEventHandler(new EscapeJavaReference());
 
         final VelocityContext context = new VelocityContext();
+        context.attachEventCartridge(ec);
         context.put("strict", overriddenParameters.isStrict());
         context.put("featureFile", featureFileLocation);
-        context.put("reports", createFormatStrings());
+        context.put("plugins", createPluginStrings());
         if (!config.filterFeaturesByTags()) {
             context.put("tags", overriddenParameters.getTags());
         }
         context.put("monochrome", overriddenParameters.isMonochrome());
-        context.put("cucumberOutputDir", config.getCucumberOutputDir());
-        context.put("glue", quoteGlueStrings());
+        context.put("cucumberOutputDir", normalizePathSeparator(config.getCucumberOutputDir()));
+        context.put("glue", overriddenParameters.getGlue());
         context.put("className", FilenameUtils.removeExtension(outputFileName));
         context.put("packageName", config.getPackageName());
 
@@ -167,46 +181,34 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
     /**
      * Create the format string used for the output.
      */
-    private String createFormatStrings() {
-        final String[] formatStrs = overriddenParameters.getFormat().split(",");
-
-        final StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < formatStrs.length; i++) {
-            final String formatStr = formatStrs[i].trim();
-
+    private List<String> createPluginStrings() {
+        final List<String> formatList = new ArrayList<String>();
+        for (String plugin : overriddenParameters.getPlugins()) {
+            final String formatStr = plugin.trim();
             if ("pretty".equalsIgnoreCase(formatStr)) {
-                sb.append("\"pretty\"");
+                formatList.add("pretty");
             } else {
-                sb.append(String.format("\"%s:%s/%s.%s\"", formatStr,
-                                config.getCucumberOutputDir().replace('\\', '/'), fileCounter,
-                                formatStr));
+                formatList.add(format("%s:%s/%s.%s",
+                        formatStr,
+                        normalizePathSeparator(config.getCucumberOutputDir()),
+                        fileCounter,
+                        formatStr));
             }
 
-            if (i < formatStrs.length - 1) {
-                sb.append(", ");
-            }
         }
-        return sb.toString();
+        return formatList;
     }
 
-    /**
-     * Wraps each package in quotes for use in the template.
-     */
-    private String quoteGlueStrings() {
-        final String[] packageStrs = overriddenParameters.getGlue().split(",");
 
-        final StringBuilder sb = new StringBuilder();
+    private static final class EscapeJavaReference implements ReferenceInsertionEventHandler {
 
-        for (int i = 0; i < packageStrs.length; i++) {
-            final String packageStr = packageStrs[i];
-            sb.append(String.format("\"%s\"", packageStr.trim()));
-
-            if (i < packageStrs.length - 1) {
-                sb.append(", ");
+        public Object referenceInsert(String reference, Object value) {
+            if (value == null) {
+                return null;
+            } else {
+                return StringEscapeUtils.escapeJava(value.toString());
             }
         }
-        return sb.toString();
     }
 
 }

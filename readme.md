@@ -26,8 +26,11 @@ Add the following to your POM file:
       </goals>
       <configuration>
         <!-- Mandatory -->
-        <!-- comma separated list of package names to scan for glue code -->
-        <glue>foo, bar</glue>
+        <!-- List of package names to scan for glue code. -->
+        <glue>
+          <package>my.package</package>
+          <package>my.other.package</package>
+        </glue>
         <!-- These are optional, with the default values -->
         <!-- Where to output the generated tests -->
         <outputDirectory>${project.build.directory}/generated-test-sources/cucumber</outputDirectory>
@@ -35,14 +38,19 @@ Add the following to your POM file:
         <featuresDirectory>src/test/resources/features/</featuresDirectory>
         <!-- Directory where the cucumber report files shall be written  -->
         <cucumberOutputDir>target/cucumber-parallel</cucumberOutputDir>
-        <!-- comma separated list of output formats -->
+        <!-- Comma separated list of output formats. Only html, json and pretty are supported -->
         <format>json</format>
         <!-- CucumberOptions.strict property -->
         <strict>true</strict>
         <!-- CucumberOptions.monochrome property -->
         <monochrome>true</monochrome>
-        <!-- The tags to run, maps to CucumberOptions.tags property -->
-        <tags></tags>
+        <!-- The tags to run, maps to CucumberOptions.tags property. Default is no tags. -->
+        <tags>
+          <tag>@billing</tag>
+          <tag>~@billing</tag>
+          <tag>@important</tag>
+          <tag>@important,@billing</tag>
+        </tags>
         <!-- If set to true, only feature files containing the required tags shall be generated. -->
         <filterFeaturesByTags>false</filterFeaturesByTags>
         <!-- Generate TestNG runners instead of JUnit ones. --> 
@@ -56,7 +64,7 @@ Add the following to your POM file:
         <!-- Specify a custom template for the generated sources (this is a path relative to the project base directory) -->
         <customVmTemplate>src/test/resources/cucumber-custom-runner.vm</customVmTemplate>
         <!-- Specify a custom package name for generated sources. Default is no package.-->
-        <packageName></packageName>
+        <packageName>my.package</packageName>
       </configuration>
     </execution>
   </executions>

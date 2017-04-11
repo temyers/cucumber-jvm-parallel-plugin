@@ -44,7 +44,10 @@
           </execution>
         </executions>
         <configuration>
-          <glue>foo, bar</glue>
+          <glue>
+            <package>foo</package>
+            <package>bar</package>
+          </glue>
           <customVmTemplate>custom-template-test.vm</customVmTemplate>
         </configuration>
       </plugin>

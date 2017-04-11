@@ -1,5 +1,6 @@
 package com.github.timm.cucumber.generate;
 
+import static java.util.Collections.singletonList;
 import static org.fest.assertions.Assertions.assertThat;
 
 import com.github.timm.cucumber.generate.name.ClassNamingScheme;
@@ -10,6 +11,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class CucumberITGeneratorByFeatureTest {
 
@@ -25,9 +27,12 @@ public class CucumberITGeneratorByFeatureTest {
                         .setCucumberOutputDir(this.getClass());
 
         final OverriddenCucumberOptionsParameters overriddenParameters =
-                        new OverriddenCucumberOptionsParameters();
-        overriddenParameters.setTags("").setGlue("foo").setStrict(true).setFormat("json")
-        .setMonochrome(false);
+                new OverriddenCucumberOptionsParameters()
+                        .setTags(Collections.<String>emptyList())
+                        .setGlue(singletonList("foo"))
+                        .setStrict(true)
+                        .setPlugins(singletonList("json"))
+                        .setMonochrome(false);
 
         final ClassNamingScheme classNamingScheme =
                         new ClassNamingSchemeFactory(new InstanceCounter()).create("simple", null);
@@ -35,7 +40,7 @@ public class CucumberITGeneratorByFeatureTest {
         classUnderTest = new CucumberITGeneratorByFeature(config, overriddenParameters,
                         classNamingScheme);
 
-        outputDirectory = new File(config.getCucumberOutputDir());
+        outputDirectory = config.getCucumberOutputDir();
         outputDirectory.mkdirs();
         FileUtils.cleanDirectory(outputDirectory);
     }
@@ -48,8 +53,7 @@ public class CucumberITGeneratorByFeatureTest {
         final int expectedGeneratedFiles = 1;
 
         outputDirectory.deleteOnExit();
-        classUnderTest.generateCucumberITFiles(outputDirectory,
-                        Arrays.asList(new File(featureFile)));
+        classUnderTest.generateCucumberITFiles(outputDirectory, singletonList(new File(featureFile)));
 
         assertThat(outputDirectory.listFiles()).hasSize(expectedGeneratedFiles);
 

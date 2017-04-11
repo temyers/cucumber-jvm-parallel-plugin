@@ -42,9 +42,15 @@
                             <goal>generateRunners</goal>
                         </goals>
                         <configuration>
-                            <glue>foo, bar</glue>
-                            <!-- @feature1 AND @required -->
-                            <tags>"@feature1","@required"</tags>
+                            <glue>
+                                <package>foo</package>
+                                <package>bar</package>
+                            </glue>
+                            <tags>
+                                <!-- @feature1 AND @required -->
+                                <tag>@feature1</tag>
+                                <tag>@required</tag>
+                            </tags>
                             <filterFeaturesByTags>true</filterFeaturesByTags>
                         </configuration>
                     </execution>

@@ -1,6 +1,5 @@
 package com.github.timm.cucumber.generate.filter;
 
-import com.github.timm.cucumber.options.TagParser;
 import gherkin.ast.Examples;
 import gherkin.ast.Feature;
 import gherkin.ast.Node;
@@ -9,6 +8,7 @@ import gherkin.ast.ScenarioOutline;
 import gherkin.ast.TableRow;
 import gherkin.ast.Tag;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -27,10 +27,23 @@ public class TagFilter {
      *
      * @param tags The tags to filter by.
      */
-    public TagFilter(final String tags) {
+    public TagFilter(final List<String> tags) {
 
-        final String nullsafeTags = tags == null ? "" : tags;
-        tagGroupsAnded = TagParser.splitQuotedTagsIntoParts(nullsafeTags);
+        final List<String> nullsafeTags = tags == null ? new ArrayList<String>() : tags;
+        tagGroupsAnded = splitTagQuery(nullsafeTags);
+    }
+
+    private static List<List<String>> splitTagQuery(final List<String> tagQuery) {
+        final List<List<String>> allTags = new ArrayList<List<String>>();
+        for (String tags : tagQuery) {
+            final List<String> queryPart = new ArrayList<String>();
+            for (String part : tags.split(",")) {
+                queryPart.add(part.trim());
+            }
+            allTags.add(queryPart);
+        }
+
+        return allTags;
     }
 
     private boolean matches(final Collection<Tag> tags) {
@@ -84,7 +97,7 @@ public class TagFilter {
             allTagsForScenario.addAll(feature.getTags());
             if (scenario instanceof ScenarioOutline) {
                 matchingScenariosAndExamples.addAll(
-                                matchingExamples((ScenarioOutline) scenario, allTagsForScenario));
+                        matchingExamples((ScenarioOutline) scenario, allTagsForScenario));
             } else {
                 if (matches(allTagsForScenario)) {
                     matchingScenariosAndExamples.add(scenario);
@@ -97,7 +110,7 @@ public class TagFilter {
     }
 
     private Collection<TableRow> matchingExamples(final ScenarioOutline scenario,
-                    final Set<Tag> allTagsForScenario) {
+                                                  final Set<Tag> allTagsForScenario) {
 
         final Collection<TableRow> matchingRows = new LinkedList<TableRow>();
 

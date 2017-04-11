@@ -1,5 +1,7 @@
 package com.github.timm.cucumber.generate.filter;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.fest.assertions.Assertions.assertThat;
 
 import gherkin.AstBuilder;
@@ -29,7 +31,7 @@ public class TagFilterTest {
     @Test
     public void shouldFindScenariosWithAndedTags() {
 
-        final TagFilter tagFilter = new TagFilter("\"@tag1\",\"@tag2\"");
+        final TagFilter tagFilter = new TagFilter(asList("@tag1","@tag2"));
         final Feature feature = parseFeature("src/test/resources/features/filterByTag.feature");
 
         final Collection<Node> matchingScenariosAndExamples =
@@ -41,7 +43,7 @@ public class TagFilterTest {
     @Test
     public void shouldExcludeScenariosWhenFilteringByNotTags() throws Exception {
 
-        final TagFilter tagFilter = new TagFilter("\"@tag1\",\"~@tag2\"");
+        final TagFilter tagFilter = new TagFilter(asList("@tag1","~@tag2"));
         final Feature feature = parseFeature("src/test/resources/features/filterByTag.feature");
 
         final Collection<Node> matchingScenariosAndExamples =
@@ -56,7 +58,7 @@ public class TagFilterTest {
     @Test
     public void shouldFindScenariosWhenFilteringByOrTags() throws Exception {
 
-        final TagFilter tagFilter = new TagFilter("\"@tag1,@tag2\"");
+        final TagFilter tagFilter = new TagFilter(singletonList("@tag1,@tag2"));
         final Feature feature = parseFeature("src/test/resources/features/filterByTag.feature");
 
         final Collection<Node> matchingScenariosAndExamples =
@@ -68,7 +70,7 @@ public class TagFilterTest {
     @Test
     public void shouldIncludeExamplesWhenFilteringByTagsAtExampleLevel() throws Exception {
 
-        final TagFilter tagFilter = new TagFilter("\"@english\"");
+        final TagFilter tagFilter = new TagFilter(singletonList("@english"));
         final Feature feature =
                         parseFeature("src/test/resources/features/multiple-example.feature");
 
@@ -84,7 +86,7 @@ public class TagFilterTest {
     @Test
     public void shouldIncludeScenariosWhenFilteringByTagsAtFeatureLevel() throws Exception {
 
-        final TagFilter tagFilter = new TagFilter("\"@featureTag\"");
+        final TagFilter tagFilter = new TagFilter(singletonList("@featureTag"));
         final Feature feature = parseFeature("src/test/resources/features/filterByTag.feature");
 
         final Collection<Node> matchingScenariosAndExamples =
@@ -97,7 +99,7 @@ public class TagFilterTest {
     @Test
     public void shouldIncludeScenariosWhenFilteringByTagsAtScenarioLevel() throws Exception {
 
-        final TagFilter tagFilter = new TagFilter("\"@tag1\"");
+        final TagFilter tagFilter = new TagFilter(singletonList("@tag1"));
         final Feature feature = parseFeature("src/test/resources/features/filterByTag.feature");
 
         final Collection<Node> matchingScenariosAndExamples =
@@ -110,7 +112,7 @@ public class TagFilterTest {
     @Test
     public void shouldIncludeScenariosWhenFilteringByTagsAtScenarioOutlineLevel() throws Exception {
 
-        final TagFilter tagFilter = new TagFilter("\"@outlineTag\"");
+        final TagFilter tagFilter = new TagFilter(singletonList("@outlineTag"));
         final Feature feature =
                         parseFeature("src/test/resources/features/multiple-example.feature");
 

@@ -9,7 +9,7 @@ public class TestFileGeneratorConfig implements FileGeneratorConfig {
     private boolean filterFeatureByTags = false;
     private Log log;
     private File featuresDirectory;
-    private String outputDir;
+    private File outputDir;
     private final boolean useTestNg = false;
     private final String namingScheme = "simple";
     private final String namingPattern = null;
@@ -21,7 +21,7 @@ public class TestFileGeneratorConfig implements FileGeneratorConfig {
     }
 
     public TestFileGeneratorConfig setCucumberOutputDir(final Class<?> classUnderTest) {
-        this.outputDir = "target/" + classUnderTest.getSimpleName();
+        this.outputDir = new File("target", classUnderTest.getSimpleName());
         return this;
     }
 
@@ -41,7 +41,7 @@ public class TestFileGeneratorConfig implements FileGeneratorConfig {
         return "UTF-8";
     }
 
-    public String getCucumberOutputDir() {
+    public File getCucumberOutputDir() {
         return outputDir;
     }
 
