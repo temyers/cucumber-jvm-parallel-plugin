@@ -27,4 +27,6 @@ public interface FileGeneratorConfig {
     String getPackageName();
 
     File getProjectBasedir();
+
+    boolean useReRun() ;
 }

@@ -39,7 +39,9 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
     private Template velocityTemplate;
     private String outputFileName;
     private final ClassNamingScheme classNamingScheme;
-
+    private String htmlFormat;
+    private String jsonFormat;
+    private String rerunFormat;
 
     /**
      * @param config The configuration parameters passed to the Maven Mojo
@@ -66,6 +68,8 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
             props.put("resource.loader", "class, file");
             props.put("file.resource.loader.path", config.getProjectBasedir().getAbsolutePath());
             name = config.getCustomVmTemplate();
+        } else if (config.useReRun()) {
+            name = "cucumber-generic-re-runner.vm";
         } else if (config.useTestNG()) {
             name = "cucumber-testng-runner.vm";
         } else {
@@ -168,6 +172,13 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
         context.put("glue", quoteGlueStrings());
         context.put("className", FilenameUtils.removeExtension(outputFileName));
         context.put("packageName", config.getPackageName());
+        context.put("outputPath", config.getCucumberOutputDir().replace('\\', '/') + "/"
+            + FilenameUtils.removeExtension(outputFileName) + "/"
+            + FilenameUtils.removeExtension(outputFileName));
+        context.put("retryCount", overriddenParameters.getRetryCount());
+        context.put("htmlFormat", this.htmlFormat);
+        context.put("jsonFormat", this.jsonFormat);
+        context.put("rerunFormat", this.rerunFormat);
 
         velocityTemplate.merge(context, writer);
     }
@@ -183,7 +194,39 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
         for (int i = 0; i < formatStrs.length; i++) {
             final String formatStr = formatStrs[i].trim();
 
-            if ("pretty".equalsIgnoreCase(formatStr)) {
+            if (config.useReRun()) {
+                sb.append(String.format("\"%s:%s/%s/%s.%s\"",
+                    formatStr,
+                    config.getCucumberOutputDir().replace('\\', '/'),
+                    FilenameUtils.removeExtension(outputFileName),
+                    FilenameUtils.removeExtension(outputFileName),
+                    formatStr));
+                if (formatStr.equalsIgnoreCase("html")) {
+                    htmlFormat = String.format("\"%s:%s/%s/%s.%s\"",
+                        formatStr,
+                        config.getCucumberOutputDir().replace('\\', '/'),
+                        FilenameUtils.removeExtension(outputFileName),
+                        FilenameUtils.removeExtension(outputFileName),
+                        formatStr);
+                }
+                if (formatStr.equalsIgnoreCase("json")) {
+                    jsonFormat = String.format("\"%s:%s/%s/%s.%s\"",
+                        formatStr,
+                        config.getCucumberOutputDir().replace('\\', '/'),
+                        FilenameUtils.removeExtension(outputFileName),
+                        FilenameUtils.removeExtension(outputFileName),
+                        formatStr);
+                }
+                if (formatStr.equalsIgnoreCase("rerun")) {
+                    rerunFormat = String.format("\"%s:%s/%s/%s.%s\"",
+                        formatStr,
+                        config.getCucumberOutputDir().replace('\\', '/'),
+                        FilenameUtils.removeExtension(outputFileName),
+                        FilenameUtils.removeExtension(outputFileName),
+                        "txt");
+                }
+
+            } else if ("pretty".equalsIgnoreCase(formatStr)) {
                 sb.append("\"pretty\"");
             } else {
                 sb.append(String.format("\"%s:%s/%s.%s\"", formatStr,

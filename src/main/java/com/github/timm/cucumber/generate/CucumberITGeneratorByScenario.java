@@ -33,21 +33,23 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
 
     private final FileGeneratorConfig config;
     private final OverriddenCucumberOptionsParameters overriddenParameters;
+    private final ClassNamingScheme classNamingScheme;
     private int fileCounter = 1;
     private String featureFileLocation;
     private Template velocityTemplate;
     private String outputFileName;
-    private final ClassNamingScheme classNamingScheme;
-
+    private String htmlFormat;
+    private String jsonFormat;
+    private String rerunFormat;
 
     /**
-     * @param config The configuration parameters passed to the Maven Mojo
+     * @param config               The configuration parameters passed to the Maven Mojo
      * @param overriddenParameters Parameters overridden from Cucumber options VM parameter (-Dcucumber.options)
-     * @param classNamingScheme The naming scheme to use for the generated class files
+     * @param classNamingScheme    The naming scheme to use for the generated class files
      */
     public CucumberITGeneratorByScenario(final FileGeneratorConfig config,
-                    final OverriddenCucumberOptionsParameters overriddenParameters,
-                    final ClassNamingScheme classNamingScheme) {
+                                         final OverriddenCucumberOptionsParameters overriddenParameters,
+                                         final ClassNamingScheme classNamingScheme) {
         this.config = config;
         this.overriddenParameters = overriddenParameters;
         this.classNamingScheme = classNamingScheme;
@@ -58,13 +60,15 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
         final Properties props = new Properties();
         props.put("resource.loader", "class");
         props.put("class.resource.loader.class",
-                "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+            "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
         final String name;
         if (StringUtils.isNotBlank(config.getCustomVmTemplate())) {
             // Look for custom template on the classpath or as a relative file path
             props.put("resource.loader", "class, file");
             props.put("file.resource.loader.path", config.getProjectBasedir().getAbsolutePath());
             name = config.getCustomVmTemplate();
+        } else if (config.useReRun()) {
+            name = "cucumber-generic-re-runner.vm";
         } else if (config.useTestNG()) {
             name = "cucumber-testng-runner.vm";
         } else {
@@ -79,11 +83,11 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
      * Generates a Cucumber runner for each scenario, or example in a scenario outline.
      *
      * @param outputDirectory the output directory to place generated files
-     * @param featureFiles The feature files to create runners for
+     * @param featureFiles    The feature files to create runners for
      * @throws MojoExecutionException if something goes wrong
      */
     public void generateCucumberITFiles(final File outputDirectory,
-                    final Collection<File> featureFiles) throws MojoExecutionException {
+                                        final Collection<File> featureFiles) throws MojoExecutionException {
         final Parser<Feature> parser = new Parser<Feature>(new AstBuilder());
         Feature feature = null;
         final TagFilter tagFilter = new TagFilter(overriddenParameters.getTags());
@@ -96,12 +100,12 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
                 // should never happen
                 // TODO - proper logging
                 System.out.println(String.format("WARNING: Failed to parse '%s'...IGNORING",
-                                file.getName()));
+                    file.getName()));
             }
 
 
             final Collection<Node> matchingScenariosAndExamples =
-                            tagFilter.matchingScenariosAndExamples(feature);
+                tagFilter.matchingScenariosAndExamples(feature);
 
             for (final Node match : matchingScenariosAndExamples) {
                 outputFileName = classNamingScheme.generate(file.getName());
@@ -143,7 +147,7 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
      */
     private void setFeatureFileLocation(final File file, final Location location) {
         featureFileLocation = file.getPath().replace(File.separatorChar, '/')
-                        .concat(":" + location.getLine());
+            .concat(":" + location.getLine());
     }
 
     private void writeContentFromTemplate(final Writer writer) {
@@ -160,7 +164,13 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
         context.put("glue", quoteGlueStrings());
         context.put("className", FilenameUtils.removeExtension(outputFileName));
         context.put("packageName", config.getPackageName());
-
+        context.put("outputPath", config.getCucumberOutputDir().replace('\\', '/') + "/"
+            + FilenameUtils.removeExtension(outputFileName) + "/"
+            + FilenameUtils.removeExtension(outputFileName));
+        context.put("retryCount", overriddenParameters.getRetryCount());
+        context.put("htmlFormat", this.htmlFormat);
+        context.put("jsonFormat", this.jsonFormat);
+        context.put("rerunFormat", this.rerunFormat);
         velocityTemplate.merge(context, writer);
     }
 
@@ -175,12 +185,44 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
         for (int i = 0; i < formatStrs.length; i++) {
             final String formatStr = formatStrs[i].trim();
 
-            if ("pretty".equalsIgnoreCase(formatStr)) {
+            if (config.useReRun()) {
+                sb.append(String.format("\"%s:%s/%s/%s.%s\"",
+                    formatStr,
+                    config.getCucumberOutputDir().replace('\\', '/'),
+                    FilenameUtils.removeExtension(outputFileName),
+                    FilenameUtils.removeExtension(outputFileName),
+                    formatStr));
+                if (formatStr.equalsIgnoreCase("html")) {
+                    htmlFormat = String.format("\"%s:%s/%s/%s.%s\"",
+                        formatStr,
+                        config.getCucumberOutputDir().replace('\\', '/'),
+                        FilenameUtils.removeExtension(outputFileName),
+                        FilenameUtils.removeExtension(outputFileName),
+                        formatStr);
+                }
+                if (formatStr.equalsIgnoreCase("json")) {
+                    jsonFormat = String.format("\"%s:%s/%s/%s.%s\"",
+                        formatStr,
+                        config.getCucumberOutputDir().replace('\\', '/'),
+                        FilenameUtils.removeExtension(outputFileName),
+                        FilenameUtils.removeExtension(outputFileName),
+                        formatStr);
+                }
+                if (formatStr.equalsIgnoreCase("rerun")) {
+                    rerunFormat = String.format("\"%s:%s/%s/%s.%s\"",
+                        formatStr,
+                        config.getCucumberOutputDir().replace('\\', '/'),
+                        FilenameUtils.removeExtension(outputFileName),
+                        FilenameUtils.removeExtension(outputFileName),
+                        "txt");
+                }
+
+            } else if ("pretty".equalsIgnoreCase(formatStr)) {
                 sb.append("\"pretty\"");
             } else {
                 sb.append(String.format("\"%s:%s/%s.%s\"", formatStr,
-                                config.getCucumberOutputDir().replace('\\', '/'), fileCounter,
-                                formatStr));
+                    config.getCucumberOutputDir().replace('\\', '/'), fileCounter,
+                    formatStr));
             }
 
             if (i < formatStrs.length - 1) {
