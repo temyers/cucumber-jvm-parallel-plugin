@@ -16,7 +16,7 @@ Add the following to your POM file:
 <plugin>
   <groupId>com.github.temyers</groupId>
   <artifactId>cucumber-jvm-parallel-plugin</artifactId>
-  <version>2.1.0</version>
+  <version>3.0.0</version>
   <executions>
     <execution>
       <id>generateRunners</id>
@@ -129,6 +129,10 @@ Migration from version 1.x
 
 Changelog
 =========
+3.0.0 (UNRELEASED)
+-----
+* PR #99 - Escape Java using Velocity engine: Fix issue #82
+* PR #100 - Used containerized builds and cache dependencies
 
 2.2.0
 -----
