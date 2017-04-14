@@ -120,6 +120,19 @@ Q. Why isn't there much activity on this project
 
 A. The plugin is considered feature complete.  If you feel there is something missing, raise an issue.
 
+
+Migration from version 2.x
+==========================
+* The `glue` property now takes a list of `package` elements rather then a list of comma delimited packages. A 
+  `package` contains a single package name to be used as glue.
+* The `tags` property now takes a list of `tag` elements rather then a list of comma and quote delimited strings. A 
+  `tag` element can take one or more tags. The semantics are the same as those of the
+  [the command line]( https://github.com/cucumber/cucumber/wiki/Tags#running-a-subset-of-scenarios).
+* The default value for `cucumberOutputDir` has changed from `target/cucumber-parallel` to 
+  `${project.build.directory}/cucumber-parallel` if you were using a build directory other then `target` you can remove 
+  this element.
+
+
 Migration from version 1.x
 ==========================
 * The default for the `tags` property is now set to no tags.  This means that all scenarios shall be executed by default.  
