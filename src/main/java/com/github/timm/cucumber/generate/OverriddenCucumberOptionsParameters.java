@@ -2,16 +2,16 @@ package com.github.timm.cucumber.generate;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-import com.github.timm.cucumber.options.RuntimeOptions;
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class OverriddenCucumberOptionsParameters {
 
     private List<String> tags;
     private List<String> glue;
     private boolean strict;
-    private List<String> plugins;
+    private List<Plugin> plugins;
     private boolean monochrome;
 
     public OverriddenCucumberOptionsParameters setTags(final List<String> tags) {
@@ -33,9 +33,30 @@ class OverriddenCucumberOptionsParameters {
         return this;
     }
 
-    public OverriddenCucumberOptionsParameters setPlugins(final List<String> plugins) {
-        this.plugins = requireNoneBlank(plugins, "The parameters 'plugins' are missing or invalid");
+    public OverriddenCucumberOptionsParameters setPlugins(final List<Plugin> plugins) {
+        this.plugins = requireNoDuplicateExtensions(plugins);
         return this;
+    }
+
+    private static List<Plugin> requireNoDuplicateExtensions(List<Plugin> plugins) {
+        final Map<String, Plugin> extension = new HashMap<String, Plugin>();
+        for (Plugin plugin : plugins) {
+            if (plugin.isNoOutput()) {
+                continue;
+            }
+
+            final Plugin replaced =
+                extension.put(plugin.getOutputDirectory() + ":" + plugin.getExtension(), plugin);
+            if (replaced != null) {
+                throw new IllegalArgumentException("The cucumber plugin '" + plugin
+                    + "' is writing to the same "
+                    + "combination of outputDirectory and extension as '"
+                    + replaced + "'. Use the outputDirectories attribute to "
+                    + "specify a directory for each plugin");
+            }
+        }
+
+        return plugins;
     }
 
     public OverriddenCucumberOptionsParameters setMonochrome(final boolean monochrome) {
@@ -43,32 +64,40 @@ class OverriddenCucumberOptionsParameters {
         return this;
     }
 
-    void overrideParametersWithCucumberOptions(final String cucumberOptions) {
-        if (cucumberOptions == null || cucumberOptions.length() == 0) {
-            return;
+    OverriddenCucumberOptionsParameters overridePlugins(List<Plugin> plugins) {
+        if (!plugins.isEmpty()) {
+            setPlugins(plugins);
         }
-        final RuntimeOptions options = new RuntimeOptions(cucumberOptions);
-        final List<String> tags = options.getFilters();
-        if (!tags.isEmpty()) {
-            setTags(options.getFilters());
-        }
+        return this;
+    }
 
-        final List<String> glue = options.getGlue();
+    OverriddenCucumberOptionsParameters overrideGlue(List<String> glue) {
         if (!glue.isEmpty()) {
             setGlue(glue);
         }
+        return this;
+    }
 
-        if (options.isStrict()) {
-            this.strict = true;
+    OverriddenCucumberOptionsParameters overrideTags(List<String> tags) {
+        if (!tags.isEmpty()) {
+            setTags(tags);
         }
+        return this;
+    }
 
-        if (!options.getPluginNames().isEmpty()) {
-            setPlugins(options.getPluginNames());
+    OverriddenCucumberOptionsParameters overrideStrict(Boolean strict) {
+        if (strict != null) {
+            this.strict = strict;
         }
+        return this;
+    }
 
-        if (options.isMonochrome()) {
-            this.monochrome = true;
+
+    OverriddenCucumberOptionsParameters overrideMonochrome(Boolean monochrome) {
+        if (monochrome != null) {
+            this.monochrome = monochrome;
         }
+        return this;
     }
 
     public boolean isStrict() {
@@ -76,7 +105,7 @@ class OverriddenCucumberOptionsParameters {
     }
 
 
-    public List<String> getPlugins() {
+    public List<Plugin> getPlugins() {
         return plugins;
     }
 

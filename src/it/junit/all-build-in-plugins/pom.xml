@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.temyers.it</groupId>
+    <artifactId>simple-it</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <description>Output test report in multiple formats</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <cucumber.version>1.2.2</cucumber.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>@project.groupId@</groupId>
+                <artifactId>@project.artifactId@</artifactId>
+                <version>@project.version@</version>
+                <executions>
+                    <execution>
+                        <id>generateRunners</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>generateRunners</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <glue>
+                        <package>foo</package>
+                    </glue>
+                    <plugins>
+                        <plugin>
+                            <name>null</name>
+                        </plugin>
+                        <plugin>
+                            <name>junit</name>
+                            <outputDirectory>${project.build.directory}/cucumber-parallel/junit</outputDirectory>
+                        </plugin>
+                        <plugin>
+                            <name>testng</name>
+                            <outputDirectory>${project.build.directory}/cucumber-parallel/testng</outputDirectory>
+                        </plugin>
+                        <plugin>
+                            <name>html</name>
+                            <outputDirectory>${project.build.directory}/cucumber-parallel/html</outputDirectory>
+                        </plugin>
+                        <plugin>
+                            <name>pretty</name>
+                        </plugin>
+                        <plugin>
+                            <name>progress</name>
+                            <outputDirectory>${project.build.directory}/cucumber-parallel/progress</outputDirectory>
+                        </plugin>
+                        <plugin>
+                            <name>json</name>
+                            <outputDirectory>${project.build.directory}/cucumber-parallel/json</outputDirectory>
+                        </plugin>
+                        <plugin>
+                            <name>usage</name>
+                            <outputDirectory>${project.build.directory}/cucumber-parallel/usage</outputDirectory>
+                        </plugin>
+                        <plugin>
+                            <name>rerun</name>
+                            <outputDirectory>${project.build.directory}/cucumber-parallel/rerun</outputDirectory>
+                        </plugin>
+                        <plugin>
+                            <name>default_summary</name>
+                            <outputDirectory>${project.build.directory}/cucumber-parallel/default_summary</outputDirectory>
+                        </plugin>
+                        <plugin>
+                            <name>null_summary</name>
+                        </plugin>
+                    </plugins>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
