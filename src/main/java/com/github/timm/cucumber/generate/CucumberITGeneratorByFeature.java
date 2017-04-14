@@ -140,7 +140,7 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
     }
 
     private boolean shouldSkipFeature(final Feature feature) {
-        if (config.filterFeaturesByTags()) {
+        if (!overriddenParameters.getTags().isEmpty()) {
             final TagFilter tagFilter = new TagFilter(overriddenParameters.getTags());
             if (tagFilter.matchingScenariosAndExamples(feature).isEmpty()) {
                 return true;

@@ -51,7 +51,6 @@
                                 <tag>@feature1</tag>
                                 <tag>@required</tag>
                             </tags>
-                            <filterFeaturesByTags>true</filterFeaturesByTags>
                         </configuration>
                     </execution>
                 </executions>

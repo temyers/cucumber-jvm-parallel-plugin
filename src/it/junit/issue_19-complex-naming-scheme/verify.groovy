@@ -25,7 +25,7 @@ import cucumber.api.junit.Cucumber;
         features = {"${feature1.absolutePath}"},
         plugin = {"json:${buildDirectory.absolutePath}/cucumber-parallel/1.json"},
         monochrome = false,
-        tags = {"@complete", "@accepted"},
+        tags = {},
         glue = {"foo", "bar"})
 public class FooFeature101IT {
 }"""
@@ -42,7 +42,7 @@ import cucumber.api.junit.Cucumber;
         features = {"${feature2.absolutePath}"},
         plugin = {"json:${buildDirectory.absolutePath}/cucumber-parallel/2.json"},
         monochrome = false,
-        tags = {"@complete", "@accepted"},
+        tags = {},
         glue = {"foo", "bar"})
 public class FooFeature202IT {
 }"""

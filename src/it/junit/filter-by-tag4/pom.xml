@@ -51,7 +51,6 @@
                                 <tag>~@unwanted</tag>
                                 <tag>@includeMe</tag>
                             </tags>
-                            <filterFeaturesByTags>true</filterFeaturesByTags>
                         </configuration>
                     </execution>
                 </executions>

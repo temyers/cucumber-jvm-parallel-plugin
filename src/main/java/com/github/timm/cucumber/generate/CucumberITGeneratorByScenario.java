@@ -166,9 +166,7 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
         context.put("strict", overriddenParameters.isStrict());
         context.put("featureFile", featureFileLocation);
         context.put("plugins", createPluginStrings());
-        if (!config.filterFeaturesByTags()) {
-            context.put("tags", overriddenParameters.getTags());
-        }
+        context.put("tags", overriddenParameters.getTags());
         context.put("monochrome", overriddenParameters.isMonochrome());
         context.put("cucumberOutputDir", normalizePathSeparator(config.getCucumberOutputDir()));
         context.put("glue", overriddenParameters.getGlue());

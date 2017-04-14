@@ -58,7 +58,6 @@
                                 <package>com.github.timm</package>
                             </glue>
                             <parallelScheme>SCENARIO</parallelScheme>
-                            <filterFeaturesByTags>true</filterFeaturesByTags>
                             <tags>
                                 <tag>@outlineTag</tag>
                             </tags>

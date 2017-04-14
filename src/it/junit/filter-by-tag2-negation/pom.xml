@@ -50,7 +50,6 @@
                                 <!-- Negation - filter out scenarios tagged with @feature1 -->
                                 <tag>~@feature1</tag>
                             </tags>
-                            <filterFeaturesByTags>true</filterFeaturesByTags>
                         </configuration>
                     </execution>
                 </executions>

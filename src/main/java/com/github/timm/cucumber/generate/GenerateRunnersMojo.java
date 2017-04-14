@@ -158,9 +158,6 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     @Parameter(defaultValue = "UTF-8", property = "project.build.sourceEncoding", readonly = true)
     private String encoding;
 
-    @Parameter(defaultValue = "false", property = "cucumber.tags.filterOutput", required = true)
-    private boolean filterFeaturesByTags;
-
     @Parameter(defaultValue = "false", property = "useTestNG", required = true)
     private boolean useTestNG;
 
@@ -319,10 +316,6 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
         }
 
         return plugins;
-    }
-
-    public boolean filterFeaturesByTags() {
-        return filterFeaturesByTags;
     }
 
     public String getEncoding() {

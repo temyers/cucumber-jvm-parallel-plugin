@@ -6,7 +6,6 @@ import java.io.File;
 
 class TestFileGeneratorConfig implements FileGeneratorConfig {
 
-    private boolean filterFeatureByTags = false;
     private Log log;
     private File featuresDirectory;
     private File outputDir;
@@ -23,10 +22,6 @@ class TestFileGeneratorConfig implements FileGeneratorConfig {
     TestFileGeneratorConfig setCucumberOutputDir(final Class<?> classUnderTest) {
         this.outputDir = new File("target", classUnderTest.getSimpleName());
         return this;
-    }
-
-    public boolean filterFeaturesByTags() {
-        return filterFeatureByTags;
     }
 
     public Log getLog() {
@@ -47,11 +42,6 @@ class TestFileGeneratorConfig implements FileGeneratorConfig {
 
     public String getCustomVmTemplate() {
         return customVmTemplate;
-    }
-
-    public TestFileGeneratorConfig setFilterFeaturesByTags(final boolean newValue) {
-        this.filterFeatureByTags = newValue;
-        return this;
     }
 
     public String getPackageName() {

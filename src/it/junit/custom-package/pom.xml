@@ -46,10 +46,6 @@
                                 <package>foo</package>
                                 <package>bar</package>
                             </glue>
-                            <tags>
-                                <tag>@complete</tag>
-                                <tag>@accepted</tag>
-                            </tags>
                             <packageName>foo.bar</packageName>
                         </configuration>
                     </execution>
