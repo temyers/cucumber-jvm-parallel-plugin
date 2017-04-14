@@ -1,5 +1,6 @@
 package com.github.timm.cucumber.generate;
 
+import static com.github.timm.cucumber.generate.Plugin.createBuildInPlugin;
 import static java.util.Collections.singletonList;
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -26,7 +27,7 @@ public class CucumberITGeneratorFactoryTest {
                                 .setTags(Collections.<String>emptyList())
                                 .setGlue(singletonList("foo"))
                                 .setStrict(true)
-                                .setPlugins(singletonList("json"))
+                                .setPlugins(singletonList(createBuildInPlugin("json")))
                                 .setMonochrome(false);
 
         final ClassNamingScheme classNamingScheme =
@@ -36,6 +37,7 @@ public class CucumberITGeneratorFactoryTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void shouldCreateFeatureRunner() throws Exception {
         final CucumberITGenerator generator = factory.create(ParallelScheme.FEATURE);
         assertThat(generator).isInstanceOf(CucumberITGeneratorByFeature.class);

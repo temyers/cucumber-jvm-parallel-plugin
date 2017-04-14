@@ -23,7 +23,7 @@ import cucumber.api.junit.Cucumber;
 @CucumberOptions(
         strict = true,
         features = {"${feature1.absolutePath}"},
-        plugin = {"html:${buildDirectory.absolutePath}/cucumber-parallel/1.html", "json:${buildDirectory.absolutePath}/cucumber-parallel/1.json", "pretty"},
+        plugin = {"html:${buildDirectory.absolutePath}/cucumber-parallel/1", "json:${buildDirectory.absolutePath}/cucumber-parallel/1.json", "pretty"},
         monochrome = false,
         tags = {"@complete", "@accepted"},
         glue = {"foo"})
@@ -40,7 +40,7 @@ import cucumber.api.junit.Cucumber;
 @CucumberOptions(
         strict = true,
         features = {"${feature2.absolutePath}"},
-        plugin = {"html:${buildDirectory.absolutePath}/cucumber-parallel/2.html", "json:${buildDirectory.absolutePath}/cucumber-parallel/2.json", "pretty"},
+        plugin = {"html:${buildDirectory.absolutePath}/cucumber-parallel/2", "json:${buildDirectory.absolutePath}/cucumber-parallel/2.json", "pretty"},
         monochrome = false,
         tags = {"@complete", "@accepted"},
         glue = {"foo"})

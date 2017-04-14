@@ -38,8 +38,19 @@ Add the following to your POM file:
         <featuresDirectory>src/test/resources/features/</featuresDirectory>
         <!-- Directory where the cucumber report files shall be written  -->
         <cucumberOutputDir>target/cucumber-parallel</cucumberOutputDir>
-        <!-- Comma separated list of output formats. Only html, json and pretty are supported -->
-        <format>json</format>
+        <!-- List of cucumber plugins. When none are provided the json formatter is used. For more 
+             advanced usage see section about configuring cucumber plugins -->
+        <plugins>
+            <plugins>
+                <plugin>
+                    <name>json</name>
+                </plugin>
+                <plugin>
+                    <name>my.other.package.CustomHtmlFormatter</name>
+                    <extension>html</extension>
+                </plugin>
+            </plugins>
+        </plugins>
         <!-- CucumberOptions.strict property -->
         <strict>true</strict>
         <!-- CucumberOptions.monochrome property -->
@@ -88,7 +99,58 @@ The Java source is generated in `outputDirectory`, based on the naming scheme us
 
 Each runner is configured to output the results to a separate output file under `target/cucumber-parallel`
 
-###Naming Scheme
+### Cucumber Plugins ###
+
+Cucumber plugins that write to a file are referenced using the syntax 
+`name[:outputDirectory/excutorId[.extension]]`. Because not all plugins create output and the 
+excutorId is provided at runtime some leg work is needed.
+
+#### Build-in Cucumber Plugins ####
+
+```xml
+<plugins>
+    <plugin>
+        <!--The available options are junit, testng, html, pretty, json, usage and rerun -->
+        <name>json</name>
+        <!--Optional file extension. For build in cucumber plugins a sensible default is provided. -->
+        <extension>json</extension>
+        <!--Optional output directory. Overrides cucumberOutputDirectory. Usefull when different 
+            plugins create files with the same extension-->
+        <outputDirectory>${project.build.directory}/cucumber-parallel/json</outputDirectory>
+    </plugin>
+</plugins>
+```
+
+#### Custom Cucumber Plugins ####
+
+```xml
+<plugins>
+    <plugin>
+        <name>path.to.my.formaters.CustomHtmlFormatter</name>
+        <!--Optional file extension. Unless the formatter writes to a file it is strongly 
+            recommend that one is provided. -->
+        <extension>html</extension>
+        <!--Optional output directory. Overrides cucumberOutputDirectory. Useful when different 
+            plugins create files with the same extension-->
+        <outputDirectory>${project.build.directory}/cucumber-parallel/html</outputDirectory>
+    </plugin>
+</plugins>
+```
+
+#### Custom Cucumber Plugins without output ####
+
+```xml
+<plugins>
+    <plugin>
+        <name>path.to.my.formaters.NoOutputFormatter</name>
+        <!--Set to true if this plug creates no output. Setting extension or outputDirectory 
+            will override this setting -->
+        <noOutput>true</noOutput>
+    </plugin>
+</plugins>
+```
+
+### Naming Scheme ###
 
 The naming scheme used for the generated files is controlled by the `namingScheme` property.  The following values are supported:
 
@@ -106,7 +168,7 @@ The following tokens can be used in the pattern:
 
 By default, generated test files use the `simple` naming strategy.
 
-####Note on Pattern Naming Scheme
+#### Note on Pattern Naming Scheme ####
 The `pattern` naming scheme is for advanced usage only.  
 
 It is up to you to ensure that class names generated are valid and there are no clashes.  If the same class name is generated multiple times, then it shall be overwritten and some of your tests will not be executed.

@@ -12,12 +12,14 @@ package com.github.timm.cucumber.generate;
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-import static java.util.Arrays.asList;
+
+import static com.github.timm.cucumber.generate.Plugin.createBuildInPlugin;
 import static org.apache.commons.io.FileUtils.listFiles;
 
 import com.github.timm.cucumber.generate.name.ClassNamingScheme;
 import com.github.timm.cucumber.generate.name.ClassNamingSchemeFactory;
 import com.github.timm.cucumber.generate.name.OneUpCounter;
+import com.github.timm.cucumber.options.RuntimeOptions;
 import org.apache.commons.io.comparator.NameFileComparator;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -48,12 +50,12 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     private MavenProject project;
 
     /**
-     * List of packages to use for the cucumber glue code. E.g. <code>
+     * List of packages to use for the cucumber glue code. E.g. <pre>{@code
      *     <glue>
      *         <package>my.package</package>
      *         <package>my.other.package</package>
      *     </glue>
-     * </code>
+     * }</pre>
      *
      * <p>
      * see cucumber.api.CucumberOptions.glue
@@ -91,9 +93,9 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
     /**
      * Comma separated list of format used for the output. Currently only html, json and pretty format are supported.
-     * Default is json.<code>
+     * Default is json.<pre>{@code
      * <format>html,json</format>
-     * </code>
+     * }</pre>
      *
      * <p>
      * see cucumber.api.CucumberOptions.plugin
@@ -101,6 +103,32 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
      */
     @Parameter(defaultValue = "json", property = "cucumber.format", required = true)
     private String format;
+
+    /**
+     * List of cucumber plugins used . E.g. <pre>{@code
+     * <configuration>
+     *     <glue>
+     *         <package>path.to.my.formaters</package>
+     *     </glue>
+     *     <plugins>
+     *         <plugin>
+     *             <name>path.to.my.formaters.CustomHtmlFormatter</name>
+     *             <extension>html</extension>
+     *         </plugin>
+     *         <plugin>
+     *             <name>path.to.my.formaters.CustomJsonFormatter</name>
+     *             <extension>json</extension>
+                   <outputDirectory>${project.build.directory}/cucumber-parallel/custom-json/</outputDirectory>
+     *         </plugin>
+     *     </plugins>
+     * </configuration>
+     * }</pre>
+     * <p>
+     * see cucumber.api.CucumberOptions.plugins
+     * </p>
+     */
+    @Parameter
+    private List<Plugin> plugins;
 
     /**
      * <p>
@@ -111,14 +139,14 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     private boolean monochrome;
 
     /**
-     * List of tags used to select scenarios to run. E.g. <code>
+     * List of tags used to select scenarios to run. E.g. <pre>{@code
      *     <tags>
      *         <tag>@billing</tag>
      *         <tag>~@billing</tag>
      *         <tag>@important</tag>
      *         <tag>@important,@billing</tag>
      *     </tags>
-     * </code>
+     * }</pre>
      *
      * <p>
      * see cucumber.api.CucumberOptions.tags
@@ -154,9 +182,9 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     /**
      * The scheme to use when generating runner. Valid values are:
      * <ul>
-     * <li><code>FEATURE</code> - Generate one runner per feature</li>
-     * <li><code>SCENARIO</code> - Generate one runner per scenario. A runner shall be created for each example of a
-     * scenario outline</li>
+     * <li><pre>{@code FEATURE}</pre> -Generate one runner per feature</li>
+     * <li><pre>{@code SCENARIO}</pre> - Generate one runner per scenario. A runner shall be created
+     * for each example of a scenario outline</li>
      * </ul>
      * @see ParallelScheme
      */
@@ -214,37 +242,87 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     }
 
     /**
-     * Overrides the parameters with cucumber.options if they have been specified. Currently only tags are supported.
+     * Overrides the parameters with cucumber.options if they have been specified. Plugins have
+     * somewhat limited support.
      */
     private OverriddenCucumberOptionsParameters overrideParametersWithCucumberOptions() throws MojoExecutionException {
 
-        final List<String> cleanPlugins = new ArrayList<String>();
-        for (String plugin : this.format.split(",")) {
-            cleanPlugins.add(plugin.trim());
-        }
-
         try {
             final OverriddenCucumberOptionsParameters overriddenParameters =
-                    new OverriddenCucumberOptionsParameters()
-                            .setTags(this.tags)
-                            .setGlue(this.glue)
-                            .setStrict(this.strict)
-                            .setPlugins(cleanPlugins)
-                            .setMonochrome(this.monochrome);
+                new OverriddenCucumberOptionsParameters()
+                    .setTags(tags)
+                    .setGlue(glue)
+                    .setStrict(strict)
+                    .setPlugins(parseFormatAndPlugins(format, plugins == null ? new ArrayList<Plugin>() : plugins))
+                    .setMonochrome(monochrome);
 
-            overriddenParameters.overrideParametersWithCucumberOptions(cucumberOptions);
+
+            if (cucumberOptions != null && cucumberOptions.length() > 0) {
+                final RuntimeOptions options = new RuntimeOptions(cucumberOptions);
+                overriddenParameters
+                    .overrideTags(options.getFilters())
+                    .overrideGlue(options.getGlue())
+                    .overridePlugins(parsePlugins(options.getPluginNames()))
+                    .overrideStrict(options.isStrict())
+                    .overrideMonochrome(options.isMonochrome());
+            }
+
             return overriddenParameters;
         } catch (IllegalArgumentException e) {
-            throw new MojoExecutionException(e, e.getMessage(), e.getMessage());
+            throw new MojoExecutionException(this, "Invalid parameter. ", e.getMessage());
         }
+    }
+
+
+    private List<Plugin> parsePlugins(List<String> pluginStrings) throws MojoExecutionException {
+        final List<Plugin> plugins = new ArrayList<Plugin>();
+        for (String pluginString : pluginStrings) {
+            try {
+                plugins.add(createBuildInPlugin(pluginString));
+            } catch (IllegalArgumentException e) {
+                throw new MojoExecutionException(this,
+                    "Invalid plugin in cucumber.options",
+                    "Cucumber options only supports build in plugins. "
+                    + "'" + pluginString + "' is not supported as a commandline option, "
+                    + "try it as a plugin in the pom?");
+            }
+        }
+
+        for (Plugin plugin : plugins) {
+            plugin.applyDefaults(cucumberOutputDir);
+        }
+
+        return plugins;
+    }
+
+    private List<Plugin> parseFormatAndPlugins(String formats, List<Plugin> plugins) throws MojoExecutionException {
+        if (!"json".equals(formats)) {
+            getLog().warn("The format parameter is deprecated. Please use plugins");
+
+            for (String format : formats.split(",")) {
+                try {
+                    plugins.add(createBuildInPlugin(format));
+                } catch (IllegalArgumentException e) {
+                    throw new MojoExecutionException("Format '" + format + "' is not supported as a "
+                        + "format, try it as a plugin?", e);
+                }
+            }
+        }
+
+        // Add the default plugin if no others were provided through the format or plugins property.
+        if (plugins.isEmpty()) {
+            plugins.add(createBuildInPlugin("json"));
+        }
+
+        for (Plugin plugin : plugins) {
+            plugin.applyDefaults(cucumberOutputDir);
+        }
+
+        return plugins;
     }
 
     public boolean filterFeaturesByTags() {
         return filterFeaturesByTags;
-    }
-
-    public File getFeaturesDirectory() {
-        return featuresDirectory;
     }
 
     public String getEncoding() {
@@ -257,14 +335,6 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
     public boolean useTestNG() {
         return useTestNG;
-    }
-
-    public String getNamingScheme() {
-        return namingScheme;
-    }
-
-    public String getNamingPattern() {
-        return namingPattern;
     }
 
     public String getCustomVmTemplate() {

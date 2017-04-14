@@ -10,17 +10,11 @@ public interface FileGeneratorConfig {
 
     Log getLog();
 
-    File getFeaturesDirectory();
-
     String getEncoding();
 
     File getCucumberOutputDir();
 
     boolean useTestNG();
-
-    String getNamingScheme();
-
-    String getNamingPattern();
 
     String getCustomVmTemplate();
 

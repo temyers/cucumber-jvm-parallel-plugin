@@ -1,7 +1,6 @@
 package com.github.timm.cucumber.options;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 
@@ -14,10 +13,10 @@ public class RuntimeOptions {
 
     private final List<String> glue = new ArrayList<String>();
     private final List<String> filters = new ArrayList<String>();
-    private final List<String> pluginNames = new LinkedList<String>();
-    private boolean dryRun;
-    private boolean strict = false;
-    private boolean monochrome = false;
+    private final List<String> pluginNames = new ArrayList<String>();
+    private Boolean dryRun = null;
+    private Boolean strict = null;
+    private Boolean monochrome = null;
 
     /**
      * Create a new instance from a string of options, for example:
@@ -89,19 +88,19 @@ public class RuntimeOptions {
         }
     }
 
-    private void addPluginName(final String plugin) {
-        pluginNames.add(plugin);
+    private void addPluginName(final String pluginString) {
+        pluginNames.add(pluginString);
     }
 
     public List<String> getGlue() {
         return glue;
     }
 
-    public boolean isStrict() {
+    public Boolean isStrict() {
         return strict;
     }
 
-    public boolean isDryRun() {
+    public Boolean isDryRun() {
         return dryRun;
     }
 
@@ -109,7 +108,7 @@ public class RuntimeOptions {
         return filters;
     }
 
-    public boolean isMonochrome() {
+    public Boolean isMonochrome() {
         return monochrome;
     }
 

@@ -194,18 +194,8 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
      */
     private List<String> createPluginStrings() {
         final List<String> formatList = new ArrayList<String>();
-        for (String plugin : overriddenParameters.getPlugins()) {
-            final String formatStr = plugin.trim();
-            if ("pretty".equalsIgnoreCase(formatStr)) {
-                formatList.add("pretty");
-            } else {
-                formatList.add(format("%s:%s/%s.%s",
-                        formatStr,
-                        normalizePathSeparator(config.getCucumberOutputDir()),
-                        fileCounter,
-                        formatStr));
-            }
-
+        for (Plugin plugin : overriddenParameters.getPlugins()) {
+            formatList.add(plugin.asPluginString(fileCounter));
         }
         return formatList;
     }
