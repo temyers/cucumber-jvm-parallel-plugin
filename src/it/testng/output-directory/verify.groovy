@@ -22,7 +22,7 @@ import cucumber.api.testng.AbstractTestNGCucumberTests;
         features = {"${feature1.absolutePath}"},
         plugin = {"json:${buildDirectory.absolutePath}/my-custom-dir/1.json"},
         monochrome = false,
-        tags = {"@complete", "@accepted"},
+        tags = {},
         glue = {"foo", "bar"})
 public class Parallel01IT extends AbstractTestNGCucumberTests {
 }"""
@@ -36,7 +36,7 @@ import cucumber.api.testng.AbstractTestNGCucumberTests;
         features = {"${feature2.absolutePath}"},
         plugin = {"json:${buildDirectory.absolutePath}/my-custom-dir/2.json"},
         monochrome = false,
-        tags = {"@complete", "@accepted"},
+        tags = {},
         glue = {"foo", "bar"})
 public class Parallel02IT extends AbstractTestNGCucumberTests {
 }"""

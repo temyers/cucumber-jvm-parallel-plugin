@@ -47,10 +47,6 @@
                     <glue>
                         <package>foo</package>
                     </glue>
-                    <tags>
-                        <tag>@complete</tag>
-                        <tag>@accepted</tag>
-                    </tags>
                     <format>html,json,pretty</format>
                 </configuration>
             </plugin>

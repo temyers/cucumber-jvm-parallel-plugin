@@ -22,7 +22,7 @@ import cucumber.api.junit.Cucumber;
         features = {"${feature.absolutePath}"},
         plugin = {"json:${buildDirectory.absolutePath}/cucumber-reports/1.json"},
         monochrome = false,
-        tags = {"@complete", "@accepted"},
+        tags = {},
         glue = {"foo", "bar"})
 public class Parallel01IT {
 }"""

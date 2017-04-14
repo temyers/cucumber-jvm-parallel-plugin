@@ -46,10 +46,6 @@
                                 <package>foo</package>
                                 <package>bar</package>
                             </glue>
-                            <tags>
-                                <tag>@complete</tag>
-                                <tag>@accepted</tag>
-                            </tags>
                             <cucumberOutputDir>target\cucumber-reports</cucumberOutputDir>
                             <useTestNG>true</useTestNG>
                         </configuration>

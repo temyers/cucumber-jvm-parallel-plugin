@@ -190,6 +190,12 @@ Q. Why isn't there much activity on this project
 A. The plugin is considered feature complete.  If you feel there is something missing, raise an issue.
 
 
+Migration from version 3.x
+==========================
+* The `filterFeaturesByTags` property has been removed. If you have not set this property to true 
+  remove any tags from your configuration. If you have set it to true you  can safely remove it.
+
+
 Migration from version 2.x
 ==========================
 * The `glue` property now takes a list of `package` elements rather then a list of comma delimited packages. A 
@@ -211,11 +217,17 @@ Migration from version 1.x
 
 Changelog
 =========
+
+4.0.0
+-----
+* PR #105 - Remove filterFeaturesByTags property. Fix issue #77
+
 3.0.0
 -----
-* PR #99 - Escape Java using Velocity engine: Fix issue #82
+* PR #99  - Escape Java using Velocity engine. Fix issue #82
 * PR #100 - Used containerized builds and cache dependencies
-* PR #104 - Add support for custom cucumber plugins.  Fix issue #95
+* PR #104 - Add support for custom cucumber plugins. Fix issue #95
+
 
 2.2.0
 -----

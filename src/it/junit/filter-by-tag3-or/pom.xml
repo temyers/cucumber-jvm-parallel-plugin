@@ -50,7 +50,6 @@
                                 <!-- @feature1 OR @feature2 -->
                                 <tag>@feature1,@feature2</tag>
                             </tags>
-                            <filterFeaturesByTags>true</filterFeaturesByTags>
                         </configuration>
                     </execution>
                 </executions>

@@ -42,10 +42,6 @@
                             <goal>generateRunners</goal>
                         </goals>
                         <configuration>
-                            <tags>
-                                <tag>@complete</tag>
-                                <tag>@accepted</tag>
-                            </tags>
                             <glue>
                                 <package>foo</package>
                             </glue>
@@ -58,10 +54,6 @@
                             <goal>generateRunners</goal>
                         </goals>
                         <configuration>
-                            <tags>
-                                <tag>@complete</tag>
-                                <tag>@accepted</tag>
-                            </tags>
                             <glue>
                                 <package>bar</package>
                             </glue>

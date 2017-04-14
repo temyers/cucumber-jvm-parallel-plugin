@@ -50,7 +50,6 @@
                                 <!-- Only 1 feature contains this tag -->
                                 <tag>@feature1</tag>
                             </tags>
-                            <filterFeaturesByTags>true</filterFeaturesByTags>
                             <useTestNG>true</useTestNG>
                         </configuration>
                     </execution>
