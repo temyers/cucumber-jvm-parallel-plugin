@@ -175,6 +175,13 @@ It is up to you to ensure that class names generated are valid and there are no 
 
 The `namingPattern` property is for the **class name** only.  Do not add the `.java` suffix.
 
+### Custom Templates ###
+
+Some reporting plugins, such as
+[Cucumber Extent Reporter](https://github.com/email2vimalraj/CucumberExtentReporter), require some 
+setup before a test is started. A template can be used to customize the integration tests. For a 
+sample see the [extents-report](src/it/junit/extents-report) integration test.
+
 
 FAQ
 ===
