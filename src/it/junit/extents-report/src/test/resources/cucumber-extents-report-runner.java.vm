@@ -1,0 +1,40 @@
+#parse("/array.java.vm")
+#if ($packageName)
+package $packageName;
+
+#end
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+
+import cucumber.api.CucumberOptions;
+import cucumber.api.junit.Cucumber;
+import com.cucumber.listener.Reporter;
+
+import java.io.File;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(
+        strict = $strict,
+        features = {"$featureFile"},
+        plugin = #stringArray($plugins),
+        monochrome = $monochrome,
+#if(!$featureFile.contains(".feature:") && $tags)
+        tags = #stringArray($tags),
+#end
+        glue = #stringArray($glue))
+public class $className {
+
+    @BeforeClass
+    public static void beforeClass(){
+      //Do things
+    }
+
+    @AfterClass
+    public static void afterClass(){
+      Reporter.loadXMLConfig(new File("src/test/resources/extent-config.xml"));
+      Reporter.setSystemInfo("user", System.getProperty("user.name"));
+      Reporter.setSystemInfo("os", "Mac OSX");
+      Reporter.setTestRunnerOutput("Sample test runner output message");
+    }
+}
