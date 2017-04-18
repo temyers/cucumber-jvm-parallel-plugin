@@ -211,7 +211,7 @@ Migration from version 1.x
 
 Changelog
 =========
-3.0.0 (UNRELEASED)
+3.0.0
 -----
 * PR #99 - Escape Java using Velocity engine: Fix issue #82
 * PR #100 - Used containerized builds and cache dependencies
