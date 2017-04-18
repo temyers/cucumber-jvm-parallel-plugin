@@ -202,6 +202,7 @@ Changelog
 -----
 * PR #99 - Escape Java using Velocity engine: Fix issue #82
 * PR #100 - Used containerized builds and cache dependencies
+* PR #104 - Add support for custom cucumber plugins.  Fix issue #95
 
 2.2.0
 -----
