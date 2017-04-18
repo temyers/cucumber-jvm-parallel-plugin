@@ -16,7 +16,7 @@ Add the following to your POM file:
 <plugin>
   <groupId>com.github.temyers</groupId>
   <artifactId>cucumber-jvm-parallel-plugin</artifactId>
-  <version>3.0.0</version>
+  <version>4.0.0</version>
   <executions>
     <execution>
       <id>generateRunners</id>
