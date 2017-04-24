@@ -28,8 +28,8 @@ Add the following to your POM file:
         <!-- Mandatory -->
         <!-- List of package names to scan for glue code. -->
         <glue>
-          <package>my.package</package>
-          <package>my.other.package</package>
+          <package>com.example</package>
+          <package>com.example.other</package>
         </glue>
         <!-- These are optional, with the default values -->
         <!-- Where to output the generated tests -->
@@ -41,15 +41,13 @@ Add the following to your POM file:
         <!-- List of cucumber plugins. When none are provided the json formatter is used. For more 
              advanced usage see section about configuring cucumber plugins -->
         <plugins>
-            <plugins>
-                <plugin>
-                    <name>json</name>
-                </plugin>
-                <plugin>
-                    <name>my.other.package.CustomHtmlFormatter</name>
-                    <extension>html</extension>
-                </plugin>
-            </plugins>
+          <plugin>
+              <name>json</name>
+          </plugin>
+          <plugin>
+              <name>com.example.CustomHtmlFormatter</name>
+              <extension>html</extension>
+          </plugin>
         </plugins>
         <!-- CucumberOptions.strict property -->
         <strict>true</strict>
@@ -75,7 +73,7 @@ Add the following to your POM file:
         <!-- Specify a custom template for the generated sources (this is a path relative to the project base directory) -->
         <customVmTemplate>src/test/resources/cucumber-custom-runner.vm</customVmTemplate>
         <!-- Specify a custom package name for generated sources. Default is no package.-->
-        <packageName>my.package</packageName>
+        <packageName>com.example</packageName>
       </configuration>
     </execution>
   </executions>
