@@ -52,8 +52,8 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     /**
      * List of packages to use for the cucumber glue code. E.g. <pre>{@code
      *     <glue>
-     *         <package>my.package</package>
-     *         <package>my.other.package</package>
+     *         <package>com.example</package>
+     *         <package>com.example.other</package>
      *     </glue>
      * }</pre>
      *
@@ -106,26 +106,19 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
     /**
      * List of cucumber plugins used . E.g. <pre>{@code
-     * <configuration>
-     *     <glue>
-     *         <package>path.to.my.formaters</package>
-     *     </glue>
-     *     <plugins>
-     *         <plugin>
-     *             <name>path.to.my.formaters.CustomHtmlFormatter</name>
-     *             <extension>html</extension>
-     *         </plugin>
-     *         <plugin>
-     *             <name>path.to.my.formaters.CustomJsonFormatter</name>
-     *             <extension>json</extension>
-                   <outputDirectory>${project.build.directory}/cucumber-parallel/custom-json/</outputDirectory>
-     *         </plugin>
-     *     </plugins>
-     * </configuration>
+     * <plugins>
+     *    <plugin>
+     *      <name>path.to.my.formaters.CustomHtmlFormatter</name>
+     *      <extension>html</extension>
+     *    </plugin>
+     *    <plugin>
+     *      <name>path.to.my.formaters.CustomJsonFormatter</name>
+     *      <extension>json</extension>
+     *      <outputDirectory>${project.build.directory}/cucumber-parallel/custom-json/</outputDirectory>
+     *    </plugin>
+     * </plugins>
      * }</pre>
-     * <p>
-     * see cucumber.api.CucumberOptions.plugins
-     * </p>
+     * <p> see cucumber.api.CucumberOptions.plugins </p>
      */
     @Parameter
     private List<Plugin> plugins;
