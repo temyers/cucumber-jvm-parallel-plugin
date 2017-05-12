@@ -43,6 +43,7 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
     private final OverriddenCucumberOptionsParameters overriddenParameters;
     private int fileCounter = 1;
     private String featureFileLocation;
+    private Feature parsedFeature;
     private Template velocityTemplate;
     private String outputFileName;
     private final ClassNamingScheme classNamingScheme;
@@ -112,6 +113,7 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
 
             outputFileName = classNamingScheme.generate(file.getName());
             setFeatureFileLocation(file);
+            setParsedFeature(feature);
             writeFile(outputDirectory);
 
         }
@@ -165,6 +167,11 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
         featureFileLocation = normalizePathSeparator(file);
     }
 
+    
+    private void setParsedFeature(final Feature feature) {
+        parsedFeature = feature;
+    }
+    
     private static String normalizePathSeparator(File file) {
         return file.getPath().replace(File.separatorChar, '/');
     }
@@ -185,6 +192,7 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
         context.put("glue", overriddenParameters.getGlue());
         context.put("className", FilenameUtils.removeExtension(outputFileName));
         context.put("packageName", config.getPackageName());
+        context.put("feature",parsedFeature);
 
         velocityTemplate.merge(context, writer);
     }

@@ -1,8 +1,9 @@
 package com.github.timm.cucumber.generate.filter;
 
+import com.github.timm.cucumber.generate.ScenarioAndSourceLocation;
+
 import gherkin.ast.Examples;
 import gherkin.ast.Feature;
-import gherkin.ast.Node;
 import gherkin.ast.ScenarioDefinition;
 import gherkin.ast.ScenarioOutline;
 import gherkin.ast.TableRow;
@@ -14,6 +15,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
 
 /**
  * The TagFilter is responsible for identifying matching Scenarios/Outline Examples that match the given set of tags.
@@ -86,21 +88,24 @@ public class TagFilter {
      * @param feature
      * @return
      */
-    public Collection<Node> matchingScenariosAndExamples(final Feature feature) {
+    public Collection<ScenarioAndSourceLocation> matchingScenariosAndExamples(
+                    final Feature feature) {
 
         final List<ScenarioDefinition> allScenarios = feature.getScenarioDefinitions();
 
-        final List<Node> matchingScenariosAndExamples = new LinkedList<Node>();
+        final List<ScenarioAndSourceLocation> matchingScenariosAndExamples =
+                        new LinkedList<ScenarioAndSourceLocation>();
 
         for (final ScenarioDefinition scenario : allScenarios) {
             final Set<Tag> allTagsForScenario = new HashSet<Tag>(scenario.getTags());
             allTagsForScenario.addAll(feature.getTags());
             if (scenario instanceof ScenarioOutline) {
                 matchingScenariosAndExamples.addAll(
-                        matchingExamples((ScenarioOutline) scenario, allTagsForScenario));
+                                matchingExamples((ScenarioOutline) scenario, allTagsForScenario));
             } else {
                 if (matches(allTagsForScenario)) {
-                    matchingScenariosAndExamples.add(scenario);
+                    matchingScenariosAndExamples
+                                    .add(new ScenarioAndSourceLocation(scenario, scenario));
                 }
 
             }
@@ -109,19 +114,23 @@ public class TagFilter {
 
     }
 
-    private Collection<TableRow> matchingExamples(final ScenarioOutline scenario,
-                                                  final Set<Tag> allTagsForScenario) {
+    private Collection<ScenarioAndSourceLocation> matchingExamples(final ScenarioOutline scenario,
+                    final Set<Tag> allTagsForScenario) {
 
-        final Collection<TableRow> matchingRows = new LinkedList<TableRow>();
+        final Collection<ScenarioAndSourceLocation> matchingRows =
+                        new LinkedList<ScenarioAndSourceLocation>();
 
         for (final Examples example : scenario.getExamples()) {
             final Collection<Tag> allTagsForExample = new HashSet<Tag>(allTagsForScenario);
             allTagsForExample.addAll(example.getTags());
             if (matches(allTagsForExample)) {
-                matchingRows.addAll(example.getTableBody());
+                for (TableRow row : example.getTableBody()) {
+                    matchingRows.add(new ScenarioAndSourceLocation(scenario, row));
+                }
             }
         }
 
         return matchingRows;
     }
+
 }
