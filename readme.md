@@ -178,8 +178,8 @@ The `namingPattern` property is for the **class name** only.  Do not add the `.j
 Some reporting plugins, such as
 [Cucumber Extent Reporter](https://github.com/email2vimalraj/CucumberExtentReporter), require some 
 setup before a test is started. A template can be used to customize the integration tests. For a 
-sample see the [extents-report](src/it/junit/extents-report) integration test.
-
+sample see the [extents-report](src/it/junit/extents-report) integration test. For a full list of 
+available variables please see CucumberITGeneratorBy(Feature|Scenario).
 
 FAQ
 ===

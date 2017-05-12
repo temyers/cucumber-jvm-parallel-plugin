@@ -1,8 +1,9 @@
 package com.github.timm.cucumber.generate.filter;
 
+import com.github.timm.cucumber.generate.ScenarioAndLocation;
+
 import gherkin.ast.Examples;
 import gherkin.ast.Feature;
-import gherkin.ast.Node;
 import gherkin.ast.ScenarioDefinition;
 import gherkin.ast.ScenarioOutline;
 import gherkin.ast.TableRow;
@@ -86,21 +87,24 @@ public class TagFilter {
      * @param feature
      * @return
      */
-    public Collection<Node> matchingScenariosAndExamples(final Feature feature) {
+    public Collection<ScenarioAndLocation> matchingScenariosAndExamples(
+                    final Feature feature) {
 
         final List<ScenarioDefinition> allScenarios = feature.getScenarioDefinitions();
 
-        final List<Node> matchingScenariosAndExamples = new LinkedList<Node>();
+        final List<ScenarioAndLocation> matchingScenariosAndExamples =
+                        new LinkedList<ScenarioAndLocation>();
 
         for (final ScenarioDefinition scenario : allScenarios) {
             final Set<Tag> allTagsForScenario = new HashSet<Tag>(scenario.getTags());
             allTagsForScenario.addAll(feature.getTags());
             if (scenario instanceof ScenarioOutline) {
                 matchingScenariosAndExamples.addAll(
-                        matchingExamples((ScenarioOutline) scenario, allTagsForScenario));
+                                matchingExamples((ScenarioOutline) scenario, allTagsForScenario));
             } else {
                 if (matches(allTagsForScenario)) {
-                    matchingScenariosAndExamples.add(scenario);
+                    matchingScenariosAndExamples
+                                    .add(new ScenarioAndLocation(scenario, scenario.getLocation()));
                 }
 
             }
@@ -109,16 +113,19 @@ public class TagFilter {
 
     }
 
-    private Collection<TableRow> matchingExamples(final ScenarioOutline scenario,
-                                                  final Set<Tag> allTagsForScenario) {
+    private Collection<ScenarioAndLocation> matchingExamples(final ScenarioOutline scenario,
+                                                             final Set<Tag> allTagsForScenario) {
 
-        final Collection<TableRow> matchingRows = new LinkedList<TableRow>();
+        final Collection<ScenarioAndLocation> matchingRows =
+                        new LinkedList<ScenarioAndLocation>();
 
         for (final Examples example : scenario.getExamples()) {
             final Collection<Tag> allTagsForExample = new HashSet<Tag>(allTagsForScenario);
             allTagsForExample.addAll(example.getTags());
             if (matches(allTagsForExample)) {
-                matchingRows.addAll(example.getTableBody());
+                for (TableRow row : example.getTableBody()) {
+                    matchingRows.add(new ScenarioAndLocation(scenario, row.getLocation()));
+                }
             }
         }
 
