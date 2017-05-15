@@ -1,0 +1,12 @@
+/*
+The feature tags are:
+#foreach($tag in $feature.getTags() )
+    $tag.getName()
+#end
+
+The scenario definition tags are:
+#foreach($scenarioDef in $scenarioDefinition.getTags() )
+    $scenarioDef.getName()
+#end
+
+*/

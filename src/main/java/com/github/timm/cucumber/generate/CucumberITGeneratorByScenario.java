@@ -10,6 +10,8 @@ import gherkin.TokenMatcher;
 import gherkin.ast.Feature;
 import gherkin.ast.Location;
 import gherkin.ast.Node;
+import gherkin.ast.ScenarioDefinition;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -42,6 +44,8 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
     private final OverriddenCucumberOptionsParameters overriddenParameters;
     private int fileCounter = 1;
     private String featureFileLocation;
+    private Feature parsedFeature;
+    private Node parsedScenarioDefintion;
     private Template velocityTemplate;
     private String outputFileName;
     private final ClassNamingScheme classNamingScheme;
@@ -106,13 +110,14 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
                                 file.getName()));
             }
 
-
-            final Collection<Node> matchingScenariosAndExamples =
+            final Collection<ScenarioAndSourceLocation> matchingScenariosAndExamples =
                             tagFilter.matchingScenariosAndExamples(feature);
 
-            for (final Node match : matchingScenariosAndExamples) {
+            for (final ScenarioAndSourceLocation match : matchingScenariosAndExamples) {
                 outputFileName = classNamingScheme.generate(file.getName());
-                setFeatureFileLocation(file, match.getLocation());
+                setFeatureFileLocation(file, match.getSource().getLocation());
+                setParsedFeature(feature);
+                setParsedScenariDefinition(match.getScenarioDefinition());
                 writeFile(outputDirectory);
             }
 
@@ -151,6 +156,14 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
     private void setFeatureFileLocation(final File file, final Location location) {
         featureFileLocation = normalizePathSeparator(file).concat(":" + location.getLine());
     }
+    
+    private void setParsedFeature(final Feature feature) {
+        parsedFeature = feature;
+    }
+
+    private void setParsedScenariDefinition(final ScenarioDefinition scenario) {
+        parsedScenarioDefintion = scenario;
+    }
 
     private static String normalizePathSeparator(File file) {
         return file.getPath().replace(File.separatorChar, '/');
@@ -172,6 +185,8 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
         context.put("glue", overriddenParameters.getGlue());
         context.put("className", FilenameUtils.removeExtension(outputFileName));
         context.put("packageName", config.getPackageName());
+        context.put("feature", parsedFeature);
+        context.put("scenarioDefinition", parsedScenarioDefintion);
 
         velocityTemplate.merge(context, writer);
     }
