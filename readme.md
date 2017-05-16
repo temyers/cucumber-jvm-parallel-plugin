@@ -16,7 +16,7 @@ Add the following to your POM file:
 <plugin>
   <groupId>com.github.temyers</groupId>
   <artifactId>cucumber-jvm-parallel-plugin</artifactId>
-  <version>4.0.0</version>
+  <version>4.1.0</version>
   <executions>
     <execution>
       <id>generateRunners</id>
@@ -215,6 +215,10 @@ Migration from version 1.x
 
 Changelog
 =========
+
+4.1.0
+-----
+* PR #116 - Fix issue #112. Provide access to feature and scenario objects in custom VM templates.
 
 4.0.0
 -----
