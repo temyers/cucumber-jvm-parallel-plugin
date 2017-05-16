@@ -60,8 +60,6 @@ Add the following to your POM file:
           <tag>@important</tag>
           <tag>@important,@billing</tag>
         </tags>
-        <!-- If set to true, only feature files containing the required tags shall be generated. -->
-        <filterFeaturesByTags>false</filterFeaturesByTags>
         <!-- Generate TestNG runners instead of JUnit ones. --> 
         <useTestNG>false</useTestNG>
         <!-- The naming scheme to use for the generated test classes.  One of 'simple' or 'feature-title' --> 
