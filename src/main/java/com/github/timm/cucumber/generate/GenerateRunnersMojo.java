@@ -185,6 +185,17 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     private String customVmTemplate;
 
     /**
+     * Toggles the junit option --[no-]step-notifications. Requires cucumber-jvm:[2.0.0)
+     *
+     * <p>By default steps are included in notifications and descriptions. When interacting with
+     * cucumber in an IDE it is nice to see the step executions. However presenting step executions
+     * as tests to various reporters such as surefire results in strange test counts and weird
+     * reports.
+     */
+    @Parameter(property = "junit", required = false)
+    private List<String> junit;
+
+    /**
      * Called by Maven to run this mojo after parameters have been injected.
      */
     public void execute() throws MojoExecutionException {
@@ -244,7 +255,8 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
                     .setGlue(glue)
                     .setStrict(strict)
                     .setPlugins(parseFormatAndPlugins(format, plugins == null ? new ArrayList<Plugin>() : plugins))
-                    .setMonochrome(monochrome);
+                    .setMonochrome(monochrome)
+                    .setJunitOptions(junit);
 
 
             if (cucumberOptions != null && cucumberOptions.length() > 0) {
@@ -254,7 +266,8 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
                     .overrideGlue(options.getGlue())
                     .overridePlugins(parsePlugins(options.getPluginNames()))
                     .overrideStrict(options.isStrict())
-                    .overrideMonochrome(options.isMonochrome());
+                    .overrideMonochrome(options.isMonochrome())
+                    .overrideJunitOptions(options.getJunitOptions());
             }
 
             return overriddenParameters;

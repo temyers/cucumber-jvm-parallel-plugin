@@ -13,6 +13,7 @@ class OverriddenCucumberOptionsParameters {
     private boolean strict;
     private List<Plugin> plugins;
     private boolean monochrome;
+    private List<String> junitOptions;
 
     public OverriddenCucumberOptionsParameters setTags(final List<String> tags) {
         this.tags = requireNoneBlank(tags, "The parameters 'tags' are missing or invalid");
@@ -35,6 +36,11 @@ class OverriddenCucumberOptionsParameters {
 
     public OverriddenCucumberOptionsParameters setPlugins(final List<Plugin> plugins) {
         this.plugins = requireNoDuplicateExtensions(plugins);
+        return this;
+    }
+
+    public OverriddenCucumberOptionsParameters setJunitOptions(List<String> junitOptions) {
+        this.junitOptions = requireNoneBlank(junitOptions, "The parameters 'junitOptions' are missing or invalid");
         return this;
     }
 
@@ -100,6 +106,13 @@ class OverriddenCucumberOptionsParameters {
         return this;
     }
 
+    OverriddenCucumberOptionsParameters overrideJunitOptions(List<String> junitOptions) {
+        if (junitOptions != null) {
+            this.junitOptions = junitOptions;
+        }
+        return this;
+    }
+
     public boolean isStrict() {
         return strict;
     }
@@ -128,5 +141,9 @@ class OverriddenCucumberOptionsParameters {
             }
         }
         return list;
+    }
+
+    public List<String> getJunitOptions() {
+        return junitOptions;
     }
 }

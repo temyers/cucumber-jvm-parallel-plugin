@@ -161,6 +161,7 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
         context.put("className", FilenameUtils.removeExtension(outputFileName));
         context.put("packageName", config.getPackageName());
         context.put("feature", parsedFeature);
+        context.put("junit", overriddenParameters.getJunitOptions());
 
         velocityTemplate.merge(context, writer);
     }

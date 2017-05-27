@@ -1,6 +1,7 @@
 package com.github.timm.cucumber.options;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -14,6 +15,8 @@ public class RuntimeOptions {
     private final List<String> glue = new ArrayList<String>();
     private final List<String> filters = new ArrayList<String>();
     private final List<String> pluginNames = new ArrayList<String>();
+    private final List<String> junitOptions = new ArrayList<String>();
+
     private Boolean dryRun = null;
     private Boolean strict = null;
     private Boolean monochrome = null;
@@ -73,6 +76,8 @@ public class RuntimeOptions {
             } else if (arg.equals("--no-monochrome") || arg.equals("--monochrome")
                     || arg.equals("-m")) {
                 monochrome = !arg.startsWith("--no-");
+            } else if (arg.startsWith("--junit,")) {
+                Collections.addAll(junitOptions, arg.substring("--junit,".length()).split(","));
             } else {
                 // ignore
             }
@@ -116,4 +121,7 @@ public class RuntimeOptions {
         return pluginNames;
     }
 
+    public List<String> getJunitOptions() {
+        return junitOptions;
+    }
 }

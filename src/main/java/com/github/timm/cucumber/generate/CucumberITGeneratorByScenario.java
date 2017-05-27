@@ -164,6 +164,7 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
         context.put("packageName", config.getPackageName());
         context.put("feature", parsedFeature);
         context.put("scenario", parsedScenario);
+        context.put("junit", overriddenParameters.getJunitOptions());
 
         velocityTemplate.merge(context, writer);
     }

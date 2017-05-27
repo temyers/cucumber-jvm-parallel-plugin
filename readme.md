@@ -179,6 +179,24 @@ setup before a test is started. A template can be used to customize the integrat
 sample see the [extents-report](src/it/junit/extents-report) integration test. For a full list of 
 available variables please see CucumberITGeneratorBy(Feature|Scenario).
 
+### Surefire Integration ###
+
+By default steps are included in notifications and descriptions. When interacting with cucumber in 
+an IDE it is nice to see the step executions. However presenting step executions as tests to 
+various reporters such as surefire results in strange test counts and weird reports.
+
+By passing the no step notification option cucumber this behaviour can be disabled. Requires 
+`cucumber-junit:2.0.0`.
+
+```xml
+<configuration>
+  <junit>
+    <option>--no-step-notifications</option>
+  </junit>
+</configuration>
+
+```
+
 FAQ
 ===
 Q. Why isn't there much activity on this project
@@ -221,6 +239,7 @@ Changelog
 
 5.0.0-SNAPSHOT
 --------------
+* PR #??? - Support cucumber-junit options. Requires cucumber-junit:2.0.0. 
 * PR #??? - Use cucumber-core:2.0.0.
 
 4.1.0
