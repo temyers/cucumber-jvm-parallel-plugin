@@ -1,17 +1,11 @@
 package com.github.timm.cucumber.generate;
 
-import static java.lang.String.format;
-
-import com.github.timm.cucumber.generate.filter.TagFilter;
 import com.github.timm.cucumber.generate.name.ClassNamingScheme;
-import gherkin.AstBuilder;
-import gherkin.Parser;
-import gherkin.TokenMatcher;
+import cucumber.runtime.TagPredicate;
+import cucumber.runtime.model.CucumberFeature;
 import gherkin.ast.Feature;
-import gherkin.ast.Location;
-import gherkin.ast.Node;
-import gherkin.ast.ScenarioDefinition;
-
+import gherkin.pickles.Pickle;
+import gherkin.pickles.PickleLocation;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -23,8 +17,6 @@ import org.apache.velocity.app.event.EventCartridge;
 import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -45,7 +37,7 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
     private int fileCounter = 1;
     private String featureFileLocation;
     private Feature parsedFeature;
-    private Node parsedScenario;
+    private Pickle parsedScenario;
     private Template velocityTemplate;
     private String outputFileName;
     private final ClassNamingScheme classNamingScheme;
@@ -95,29 +87,14 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
      */
     public void generateCucumberITFiles(final File outputDirectory,
                                         final Collection<File> featureFiles) throws MojoExecutionException {
-        final Parser<Feature> parser = new Parser<Feature>(new AstBuilder());
-        Feature feature = null;
-        final TagFilter tagFilter = new TagFilter(overriddenParameters.getTags());
-
+        final TagPredicate tagFilter = new TagPredicate(overriddenParameters.getTags());
         for (final File file : featureFiles) {
-
-            try {
-                feature = parser.parse(new FileReader(file), new TokenMatcher());
-            } catch (final FileNotFoundException e) {
-                // should never happen
-                // TODO - proper logging
-                System.out.println(format("WARNING: Failed to parse '%s'...IGNORING",
-                                file.getName()));
-            }
-
-            final Collection<ScenarioAndLocation> matchingScenariosAndExamples =
-                            tagFilter.matchingScenariosAndExamples(feature);
-
-            for (final ScenarioAndLocation match : matchingScenariosAndExamples) {
+            CucumberFeature cucumberFeature = CucumberUtil.parseFeature(file);
+            for (Pickle pickle : CucumberUtil.filterSteps(cucumberFeature, tagFilter)) {
                 outputFileName = classNamingScheme.generate(file.getName());
-                setFeatureFileLocation(file, match.getLocation());
-                setParsedFeature(feature);
-                setParsedScenario(match.getScenario());
+                setFeatureFileLocation(file, pickle.getLocations().get(0));
+                setParsedFeature(cucumberFeature.getGherkinFeature().getFeature());
+                setParsedScenario(pickle);
                 writeFile(outputDirectory);
             }
 
@@ -153,15 +130,15 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
      *
      * @param file The feature file
      */
-    private void setFeatureFileLocation(final File file, final Location location) {
+    private void setFeatureFileLocation(final File file, final PickleLocation location) {
         featureFileLocation = normalizePathSeparator(file).concat(":" + location.getLine());
     }
-    
+
     private void setParsedFeature(final Feature feature) {
         parsedFeature = feature;
     }
 
-    private void setParsedScenario(final ScenarioDefinition scenario) {
+    private void setParsedScenario(final Pickle scenario) {
         parsedScenario = scenario;
     }
 

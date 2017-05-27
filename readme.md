@@ -56,9 +56,9 @@ Add the following to your POM file:
         <!-- The tags to run, maps to CucumberOptions.tags property. Default is no tags. -->
         <tags>
           <tag>@billing</tag>
-          <tag>~@billing</tag>
+          <tag>not @billing</tag>
           <tag>@important</tag>
-          <tag>@important,@billing</tag>
+          <tag>@important or @billing</tag>
         </tags>
         <!-- Generate TestNG runners instead of JUnit ones. --> 
         <useTestNG>false</useTestNG>
@@ -185,6 +185,11 @@ Q. Why isn't there much activity on this project
 
 A. The plugin is considered feature complete.  If you feel there is something missing, raise an issue.
 
+Migration from version 4.x
+==========================
+* Support for `<tag>@tag1,@tag2</tag>` will be removed from the next release of Cucumber-JVM. Please use `<tag>@tag1 or @tag2</tag>` instead
+* Support for `<tag>~@tag</tag>` will be removed from the next release of Cucumber-JVM. Please use `<tag>not @tag</tag>` instead.
+* Features are parsed by gherkin:4.1.3. The feature and scenario objects exposed in the customVmTemplate have been changed accordingly. 
 
 Migration from version 3.x
 ==========================
@@ -213,6 +218,10 @@ Migration from version 1.x
 
 Changelog
 =========
+
+5.0.0-SNAPSHOT
+--------------
+* PR #??? - Use cucumber-core:2.0.0.
 
 4.1.0
 -----

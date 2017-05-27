@@ -18,6 +18,8 @@ The feature tags are:
     @myOtherFeatureTag(\\"Value\\")
 
 The scenario definition tags are:
+    @featureTag
+    @myOtherFeatureTag(\\"Value\\")
     @scenarioTag1
     @myOtherScenarioTag(\\"Value\\")
 
@@ -32,6 +34,8 @@ The feature tags are:
     @myOtherFeatureTag(\\"Value\\")
 
 The scenario definition tags are:
+    @featureTag
+    @myOtherFeatureTag(\\"Value\\")
     @outlineTag
     @myOtherScenarioOutlineTag(\\"Value\\")
 

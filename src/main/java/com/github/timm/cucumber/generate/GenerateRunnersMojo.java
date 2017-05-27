@@ -135,9 +135,9 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
      * List of tags used to select scenarios to run. E.g. <pre>{@code
      *     <tags>
      *         <tag>@billing</tag>
-     *         <tag>~@billing</tag>
+     *         <tag>not @billing</tag>
      *         <tag>@important</tag>
-     *         <tag>@important,@billing</tag>
+     *         <tag>@important or @billing</tag>
      *     </tags>
      * }</pre>
      *

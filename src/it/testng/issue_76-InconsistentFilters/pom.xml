@@ -47,7 +47,7 @@
                                 <package>bar</package>
                             </glue>
                             <tags>
-                                <tag>@complete,@accepted</tag>
+                                <tag>@complete or @accepted</tag>
                             </tags>
                             <useTestNG>true</useTestNG>
                             <parallelScheme>SCENARIO</parallelScheme>

@@ -48,7 +48,7 @@
                             </glue>
                             <tags>
                                 <!-- Negation - filter out scenarios tagged with ~@unwanted -->
-                                <tag>~@unwanted</tag>
+                                <tag>not @unwanted</tag>
                                 <tag>@includeMe</tag>
                             </tags>
                         </configuration>

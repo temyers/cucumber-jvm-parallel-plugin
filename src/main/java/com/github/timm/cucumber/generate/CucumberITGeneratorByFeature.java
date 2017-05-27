@@ -1,12 +1,8 @@
 package com.github.timm.cucumber.generate;
 
-import static java.lang.String.format;
-
-import com.github.timm.cucumber.generate.filter.TagFilter;
 import com.github.timm.cucumber.generate.name.ClassNamingScheme;
-import gherkin.AstBuilder;
-import gherkin.Parser;
-import gherkin.TokenMatcher;
+import cucumber.runtime.TagPredicate;
+import cucumber.runtime.model.CucumberFeature;
 import gherkin.ast.Feature;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -19,8 +15,6 @@ import org.apache.velocity.app.event.EventCartridge;
 import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -93,27 +87,15 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
      */
     public void generateCucumberITFiles(final File outputDirectory,
                                         final Collection<File> featureFiles) throws MojoExecutionException {
-        final Parser<Feature> parser = new Parser<Feature>(new AstBuilder());
-        Feature feature = null;
+        final TagPredicate tagFilter = new TagPredicate(overriddenParameters.getTags());
         for (final File file : featureFiles) {
-
-            try {
-                feature = parser.parse(new FileReader(file), new TokenMatcher());
-            } catch (final FileNotFoundException e) {
-                // should never happen
-                // TODO - proper logging
-                System.out.println(format("WARNING: Failed to parse '%s'...IGNORING",
-                        file.getName()));
-            }
-
-            if (shouldSkipFeature(feature)) {
+            CucumberFeature cucumberFeature = CucumberUtil.parseFeature(file);
+            if (CucumberUtil.filterSteps(cucumberFeature, tagFilter).isEmpty()) {
                 continue;
             }
-
-
             outputFileName = classNamingScheme.generate(file.getName());
             setFeatureFileLocation(file);
-            setParsedFeature(feature);
+            setParsedFeature(cucumberFeature.getGherkinFeature().getFeature());
             writeFile(outputDirectory);
 
         }
@@ -141,20 +123,6 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
         fileCounter++;
     }
 
-    private boolean shouldSkipFeature(final Feature feature) {
-        if (!overriddenParameters.getTags().isEmpty()) {
-            final TagFilter tagFilter = new TagFilter(overriddenParameters.getTags());
-            if (tagFilter.matchingScenariosAndExamples(feature).isEmpty()) {
-                return true;
-            }
-
-            //
-            // if (!featureContainsMatchingTags(feature)) {
-            // return true;
-            // }
-        }
-        return false;
-    }
 
     /**
      * Sets the feature file location based on the given file. The full file path is trimmed to only include the
@@ -167,11 +135,11 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
         featureFileLocation = normalizePathSeparator(file);
     }
 
-    
+
     private void setParsedFeature(final Feature feature) {
         parsedFeature = feature;
     }
-    
+
     private static String normalizePathSeparator(File file) {
         return file.getPath().replace(File.separatorChar, '/');
     }
@@ -192,7 +160,7 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
         context.put("glue", overriddenParameters.getGlue());
         context.put("className", FilenameUtils.removeExtension(outputFileName));
         context.put("packageName", config.getPackageName());
-        context.put("feature",parsedFeature);
+        context.put("feature", parsedFeature);
 
         velocityTemplate.merge(context, writer);
     }

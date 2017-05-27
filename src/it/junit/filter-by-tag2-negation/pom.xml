@@ -48,7 +48,7 @@
                             </glue>
                             <tags>
                                 <!-- Negation - filter out scenarios tagged with @feature1 -->
-                                <tag>~@feature1</tag>
+                                <tag>not @feature1</tag>
                             </tags>
                         </configuration>
                     </execution>
