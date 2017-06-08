@@ -185,6 +185,17 @@ Q. Why isn't there much activity on this project
 
 A. The plugin is considered feature complete.  If you feel there is something missing, raise an issue.
 
+Q. Why are my tests not executed?
+
+A. By default this plugin generates integration tests. Ensure that the 
+[Maven Failsafe Plugin](https://maven.apache.org/surefire/maven-failsafe-plugin/) is properly 
+  configured.
+  
+Q. Why am I not seeing any generated runners?
+
+A. Scenarios that don't match any tags are excluded. If there is no scenario to run, no runner will 
+   be generated.  
+
 
 Migration from version 3.x
 ==========================
