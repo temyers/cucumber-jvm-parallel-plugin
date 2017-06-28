@@ -78,6 +78,8 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
             name = config.getCustomVmTemplate();
         } else if (config.useTestNG()) {
             name = "cucumber-testng-runner.java.vm";
+        } else if (config.useSerenity()) {
+            name = "cucumber-serenity-runner.java.vm";
         } else {
             name = "cucumber-junit-runner.java.vm";
         }

@@ -10,6 +10,7 @@ class TestFileGeneratorConfig implements FileGeneratorConfig {
     private File featuresDirectory;
     private File outputDir;
     private final boolean useTestNg = false;
+    private final boolean useSerenity = false;
     private final String namingScheme = "simple";
     private final String namingPattern = null;
     private final String customVmTemplate = "";
@@ -38,6 +39,10 @@ class TestFileGeneratorConfig implements FileGeneratorConfig {
 
     public boolean useTestNG() {
         return useTestNg;
+    }
+
+    public boolean useSerenity() {
+        return useSerenity;
     }
 
     public String getCustomVmTemplate() {

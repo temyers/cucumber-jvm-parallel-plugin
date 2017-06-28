@@ -154,6 +154,9 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     @Parameter(defaultValue = "false", property = "useTestNG", required = true)
     private boolean useTestNG;
 
+    @Parameter(defaultValue = "false", property = "useSerenity", required = true)
+    private boolean useSerenity;
+
     /**
      * see cucumber.api.CucumberOptions
      */
@@ -321,6 +324,10 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
 
     public boolean useTestNG() {
         return useTestNG;
+    }
+
+    public boolean useSerenity() {
+        return useSerenity;
     }
 
     public String getCustomVmTemplate() {

@@ -14,6 +14,8 @@ interface FileGeneratorConfig {
 
     boolean useTestNG();
 
+    boolean useSerenity();
+
     String getCustomVmTemplate();
 
     String getPackageName();
