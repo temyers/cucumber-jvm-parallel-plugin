@@ -7,11 +7,12 @@ import com.github.timm.cucumber.generate.name.ClassNamingScheme;
 import gherkin.AstBuilder;
 import gherkin.Parser;
 import gherkin.TokenMatcher;
+
 import gherkin.ast.Feature;
 import gherkin.ast.Location;
 import gherkin.ast.Node;
 import gherkin.ast.ScenarioDefinition;
-
+import gherkin.ast.Tag;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -30,8 +31,10 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * Generates Cucumber runner files using configuration from FileGeneratorConfig containing parameters passed into the
@@ -49,6 +52,7 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
     private Template velocityTemplate;
     private String outputFileName;
     private final ClassNamingScheme classNamingScheme;
+    private Set<String> parsedScenarioTags;
 
 
     /**
@@ -118,6 +122,7 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
                 setFeatureFileLocation(file, match.getLocation());
                 setParsedFeature(feature);
                 setParsedScenario(match.getScenario());
+                setParsedScenarioTags(getTagsAsStrings(match.getTags()));
                 writeFile(outputDirectory);
             }
 
@@ -165,6 +170,10 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
         parsedScenario = scenario;
     }
 
+    private void setParsedScenarioTags(Set<String> scenarioTags) {
+        parsedScenarioTags = scenarioTags;
+    }
+
     private static String normalizePathSeparator(File file) {
         return file.getPath().replace(File.separatorChar, '/');
     }
@@ -187,6 +196,7 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
         context.put("packageName", config.getPackageName());
         context.put("feature", parsedFeature);
         context.put("scenario", parsedScenario);
+        context.put("scenarioTags", parsedScenarioTags);
 
         velocityTemplate.merge(context, writer);
     }
@@ -213,5 +223,17 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
             }
         }
     }
+
+
+    private Set<String> getTagsAsStrings(Set<Tag> tags) {
+        Set<String> stringTags = new HashSet<String>();
+
+        for (Tag tag: tags) {
+            stringTags.add(tag.getName());
+        }
+
+        return stringTags;
+    }
+
 
 }

@@ -1,0 +1,2 @@
+#parse("/array.java.vm")
+// This is a custom template for $className with an array of tags $scenarioTags
