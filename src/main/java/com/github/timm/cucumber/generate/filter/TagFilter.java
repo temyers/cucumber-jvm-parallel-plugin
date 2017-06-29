@@ -104,7 +104,7 @@ public class TagFilter {
             } else {
                 if (matches(allTagsForScenario)) {
                     matchingScenariosAndExamples
-                                    .add(new ScenarioAndLocation(scenario, scenario.getLocation()));
+                                    .add(new ScenarioAndLocation(scenario, scenario.getLocation(), allTagsForScenario));
                 }
 
             }
@@ -124,7 +124,8 @@ public class TagFilter {
             allTagsForExample.addAll(example.getTags());
             if (matches(allTagsForExample)) {
                 for (TableRow row : example.getTableBody()) {
-                    matchingRows.add(new ScenarioAndLocation(scenario, row.getLocation()));
+                    matchingRows.add(new ScenarioAndLocation(scenario, row.getLocation(),
+                            (Set<Tag>) allTagsForExample));
                 }
             }
         }
