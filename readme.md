@@ -181,10 +181,6 @@ available variables please see CucumberITGeneratorBy(Feature|Scenario).
 
 FAQ
 ===
-Q. Why isn't there much activity on this project
-
-A. The plugin is considered feature complete.  If you feel there is something missing, raise an issue.
-
 Q. Why are my tests not executed?
 
 A. By default this plugin generates integration tests. Ensure that the 
@@ -194,7 +190,11 @@ A. By default this plugin generates integration tests. Ensure that the
 Q. Why am I not seeing any generated runners?
 
 A. Scenarios that don't match any tags are excluded. If there is no scenario to run, no runner will 
-   be generated.  
+   be generated.
+   
+Q. Is there a mailing list?
+
+A. No. but we have a Gitter channel: https://gitter.im/cucumber-jvm-parallel-plugin/
 
 
 Migration from version 3.x
