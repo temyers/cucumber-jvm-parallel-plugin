@@ -37,6 +37,7 @@ public class PatternNamingSchemeTest {
             {"{f}", "FeatureFile"},
             {"{c}", "01"},
             {"{f}{c}", "FeatureFile01"},
+            {"{f}{c}Group{c:1}", "FeatureFile01Group0"},
             {"Foo", "Foo"},
 
             // No validation is performed

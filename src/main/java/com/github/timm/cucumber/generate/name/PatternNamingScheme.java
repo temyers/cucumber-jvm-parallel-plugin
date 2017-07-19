@@ -1,5 +1,7 @@
 package com.github.timm.cucumber.generate.name;
 
+import com.github.timm.cucumber.ModuloCounter;
+
 /**
  * Generate a Class Name based on a pattern.
  *
@@ -13,12 +15,14 @@ package com.github.timm.cucumber.generate.name;
  * <ul>
  * <li>'{f}' - The feature file, converted using supplied naming scheem.</li>
  * <li>'{c}' - A one-up number, formatted to have minimum 2 character width.</li>
+ * <li>'{c:n}' - A one-up number modulo n, with no minimum character width.</li>
  * </ul>
  */
 public class PatternNamingScheme implements ClassNamingScheme {
 
     private final String pattern;
     private final Counter counter;
+    private final Counter moduloCounter;
     private final ClassNamingScheme featureFileNamingScheme;
 
     /**
@@ -31,6 +35,7 @@ public class PatternNamingScheme implements ClassNamingScheme {
 
         this.pattern = pattern;
         this.counter = counter;
+        this.moduloCounter = new ModuloCounter(pattern);
         this.featureFileNamingScheme = featureFileNamingScheme;
     }
 
@@ -43,6 +48,7 @@ public class PatternNamingScheme implements ClassNamingScheme {
         String className =
                         pattern.replace("{f}", featureFileNamingScheme.generate(featureFileName));
         className = className.replace("{c}", String.format("%02d", counter.next()));
+        className = className.replaceAll("\\{c:\\d*}", String.format("%d", moduloCounter.next()));
         return className;
     }
 
