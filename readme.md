@@ -161,6 +161,7 @@ The naming scheme used for the generated files is controlled by the `namingSchem
 The following tokens can be used in the pattern:
 * `{f}` Converts the feature file name to a valid class name using the rules for feature-title, apart from the one up counter.
 * `{c}` Adds a one up counter. |
+* `{c:n}` Adds a one up counter modulo n (useful for selecting tests for parallelisation). |
 
 By default, generated test files use the `simple` naming strategy.
 
