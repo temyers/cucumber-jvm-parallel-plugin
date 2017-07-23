@@ -38,14 +38,6 @@ The scenario definition tags are:
 */
 """
 
-// The order of the files isn't important but listFiles may list files in any order
-// This ensures we assert correctly despite file ordering
-if (suite01.text.contains("@scenarioTag1")) {
-    Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected01))
-    Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expected02))
-} else {
-    Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expected01))
-    Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected02))
-    
-}
+Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected01))
+Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expected02))
 

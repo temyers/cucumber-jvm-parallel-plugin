@@ -14,12 +14,6 @@ String expected02 = "feature2.feature"
 
 Assert.assertTrue(suite01.text.contains(noTags))
 Assert.assertTrue(suite02.text.contains(noTags))
-if (suite01.text.contains(expected01)) {
-    Assert.assertTrue(suite02.text.contains(expected02))
-} else {
-    Assert.assertTrue(suite01.text.contains(expected02))
-    Assert.assertTrue(suite02.text.contains(expected01))
-}
-	
 
-
+Assert.assertTrue(suite01.text.contains(expected01))
+Assert.assertTrue(suite02.text.contains(expected02))

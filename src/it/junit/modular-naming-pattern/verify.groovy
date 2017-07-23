@@ -56,9 +56,5 @@ import cucumber.api.junit.Cucumber;
 public class Group1Parallel02IT {
 }"""
 
-// Depending on the OS, listFiles can list files in different order.  The actual order of files isn't necessary
-
 Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected01))
 Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expected02))
-
-

@@ -38,14 +38,5 @@ import cucumber.api.testng.AbstractTestNGCucumberTests;
         glue = {"foo", "bar"})
 public class Parallel02IT extends AbstractTestNGCucumberTests {
 }"""
-
-// Depending on the OS, listFiles can list files in different order.  The actual order of files isn't necessary
-
-if (suite01.text.contains("feature1")) {
-    Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected01))
-    Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expected02))
-} else {
-    Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expected01))
-    Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected02))
-}
-
+Assert.assertThat(suite01.text, equalToIgnoringWhiteSpace(expected01))
+Assert.assertThat(suite02.text, equalToIgnoringWhiteSpace(expected02))
