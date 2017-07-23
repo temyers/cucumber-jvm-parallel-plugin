@@ -11,9 +11,5 @@ assert !suite03.isFile()
 String expected01 = "feature1.feature"
 String expected02 = "feature2.feature"
 
-if (suite01.text.contains(expected01)) {
-    Assert.assertTrue(suite02.text.contains(expected02))
-} else {
-    Assert.assertTrue(suite02.text.contains(expected01))
-    Assert.assertTrue(suite01.text.contains(expected02))
-}
+Assert.assertTrue(suite01.text.contains(expected01))
+Assert.assertTrue(suite02.text.contains(expected02))
