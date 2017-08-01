@@ -7,10 +7,47 @@ This is a pain to maintain and not very DRY.
 
 This is where the cucumber-jvm-parallel-plugin comes in.  This plugin automatically generates a Cucumber JUnit or TestNG runner for each scenario/feature file found in your project.
 
-Usage
------
+Quickstart
+----------
 
-Add the following to your POM file:
+Place your feature files in `src/test/resources/features/`
+
+Add the following to your POM file, updating the `<glue>` definition to point to your glue code packages:
+```xml
+<plugin>
+  <groupId>com.github.temyers</groupId>
+  <artifactId>cucumber-jvm-parallel-plugin</artifactId>
+  <version>4.2.0</version>
+  <executions>
+    <execution>
+      <id>generateRunners</id>
+      <phase>generate-test-sources</phase>
+      <goals>
+        <goal>generateRunners</goal>
+      </goals>
+      <configuration>
+        <!-- Mandatory -->
+        <!-- List of package names to scan for glue code. -->
+        <glue>
+          <package>com.example</package>
+          <package>com.example.other</package>
+        </glue>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
+```
+
+Configure the [Maven Failsafe](http://maven.apache.org/surefire/maven-failsafe-plugin/) to execute your runners.
+
+Generated JUnit test runners will be named `ParallelNIT.java`, where `N` is a one up number.
+Cucumber JSON reports will be output to: `target/cucumber-parallel`
+
+Detailed Configuration
+----------------------
+
+The following snippet details all the possible configuration options and example usage:
+Please refer to the integration tests for example usage:
 
 ```xml
 <plugin>
