@@ -50,6 +50,7 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
 
 
     /**
+     * Constructor.
      * @param config               The configuration parameters passed to the Maven Mojo
      * @param overriddenParameters Parameters overridden from Cucumber options VM parameter (-Dcucumber.options)
      * @param classNamingScheme    The naming scheme to use for the generated class files
@@ -167,18 +168,18 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
         featureFileLocation = normalizePathSeparator(file);
     }
 
-    
+
     private void setParsedFeature(final Feature feature) {
         parsedFeature = feature;
     }
-    
-    private static String normalizePathSeparator(File file) {
+
+    private static String normalizePathSeparator(final File file) {
         return file.getPath().replace(File.separatorChar, '/');
     }
 
     private void writeContentFromTemplate(final Writer writer) {
         // to escape java
-        EventCartridge ec = new EventCartridge();
+        final EventCartridge ec = new EventCartridge();
         ec.addEventHandler(new EscapeJavaReference());
 
         final VelocityContext context = new VelocityContext();
@@ -202,7 +203,7 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
      */
     private List<String> createPluginStrings() {
         final List<String> formatList = new ArrayList<String>();
-        for (Plugin plugin : overriddenParameters.getPlugins()) {
+        for (final Plugin plugin : overriddenParameters.getPlugins()) {
             formatList.add(plugin.asPluginString(fileCounter));
         }
         return formatList;
@@ -211,7 +212,7 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
 
     private static final class EscapeJavaReference implements ReferenceInsertionEventHandler {
 
-        public Object referenceInsert(String reference, Object value) {
+        public Object referenceInsert(final String reference, final Object value) {
             if (value == null) {
                 return null;
             } else {

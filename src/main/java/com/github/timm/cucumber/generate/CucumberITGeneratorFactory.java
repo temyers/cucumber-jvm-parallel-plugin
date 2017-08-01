@@ -10,6 +10,7 @@ public class CucumberITGeneratorFactory {
     private final FileGeneratorConfig config;
 
     /**
+     * Constructor.
      * @param config generator config.
      * @param overriddenParameters cucumber options params
      * @param classNamingScheme the class naming scheme to use

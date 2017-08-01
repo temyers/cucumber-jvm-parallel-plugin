@@ -20,6 +20,7 @@ public class ClassNamingSchemeFactory {
     private final ClassNamingScheme featureFileNamingScheme;
 
     /**
+     * Constructor.
      * @param counter Counter for adding 1-up numbers to generated class names.
      */
     public ClassNamingSchemeFactory(final Counter counter) {

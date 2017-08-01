@@ -11,7 +11,6 @@ import gherkin.ast.Feature;
 import gherkin.ast.Location;
 import gherkin.ast.Node;
 import gherkin.ast.ScenarioDefinition;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -52,6 +51,7 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
 
 
     /**
+     * Constructor.
      * @param config               The configuration parameters passed to the Maven Mojo
      * @param overriddenParameters Parameters overridden from Cucumber options VM parameter (-Dcucumber.options)
      * @param classNamingScheme    The naming scheme to use for the generated class files
@@ -156,7 +156,7 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
     private void setFeatureFileLocation(final File file, final Location location) {
         featureFileLocation = normalizePathSeparator(file).concat(":" + location.getLine());
     }
-    
+
     private void setParsedFeature(final Feature feature) {
         parsedFeature = feature;
     }
@@ -165,13 +165,13 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
         parsedScenario = scenario;
     }
 
-    private static String normalizePathSeparator(File file) {
+    private static String normalizePathSeparator(final File file) {
         return file.getPath().replace(File.separatorChar, '/');
     }
 
     private void writeContentFromTemplate(final Writer writer) {
         // to escape java
-        EventCartridge ec = new EventCartridge();
+        final EventCartridge ec = new EventCartridge();
         ec.addEventHandler(new EscapeJavaReference());
 
         final VelocityContext context = new VelocityContext();
@@ -196,7 +196,7 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
      */
     private List<String> createPluginStrings() {
         final List<String> formatList = new ArrayList<String>();
-        for (Plugin plugin : overriddenParameters.getPlugins()) {
+        for (final Plugin plugin : overriddenParameters.getPlugins()) {
             formatList.add(plugin.asPluginString(fileCounter));
         }
         return formatList;
@@ -205,7 +205,7 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
 
     private static final class EscapeJavaReference implements ReferenceInsertionEventHandler {
 
-        public Object referenceInsert(String reference, Object value) {
+        public Object referenceInsert(final String reference, final Object value) {
             if (value == null) {
                 return null;
             } else {

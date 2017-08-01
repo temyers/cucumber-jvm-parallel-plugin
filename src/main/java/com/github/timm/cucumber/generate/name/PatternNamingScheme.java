@@ -26,6 +26,7 @@ public class PatternNamingScheme implements ClassNamingScheme {
     private final ClassNamingScheme featureFileNamingScheme;
 
     /**
+     * Constructor.
      * @param pattern The pattern to use.
      * @param counter Counter to generate one up numbers
      * @param featureFileNamingScheme Naming scheme to use for '{f}' placeholder
@@ -40,6 +41,7 @@ public class PatternNamingScheme implements ClassNamingScheme {
     }
 
     /**
+     * Generate a class name using the required pattern and feature file.
      * @param featureFileName The feature file to generate a class name for
      * @return A class name based on the required pattern.
      */
