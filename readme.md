@@ -16,7 +16,7 @@ Add the following to your POM file:
 <plugin>
   <groupId>com.github.temyers</groupId>
   <artifactId>cucumber-jvm-parallel-plugin</artifactId>
-  <version>4.1.0</version>
+  <version>4.2.0</version>
   <executions>
     <execution>
       <id>generateRunners</id>
@@ -225,6 +225,11 @@ Migration from version 1.x
 
 Changelog
 =========
+
+4.2.0
+-----
+* PR #136 - Fix issue #135 Filter generated classes into non-overlapping groups
+* PR #137 - Clean up listfiles order workaround in its
 
 4.1.0
 -----
