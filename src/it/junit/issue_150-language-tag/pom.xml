@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.temyers.it</groupId>
-    <artifactId>simple-it</artifactId>
+    <artifactId>issue_150-language-tag</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <description>A simple IT verifying the basic use case.</description>
+    <description>Plugin not working with cucumber #language-tag</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
