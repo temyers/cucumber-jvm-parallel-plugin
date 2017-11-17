@@ -26,7 +26,7 @@ public class CucumberITGeneratorFactory {
     /**
      * Create a CucumberITGenerator based on the given parallel scheme.
      * @param parallelScheme The scheme to use
-     * @return
+     * @return CucumberITGenerator
      * @throws MojoExecutionException
      */
     public CucumberITGenerator create(final ParallelScheme parallelScheme) throws MojoExecutionException {
