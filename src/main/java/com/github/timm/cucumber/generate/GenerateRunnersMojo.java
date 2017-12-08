@@ -190,13 +190,20 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     public void execute() throws MojoExecutionException {
 
         if (!featuresDirectory.exists()) {
-            throw new MojoExecutionException("Features directory does not exist");
+            getLog().warn("Features directory does not exist");
+            return;
         }
 
-        final Collection<File> featureFiles = listFiles(featuresDirectory, new String[] {"feature"}, true);
-        final List<File> sortedFeatureFiles = new NameFileComparator().sort(new ArrayList<File>(featureFiles));
-
         createOutputDirIfRequired();
+
+        final Collection<File> featureFiles = listFiles(featuresDirectory, new String[] {"feature"}, true);
+
+        if (featureFiles.isEmpty()) {
+            getLog().warn("Features directory is empty. No runners will be generated.");
+            return;
+        }
+
+        final List<File> sortedFeatureFiles = new NameFileComparator().sort(new ArrayList<File>(featureFiles));
 
         File packageDirectory = packageName == null
                 ? outputDirectory
