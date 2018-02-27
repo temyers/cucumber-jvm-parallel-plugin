@@ -58,20 +58,25 @@ public class PatternNamingScheme implements ClassNamingScheme {
         String className =
                         pattern.replace("{f}", featureFileNamingScheme.generate(featureFileName));
 
-        className = replaceAll( COUNTER_PATTERN, className, counter.next(), 2);
-        className = replaceAll( MODULO_COUNTER_PATTERN, className, moduloCounter.next(), 1);
+        int number = counter.next();
+        className = replaceAll( COUNTER_PATTERN, className, number);
+        className = replaceAll( MODULO_COUNTER_PATTERN, className, number);
         return className;
     }
 
-    private String replaceAll(Pattern compiledPattern,String pattern, int number, int defaultLen) {
+    private String replaceAll(Pattern compiledPattern,String pattern, int number) {
         Matcher matcher = compiledPattern.matcher(pattern);
+        boolean isNormalCounter = compiledPattern == COUNTER_PATTERN;
+        int defaultLen = isNormalCounter ? 2 : 1;
 
         boolean result = matcher.find();
         if (result) {
             StringBuffer sb = new StringBuffer();
             do {
-                int len = matcher.start(1) == matcher.end(1) ? defaultLen : Integer.decode(matcher.group(1));
-                matcher.appendReplacement(sb, String.format("%0" + len + "d", number));
+                boolean isNoLength = matcher.start(1) == matcher.end(1);
+                int len = isNoLength ? defaultLen : Integer.decode(matcher.group(1));
+                int numberAdjustedIfMod = isNormalCounter ? number : (number - 1) % Integer.decode(matcher.group(2));
+                matcher.appendReplacement(sb, String.format("%0" + len + "d", numberAdjustedIfMod));
                 result = matcher.find();
             }
             while (result);
