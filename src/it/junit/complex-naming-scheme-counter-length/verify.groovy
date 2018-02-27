@@ -2,17 +2,17 @@ import org.junit.Assert
 
 import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace
 
-File buildDirectory = new File(basedir, "target");
+File buildDirectory = new File(basedir, "target")
 
-File suite01 = new File(basedir, "target/generated-test-sources/cucumber/Parallel01FooFeature1Counter001IT.java");
-File suite02 = new File(basedir, "target/generated-test-sources/cucumber/Parallel00FooFeature2Counter002IT.java");
-File suite03 = new File(basedir, "target/generated-test-sources/cucumber/Parallel01FooFeature3Counter003IT.java");
-File suite04 = new File(basedir, "target/generated-test-sources/cucumber/Parallel00FooFeature4Counter004IT.java");
+File suite01 = new File(basedir, "target/generated-test-sources/cucumber/Parallel00FooFeature1Counter001IT.java")
+File suite02 = new File(basedir, "target/generated-test-sources/cucumber/Parallel01FooFeature2Counter002IT.java")
+File suite03 = new File(basedir, "target/generated-test-sources/cucumber/Parallel02FooFeature3Counter003IT.java")
+File suite04 = new File(basedir, "target/generated-test-sources/cucumber/Parallel00FooFeature4Counter004IT.java")
 
-File feature1 = new File(basedir, "/src/test/resources/features/feature1.feature");
-File feature2 = new File(basedir, "/src/test/resources/features/feature2.feature");
-File feature3 = new File(basedir, "/src/test/resources/features/feature3.feature");
-File feature4 = new File(basedir, "/src/test/resources/features/feature4.feature");
+File feature1 = new File(basedir, "/src/test/resources/features/feature1.feature")
+File feature2 = new File(basedir, "/src/test/resources/features/feature2.feature")
+File feature3 = new File(basedir, "/src/test/resources/features/feature3.feature")
+File feature4 = new File(basedir, "/src/test/resources/features/feature4.feature")
 
 assert suite01.isFile()
 assert suite02.isFile()
@@ -33,7 +33,7 @@ import cucumber.api.junit.Cucumber;
         monochrome = false,
         tags = {},
         glue = {"foo", "bar"})
-public class Parallel01FooFeature1Counter001IT {
+public class Parallel00FooFeature1Counter001IT {
 }"""
 
 String expected02 =
@@ -50,7 +50,7 @@ import cucumber.api.junit.Cucumber;
         monochrome = false,
         tags = {},
         glue = {"foo", "bar"})
-public class Parallel00FooFeature2Counter002IT {
+public class Parallel01FooFeature2Counter002IT {
 }"""
 
 String expected03 =
@@ -62,12 +62,12 @@ import cucumber.api.junit.Cucumber;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         strict = true,
-        features = {"${feature1.absolutePath}"},
-        plugin = {"json:${buildDirectory.absolutePath}/cucumber-parallel/1.json"},
+        features = {"${feature3.absolutePath}"},
+        plugin = {"json:${buildDirectory.absolutePath}/cucumber-parallel/3.json"},
         monochrome = false,
         tags = {},
         glue = {"foo", "bar"})
-public class Parallel01FooFeature3Counter003IT {
+public class Parallel02FooFeature3Counter003IT {
 }"""
 
 String expected04 =
@@ -79,8 +79,8 @@ import cucumber.api.junit.Cucumber;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         strict = true,
-        features = {"${feature2.absolutePath}"},
-        plugin = {"json:${buildDirectory.absolutePath}/cucumber-parallel/2.json"},
+        features = {"${feature4.absolutePath}"},
+        plugin = {"json:${buildDirectory.absolutePath}/cucumber-parallel/4.json"},
         monochrome = false,
         tags = {},
         glue = {"foo", "bar"})
