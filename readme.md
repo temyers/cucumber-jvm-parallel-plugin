@@ -75,7 +75,7 @@ Please refer to the integration tests for example usage:
         <featuresDirectory>src/test/resources/features/</featuresDirectory>
         <!-- Directory where the cucumber report files shall be written  -->
         <cucumberOutputDir>target/cucumber-parallel</cucumberOutputDir>
-        <!-- List of cucumber plugins. When none are provided the json formatter is used. For more 
+        <!-- List of cucumber plugins. When none are provided the json formatter is used. For more
              advanced usage see section about configuring cucumber plugins -->
         <plugins>
           <plugin>
@@ -97,9 +97,9 @@ Please refer to the integration tests for example usage:
           <tag>@important</tag>
           <tag>@important,@billing</tag>
         </tags>
-        <!-- Generate TestNG runners instead of JUnit ones. --> 
+        <!-- Generate TestNG runners instead of JUnit ones. -->
         <useTestNG>false</useTestNG>
-        <!-- The naming scheme to use for the generated test classes.  One of 'simple' or 'feature-title' --> 
+        <!-- The naming scheme to use for the generated test classes.  One of ['simple', 'feature-title', 'pattern'] -->
         <namingScheme>simple</namingScheme>
         <!-- The class naming pattern to use.  Only required/used if naming scheme is 'pattern'.-->
         <namingPattern>Parallel{c}IT</namingPattern>
@@ -119,9 +119,9 @@ If `cucumber.options` VM argument is specified as per the [Cucumber CLI options]
 
 Where glue is a comma separated list of package names to use for the Cucumber Glue.
 
-The plugin will search `featuresDirectory` for `*.feature` files and generate a JUnit test for each one. 
+The plugin will search `featuresDirectory` for `*.feature` files and generate a JUnit test for each one.
 > **WARNING:** `featuresDirectory` must denote a directory within the root of the classpath.
-> **Example:** 
+> **Example:**
 > * Resources in `src/test/resources` are added to the classpath by default.
 > * `src/test/resources/features` **is** in the root of the classpath, so **would be valid** for `featuresDirectory`
 > * `src/test/resources/features/sub_folder` is **not** in the root of the classpath, so **would not be valid** to put in `featuresDirectory`
@@ -134,8 +134,8 @@ Each runner is configured to output the results to a separate output file under 
 
 ### Cucumber Plugins ###
 
-Cucumber plugins that write to a file are referenced using the syntax 
-`name[:outputDirectory/excutorId[.extension]]`. Because not all plugins create output and the 
+Cucumber plugins that write to a file are referenced using the syntax
+`name[:outputDirectory/excutorId[.extension]]`. Because not all plugins create output and the
 excutorId is provided at runtime some leg work is needed.
 
 #### Build-in Cucumber Plugins ####
@@ -147,7 +147,7 @@ excutorId is provided at runtime some leg work is needed.
         <name>json</name>
         <!--Optional file extension. For build in cucumber plugins a sensible default is provided. -->
         <extension>json</extension>
-        <!--Optional output directory. Overrides cucumberOutputDirectory. Usefull when different 
+        <!--Optional output directory. Overrides cucumberOutputDirectory. Usefull when different
             plugins create files with the same extension-->
         <outputDirectory>${project.build.directory}/cucumber-parallel/json</outputDirectory>
     </plugin>
@@ -160,10 +160,10 @@ excutorId is provided at runtime some leg work is needed.
 <plugins>
     <plugin>
         <name>path.to.my.formaters.CustomHtmlFormatter</name>
-        <!--Optional file extension. Unless the formatter writes to a file it is strongly 
+        <!--Optional file extension. Unless the formatter writes to a file it is strongly
             recommend that one is provided. -->
         <extension>html</extension>
-        <!--Optional output directory. Overrides cucumberOutputDirectory. Useful when different 
+        <!--Optional output directory. Overrides cucumberOutputDirectory. Useful when different
             plugins create files with the same extension-->
         <outputDirectory>${project.build.directory}/cucumber-parallel/html</outputDirectory>
     </plugin>
@@ -176,7 +176,7 @@ excutorId is provided at runtime some leg work is needed.
 <plugins>
     <plugin>
         <name>path.to.my.formaters.NoOutputFormatter</name>
-        <!--Set to true if this plug creates no output. Setting extension or outputDirectory 
+        <!--Set to true if this plug creates no output. Setting extension or outputDirectory
             will override this setting -->
         <noOutput>true</noOutput>
     </plugin>
@@ -189,18 +189,25 @@ The naming scheme used for the generated files is controlled by the `namingSchem
 
 | Property      | Generated Name |
 | ------------- | -------------- |
-| simple        | `ParallelXXIT.java`, where `XX` is a one up counter.
-| feature-title | The name is generated based on the feature title with the following rules to ensure it is a valid classname:
-* Spaces are removed, camel-casing the title.
-* If the feature file starts with a digit, the classname is prefixed with '_'
-* A on up counter is appended to the classname, to prevent clashes. |
-| pattern       | Generate the filename based on the `namingPattern` property.  
-The following tokens can be used in the pattern:
-* `{f}` Converts the feature file name to a valid class name using the rules for feature-title, apart from the one up counter.
-* `{c}` Adds a one up counter. |
-* `{c:n}` Adds a one up counter modulo n (useful for selecting tests for parallelisation). |
+| simple        | `ParallelXXIT.java`, where `XX` is a one up counter.|
+| feature-title | The name is generated based on the feature title with a set of rules to ensure it is a valid classname. The reules are detailed in the next subsection below. |
+| pattern       | Generate the filename based on the `namingPattern` property.|
 
 By default, generated test files use the `simple` naming strategy.
+
+#### Feature-title Naming Scheme - rules ####
+
+* Spaces are removed, camel-casing the title
+* If the feature file starts with a digit, the classname is prefixed with '_'
+* A one up counter is appended to the classname, to prevent clashes.
+
+#### Pattern Naming Scheme - tokens ####
+
+The following tokens can be used in the pattern:
+* `{f}` Converts the feature file name to a valid class name using the rules for feature-title, apart from the one up counter.
+* `{c}` Adds a one up counter.
+* `{c:n}` Adds a one up counter modulo n (useful for selecting tests for parallelisation).
+* By default counter value is zero padded to two characters and modulo counter is not padded at all. If you need a different zero padded length, this can be achieved by prefixing the character `c` by the length required - for example `{3c}` will yield `001` instead of `01`
 
 #### Note on Pattern Naming Scheme ####
 The `pattern` naming scheme is for advanced usage only.  
@@ -212,24 +219,24 @@ The `namingPattern` property is for the **class name** only.  Do not add the `.j
 ### Custom Templates ###
 
 Some reporting plugins, such as
-[Cucumber Extent Reporter](https://github.com/email2vimalraj/CucumberExtentReporter), require some 
-setup before a test is started. A template can be used to customize the integration tests. For a 
-sample see the [extents-report](src/it/junit/extents-report) integration test. For a full list of 
+[Cucumber Extent Reporter](https://github.com/email2vimalraj/CucumberExtentReporter), require some
+setup before a test is started. A template can be used to customize the integration tests. For a
+sample see the [extents-report](src/it/junit/extents-report) integration test. For a full list of
 available variables please see CucumberITGeneratorBy(Feature|Scenario).
 
 FAQ
 ===
 Q. Why are my tests not executed?
 
-A. By default this plugin generates integration tests. Ensure that the 
-[Maven Failsafe Plugin](https://maven.apache.org/surefire/maven-failsafe-plugin/) is properly 
+A. By default this plugin generates integration tests. Ensure that the
+[Maven Failsafe Plugin](https://maven.apache.org/surefire/maven-failsafe-plugin/) is properly
   configured.
-  
+
 Q. Why am I not seeing any generated runners?
 
-A. Scenarios that don't match any tags are excluded. If there is no scenario to run, no runner will 
+A. Scenarios that don't match any tags are excluded. If there is no scenario to run, no runner will
    be generated.
-   
+
 Q. Is there a mailing list?
 
 A. No. but we have a Gitter channel: https://gitter.im/cucumber-jvm-parallel-plugin/
@@ -237,19 +244,19 @@ A. No. but we have a Gitter channel: https://gitter.im/cucumber-jvm-parallel-plu
 
 Migration from version 3.x
 ==========================
-* The `filterFeaturesByTags` property has been removed. If you have not set this property to true 
+* The `filterFeaturesByTags` property has been removed. If you have not set this property to true
   remove any tags from your configuration. If you have set it to true you  can safely remove it.
 
 
 Migration from version 2.x
 ==========================
-* The `glue` property now takes a list of `package` elements rather then a list of comma delimited packages. A 
+* The `glue` property now takes a list of `package` elements rather then a list of comma delimited packages. A
   `package` contains a single package name to be used as glue.
-* The `tags` property now takes a list of `tag` elements rather then a list of comma and quote delimited strings. A 
+* The `tags` property now takes a list of `tag` elements rather then a list of comma and quote delimited strings. A
   `tag` element can take one or more tags. The semantics are the same as those of the
   [the command line]( https://github.com/cucumber/cucumber/wiki/Tags#running-a-subset-of-scenarios).
-* The default value for `cucumberOutputDir` has changed from `target/cucumber-parallel` to 
-  `${project.build.directory}/cucumber-parallel` if you were using a build directory other then `target` you can remove 
+* The default value for `cucumberOutputDir` has changed from `target/cucumber-parallel` to
+  `${project.build.directory}/cucumber-parallel` if you were using a build directory other then `target` you can remove
   this element.
 
 
@@ -285,7 +292,7 @@ Changelog
 
 2.2.0
 -----
-* PR #87 - allow setting of packageName for runners. Closes #45 
+* PR #87 - allow setting of packageName for runners. Closes #45
 * PR #85 - Resolve inconsistent filters: Fix issue Issue #76
 * PR #86 - use the baseDir of the current project for velocity
 
