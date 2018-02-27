@@ -2,6 +2,9 @@ package com.github.timm.cucumber.generate.name;
 
 import com.github.timm.cucumber.ModuloCounter;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Generate a Class Name based on a pattern.
  *
@@ -49,9 +52,54 @@ public class PatternNamingScheme implements ClassNamingScheme {
 
         String className =
                         pattern.replace("{f}", featureFileNamingScheme.generate(featureFileName));
-        className = className.replace("{c}", String.format("%02d", counter.next()));
-        className = className.replaceAll("\\{c:\\d*}", String.format("%d", moduloCounter.next()));
+
+        className = replaceAll(className, counter.next());
         return className;
+    }
+
+    private String replaceAll(String className, int number) {
+        String retValue = replaceCounter(className, number);
+        retValue = replaceModuloCounter(retValue, number);
+        return retValue;
+    }
+
+    private String replaceCounter(String pattern, int number) {
+        int defaultLen = 2;
+        Matcher matcher = Pattern.compile("\\{(\\d*)c}").matcher(pattern);
+
+        boolean result = matcher.find();
+        if (result) {
+            StringBuffer sb = new StringBuffer();
+            do {
+                int len = matcher.start(1) == matcher.end(1) ? defaultLen : Integer.decode(matcher.group(1));
+                matcher.appendReplacement(sb, String.format("%0" + len + "d", number));
+                result = matcher.find();
+            }
+            while (result);
+            matcher.appendTail(sb);
+            return sb.toString();
+        }
+        return pattern;
+    }
+
+    private String replaceModuloCounter(String pattern, int number) {
+        int defaultLen = 1;
+        Matcher matcher = Pattern.compile("\\{(\\d*)c:(\\d+)}").matcher(pattern);
+
+        boolean result = matcher.find();
+        if (result) {
+            StringBuffer sb = new StringBuffer();
+            do {
+                int len = matcher.start(1) == matcher.end(1) ? defaultLen : Integer.decode(matcher.group(1));
+                int mod = Integer.decode(matcher.group(2));
+                matcher.appendReplacement(sb, String.format("%0" + len + "d", number % mod));
+                result = matcher.find();
+            }
+            while (result);
+            matcher.appendTail(sb);
+            return sb.toString();
+        }
+        return pattern;
     }
 
 }
