@@ -47,7 +47,7 @@
                                 <package>bar</package>
                             </glue>
                             <namingScheme>pattern</namingScheme>
-                            <namingPattern>Parallel{2c:2}Foo{f}Counter{3c}IT</namingPattern>
+                            <namingPattern>Parallel{2c:3}Foo{f}Counter{3c}IT</namingPattern>
                         </configuration>
                     </execution>
                 </executions>
