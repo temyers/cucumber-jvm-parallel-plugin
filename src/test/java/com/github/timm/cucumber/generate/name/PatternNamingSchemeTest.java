@@ -34,15 +34,15 @@ public class PatternNamingSchemeTest {
     public static Collection<Object[]> params() {
         final Object[][] params = {
 
-                {"{f}", "FeatureFile"},
-                {"{c}", "01"},
-                {"{f}{c}", "FeatureFile01"},
-                {"{f}{c}Group{c:1}", "FeatureFile01Group0"},
-                {"Foo", "Foo"},
-                {"{3c}", "001"},
-                {"{f}{4c}Group{c:1}", "FeatureFile0001Group0"},
-                {"{f}{c}-some{4c}Group{c:1}", "FeatureFile01-some0001Group0"},
-                {"{f}{c}-some{4c}Group{c:1}Group{3c:1}", "FeatureFile01-some0001Group0Group000"},
+            {"{f}", "FeatureFile"},
+            {"{c}", "01"},
+            {"{f}{c}", "FeatureFile01"},
+            {"{f}{c}Group{c:1}", "FeatureFile01Group0"},
+            {"Foo", "Foo"},
+            {"{3c}", "001"},
+            {"{f}{4c}Group{c:1}", "FeatureFile0001Group0"},
+            {"{f}{c}-some{4c}Group{c:1}", "FeatureFile01-some0001Group0"},
+            {"{f}{c}-some{4c}Group{c:1}Group{3c:1}", "FeatureFile01-some0001Group0Group000"},
 
             // No validation is performed
             {"", ""},};
