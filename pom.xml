@@ -244,7 +244,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-invoker-plugin</artifactId>
-						<version>2.0.0</version>
+						<version>3.0.1</version>
 						<configuration>
 							<debug>true</debug>
 							<cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
@@ -256,17 +256,25 @@
 							</localRepositoryPath>
 							<settingsFile>src/it/settings.xml</settingsFile>
 							<addTestClassPath>true</addTestClassPath>
-							<goals>
-								<goal>clean</goal>
-								<goal>integration-test</goal>
-							</goals>
 							<parallelThreads>5</parallelThreads>
 						</configuration>
 						<executions>
 							<execution>
-								<id>integration-test</id>
+								<id>runOneTestToSetupRepoAndAvoidConcurrentDownloads</id>
 								<goals>
 									<goal>install</goal>
+									<goal>integration-test</goal>
+								</goals>
+								<configuration>
+									<pomIncludes>
+										<pomInclude>**/junit/simple-it/pom.xml</pomInclude>
+									</pomIncludes>
+									<parallelThreads>1</parallelThreads>
+								</configuration>
+							</execution>
+							<execution>
+								<id>integration-test</id>
+								<goals>
 									<goal>integration-test</goal>
 									<goal>verify</goal>
 								</goals>
@@ -318,6 +326,7 @@
 						<format>html</format>
 						<format>xml</format>
 					</formats>
+					<check/>
 				</configuration>
 				<reportSets>
 					<reportSet>
