@@ -99,7 +99,7 @@ Please refer to the integration tests for example usage:
         </tags>
         <!-- Generate TestNG runners instead of JUnit ones. --> 
         <useTestNG>false</useTestNG>
-        <!-- The naming scheme to use for the generated test classes.  One of 'simple' or 'feature-title' --> 
+        <!-- The naming scheme to use for the generated test classes.  One of ['simple', 'feature-title', 'pattern'] -->
         <namingScheme>simple</namingScheme>
         <!-- The class naming pattern to use.  Only required/used if naming scheme is 'pattern'.-->
         <namingPattern>Parallel{c}IT</namingPattern>
@@ -189,18 +189,25 @@ The naming scheme used for the generated files is controlled by the `namingSchem
 
 | Property      | Generated Name |
 | ------------- | -------------- |
-| simple        | `ParallelXXIT.java`, where `XX` is a one up counter.
-| feature-title | The name is generated based on the feature title with the following rules to ensure it is a valid classname:
-* Spaces are removed, camel-casing the title.
-* If the feature file starts with a digit, the classname is prefixed with '_'
-* A on up counter is appended to the classname, to prevent clashes. |
-| pattern       | Generate the filename based on the `namingPattern` property.  
-The following tokens can be used in the pattern:
-* `{f}` Converts the feature file name to a valid class name using the rules for feature-title, apart from the one up counter.
-* `{c}` Adds a one up counter. |
-* `{c:n}` Adds a one up counter modulo n (useful for selecting tests for parallelisation). |
+| simple        | `ParallelXXIT.java`, where `XX` is a one up counter.|
+| feature-title | The name is generated based on the feature title with a set of rules to ensure it is a valid classname. The reules are detailed in the next subsection below. |
+| pattern       | Generate the filename based on the `namingPattern` property.|
 
 By default, generated test files use the `simple` naming strategy.
+
+#### Feature-title Naming Scheme - rules ####
+
+* Spaces are removed, camel-casing the title
+* If the feature file starts with a digit, the classname is prefixed with '_'
+* A one up counter is appended to the classname, to prevent clashes.
+
+#### Pattern Naming Scheme - tokens ####
+
+The following tokens can be used in the pattern:
+* `{f}` Converts the feature file name to a valid class name using the rules for feature-title, apart from the one up counter.
+* `{c}` Adds a one up counter.
+* `{c:n}` Adds a one up counter modulo n (useful for selecting tests for parallelisation).
+* By default counter value is zero padded to two characters and modulo counter is not padded at all. If you need a different zero padded length, this can be achieved by prefixing the character `c` by the length required - for example `{3c}` will yield `001` instead of `01`
 
 #### Note on Pattern Naming Scheme ####
 The `pattern` naming scheme is for advanced usage only.  
