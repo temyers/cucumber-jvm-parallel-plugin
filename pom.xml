@@ -59,7 +59,7 @@
 		<dependency>
 			<groupId>io.cucumber</groupId>
 			<artifactId>gherkin</artifactId>
-			<version>3.2.0</version>
+			<version>5.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
@@ -92,6 +92,11 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.5</version>
+		</dependency>
+		<dependency>
+    		<groupId>io.cucumber</groupId>
+    		<artifactId>tag-expressions</artifactId>
+    		<version>1.1.1</version>
 		</dependency>
 	</dependencies>
 
@@ -174,7 +179,7 @@
 					<consoleOutput>true</consoleOutput>
 					<failsOnError>true</failsOnError>
 					<includeTestSourceDirectory>true</includeTestSourceDirectory>
-					<excludes>**/options/*.java</excludes>
+					<excludes>**/options/*.java, **/cucumber/runtime/*</excludes>
 				</configuration>
 				<executions>
 					<execution>
