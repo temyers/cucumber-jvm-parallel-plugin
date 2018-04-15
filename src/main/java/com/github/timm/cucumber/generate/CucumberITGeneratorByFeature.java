@@ -2,12 +2,18 @@ package com.github.timm.cucumber.generate;
 
 import static java.lang.String.format;
 
-import com.github.timm.cucumber.generate.filter.TagFilter;
 import com.github.timm.cucumber.generate.name.ClassNamingScheme;
+import com.github.timm.cucumber.runtime.TagPredicate;
+
 import gherkin.AstBuilder;
 import gherkin.Parser;
 import gherkin.TokenMatcher;
 import gherkin.ast.Feature;
+import gherkin.ast.GherkinDocument;
+import gherkin.pickles.Compiler;
+import gherkin.pickles.Pickle;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -19,8 +25,6 @@ import org.apache.velocity.app.event.EventCartridge;
 import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -94,27 +98,41 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
      */
     public void generateCucumberITFiles(final File outputDirectory,
                                         final Collection<File> featureFiles) throws MojoExecutionException {
-        final Parser<Feature> parser = new Parser<Feature>(new AstBuilder());
-        Feature feature = null;
-        for (final File file : featureFiles) {
+        Parser<GherkinDocument> parser = new Parser<GherkinDocument>(new AstBuilder());
+        TagPredicate tagPredicate = new TagPredicate(overriddenParameters.getTags());
 
+        TokenMatcher matcher = new TokenMatcher();
+
+        for (final File file : featureFiles) {
+            GherkinDocument gherkinDocument = null;
+            final List<Pickle> acceptedPickles = new ArrayList<Pickle>();
             try {
-                feature = parser.parse(new FileReader(file), new TokenMatcher());
-            } catch (final FileNotFoundException e) {
+                String source = FileUtils.readFileToString(file);
+                gherkinDocument = parser.parse(source, matcher);
+                Compiler compiler = new Compiler();
+                List<Pickle> pickles = compiler.compile(gherkinDocument);
+
+                for (Pickle pickle : pickles) {
+                    if (tagPredicate.apply(pickle.getTags())) {
+                        acceptedPickles.add(pickle);
+                        continue;
+                    }
+                }
+
+            } catch (final IOException e) {
                 // should never happen
                 // TODO - proper logging
                 System.out.println(format("WARNING: Failed to parse '%s'...IGNORING",
                         file.getName()));
             }
 
-            if (shouldSkipFeature(feature)) {
+            if (acceptedPickles.isEmpty()) {
                 continue;
             }
 
-
             outputFileName = classNamingScheme.generate(file.getName());
             setFeatureFileLocation(file);
-            setParsedFeature(feature);
+            setParsedFeature(gherkinDocument.getFeature());
             writeFile(outputDirectory);
 
         }
@@ -140,21 +158,6 @@ public class CucumberITGeneratorByFeature implements CucumberITGenerator {
         }
 
         fileCounter++;
-    }
-
-    private boolean shouldSkipFeature(final Feature feature) {
-        if (!overriddenParameters.getTags().isEmpty()) {
-            final TagFilter tagFilter = new TagFilter(overriddenParameters.getTags());
-            if (tagFilter.matchingScenariosAndExamples(feature).isEmpty()) {
-                return true;
-            }
-
-            //
-            // if (!featureContainsMatchingTags(feature)) {
-            // return true;
-            // }
-        }
-        return false;
     }
 
     /**

@@ -2,15 +2,21 @@ package com.github.timm.cucumber.generate;
 
 import static java.lang.String.format;
 
-import com.github.timm.cucumber.generate.filter.TagFilter;
 import com.github.timm.cucumber.generate.name.ClassNamingScheme;
+import com.github.timm.cucumber.runtime.TagPredicate;
+
 import gherkin.AstBuilder;
 import gherkin.Parser;
 import gherkin.TokenMatcher;
 import gherkin.ast.Feature;
+import gherkin.ast.GherkinDocument;
 import gherkin.ast.Location;
 import gherkin.ast.Node;
 import gherkin.ast.ScenarioDefinition;
+import gherkin.pickles.Compiler;
+import gherkin.pickles.Pickle;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -22,8 +28,6 @@ import org.apache.velocity.app.event.EventCartridge;
 import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -95,33 +99,70 @@ public class CucumberITGeneratorByScenario implements CucumberITGenerator {
      */
     public void generateCucumberITFiles(final File outputDirectory,
                                         final Collection<File> featureFiles) throws MojoExecutionException {
-        final Parser<Feature> parser = new Parser<Feature>(new AstBuilder());
-        Feature feature = null;
-        final TagFilter tagFilter = new TagFilter(overriddenParameters.getTags());
+        Parser<GherkinDocument> parser = new Parser<GherkinDocument>(new AstBuilder());
+        TagPredicate tagPredicate = new TagPredicate(overriddenParameters.getTags());
+
+        TokenMatcher matcher = new TokenMatcher();
 
         for (final File file : featureFiles) {
-
+            GherkinDocument gherkinDocument = null;
+            final List<Pickle> acceptedPickles = new ArrayList<Pickle>();
             try {
-                feature = parser.parse(new FileReader(file), new TokenMatcher());
-            } catch (final FileNotFoundException e) {
+                String source = FileUtils.readFileToString(file);
+                gherkinDocument = parser.parse(source, matcher);
+                Compiler compiler = new Compiler();
+                List<Pickle> pickles = compiler.compile(gherkinDocument);
+
+                for (Pickle pickle : pickles) {
+                    if (tagPredicate.apply(pickle.getTags())) {
+                        acceptedPickles.add(pickle);
+                    }
+                }
+
+            } catch (final IOException e) {
                 // should never happen
                 // TODO - proper logging
                 System.out.println(format("WARNING: Failed to parse '%s'...IGNORING",
                                 file.getName()));
             }
 
-            final Collection<ScenarioAndLocation> matchingScenariosAndExamples =
-                            tagFilter.matchingScenariosAndExamples(feature);
-
-            for (final ScenarioAndLocation match : matchingScenariosAndExamples) {
+            for (Pickle pickle : acceptedPickles) {
+                int locationIndex = pickle.getLocations().size();
+                final Location location = findLocationByIndex(pickle, 0);
+                //Scenario Outline has a first location the position on the table 
+                //and second one is the position of scenario self. 
+                final Location locationToCompare = findLocationByIndex(pickle, locationIndex - 1); 
                 outputFileName = classNamingScheme.generate(file.getName());
-                setFeatureFileLocation(file, match.getLocation());
-                setParsedFeature(feature);
-                setParsedScenario(match.getScenario());
+                setFeatureFileLocation(file, location);
+                setParsedFeature(gherkinDocument.getFeature());
+                setParsedScenario(findScenarioDefinitionViaLocation(locationToCompare, gherkinDocument));
                 writeFile(outputDirectory);
             }
-
         }
+    }
+    
+    private Location findLocationByIndex(Pickle pickle, int locationIndex) {
+        return new Location(pickle.getLocations().get(locationIndex).getLine(),
+                                        pickle.getLocations().get(locationIndex).getColumn());
+    }
+    
+    private ScenarioDefinition findScenarioDefinitionViaLocation(Location location, GherkinDocument gherkinDocument) {
+        List<ScenarioDefinition> scenarioDefinitions = gherkinDocument.getFeature().getChildren();
+        for (ScenarioDefinition definition : scenarioDefinitions) {
+            if (isLocationSame(definition.getLocation(), location)) {
+                return definition;
+            }
+        }
+        return null;
+    }
+    
+    private boolean isLocationSame(Location location1, Location location2) {
+        if (location1.getColumn() == location2.getColumn()) {
+            if (location1.getLine() == location2.getLine()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void writeFile(final File outputDirectory) throws MojoExecutionException {
