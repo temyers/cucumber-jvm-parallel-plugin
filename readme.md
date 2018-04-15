@@ -241,6 +241,11 @@ Q. Is there a mailing list?
 
 A. No. but we have a Gitter channel: https://gitter.im/cucumber-jvm-parallel-plugin/
 
+Migration from version 4.x
+==========================
+* Gherkin has been updated to version 5.0.0. You may encounter issues if you do not also upgrade
+  Cucumber to at least version 2.x.x.
+* Tag expressions have upgraded to 1.1.1. See https://docs.cucumber.io/tag-expressions
 
 Migration from version 3.x
 ==========================
@@ -269,6 +274,10 @@ Migration from version 1.x
 
 Changelog
 =========
+
+5.0.0-SNAPSHOT
+-----
+* PR #165 - Implement Tag expressions
 
 4.2.0
 -----
