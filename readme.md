@@ -17,7 +17,7 @@ Add the following to your POM file, updating the `<glue>` definition to point to
 <plugin>
   <groupId>com.github.temyers</groupId>
   <artifactId>cucumber-jvm-parallel-plugin</artifactId>
-  <version>4.2.0</version>
+  <version>5.0.0</version>
   <executions>
     <execution>
       <id>generateRunners</id>
@@ -53,7 +53,7 @@ Please refer to the integration tests for example usage:
 <plugin>
   <groupId>com.github.temyers</groupId>
   <artifactId>cucumber-jvm-parallel-plugin</artifactId>
-  <version>4.2.0</version>
+  <version>5.0.0</version>
   <executions>
     <execution>
       <id>generateRunners</id>
