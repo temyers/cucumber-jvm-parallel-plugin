@@ -9,7 +9,7 @@
 
     <groupId>com.github.temyers</groupId>
     <artifactId>cucumber-jvm-parallel-plugin</artifactId>
-    <version>5.0.0</version>
+    <version>5.0.1-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>cucumber-jvm-parallel-plugin Maven Plugin</name>
@@ -385,7 +385,7 @@
         <developerConnection>scm:git:https://github.com/temyers/cucumber-jvm-parallel-plugin.git
         </developerConnection>
         <url>https://github.com/temyers/cucumber-jvm-parallel-plugin</url>
-        <tag>cucumber-jvm-parallel-plugin-5.0.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <licenses>
