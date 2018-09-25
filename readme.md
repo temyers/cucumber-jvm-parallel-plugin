@@ -7,6 +7,8 @@ This is a pain to maintain and not very DRY.
 
 This is where the cucumber-jvm-parallel-plugin comes in.  This plugin automatically generates a Cucumber JUnit or TestNG runner for each scenario/feature file found in your project.
 
+Note: As of `cucumber-jvm:4.0.0` parallel execution is supported natively by cucumber.
+
 Quickstart
 ----------
 
