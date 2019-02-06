@@ -49,4 +49,10 @@ public class CucumberITGeneratorFactoryTest {
         assertThat(generator).isInstanceOf(CucumberITGeneratorByScenario.class);
     }
 
+    @Test
+    public void shouldCreateRerunRunner() throws Exception {
+        final CucumberITGenerator generator = factory.create(ParallelScheme.RERUN);
+        assertThat(generator).isInstanceOf(CucumberITGeneratorByRerun.class);
+    }
+
 }

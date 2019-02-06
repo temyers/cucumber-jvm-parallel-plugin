@@ -33,7 +33,11 @@ public class CucumberITGeneratorFactory {
         if (ParallelScheme.FEATURE.equals(parallelScheme)) {
 
             return createFileGeneratorByFeature();
+        } else if (ParallelScheme.RERUN.equals(parallelScheme)) {
+
+            return createFileGeneratorByRerun();
         } else {
+
             return createFileGeneratorByScenario();
         }
     }
@@ -45,5 +49,9 @@ public class CucumberITGeneratorFactory {
 
     private CucumberITGenerator createFileGeneratorByScenario() throws MojoExecutionException {
         return new CucumberITGeneratorByScenario(config, overriddenParameters, classNamingScheme);
+    }
+
+    private CucumberITGenerator createFileGeneratorByRerun() throws MojoExecutionException {
+        return new CucumberITGeneratorByRerun(config, overriddenParameters, classNamingScheme);
     }
 }

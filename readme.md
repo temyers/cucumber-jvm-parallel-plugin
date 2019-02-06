@@ -75,6 +75,8 @@ Please refer to the integration tests for example usage:
         <outputDirectory>${project.build.directory}/generated-test-sources/cucumber</outputDirectory>
         <!-- The directory, which must be in the root of the runtime classpath, containing your feature files.  -->
         <featuresDirectory>src/test/resources/features/</featuresDirectory>
+        <!-- The directory containing your rerun files, written by Cucumber Rerun formatter.  -->
+        <rerunFilesDirectory>src/test/resources/rerun/</rerunFilesDirectory>
         <!-- Directory where the cucumber report files shall be written  -->
         <cucumberOutputDir>target/cucumber-parallel</cucumberOutputDir>
         <!-- List of cucumber plugins. When none are provided the json formatter is used. For more 
@@ -105,7 +107,8 @@ Please refer to the integration tests for example usage:
         <namingScheme>simple</namingScheme>
         <!-- The class naming pattern to use.  Only required/used if naming scheme is 'pattern'.-->
         <namingPattern>Parallel{c}IT</namingPattern>
-        <!-- One of [SCENARIO, FEATURE]. SCENARIO generates one runner per scenario.  FEATURE generates a runner per feature. -->
+        <!-- One of [SCENARIO, FEATURE, RERUN]. SCENARIO generates one runner per scenario.  FEATURE generates a runner per feature. -->
+        <!-- RERUN generates one runner per row in the rerun files under rerunFilesDirectory -->
         <parallelScheme>SCENARIO</parallelScheme>
         <!-- Specify a custom template for the generated sources (this is a path relative to the project base directory) -->
         <customVmTemplate>src/test/resources/cucumber-custom-runner.vm</customVmTemplate>
@@ -127,6 +130,9 @@ The plugin will search `featuresDirectory` for `*.feature` files and generate a 
 > * Resources in `src/test/resources` are added to the classpath by default.
 > * `src/test/resources/features` **is** in the root of the classpath, so **would be valid** for `featuresDirectory`
 > * `src/test/resources/features/sub_folder` is **not** in the root of the classpath, so **would not be valid** to put in `featuresDirectory`
+
+If the parallelScheme is RERUN then the plugin will search `rerunFilesDirectory` for all files and generate a JUnit test for each row in a rerun file, for all rerun files.
+These rerun files must be written by Cucumber Rerun Formatter.
 
 If you prefer to generate TestNG tests, set `useTestNG` to true
 

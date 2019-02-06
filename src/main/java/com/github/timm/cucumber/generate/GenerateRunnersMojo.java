@@ -86,6 +86,13 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
     private File featuresDirectory;
 
     /**
+     * Directory containing the rerun files.
+     */
+    @Parameter(defaultValue = "src/test/resources/rerun/", property = "rerunFilesDir",
+                    required = true)
+    private File rerunFilesDirectory;
+
+    /**
      * see cucumber.api.CucumberOptions.strict
      */
     @Parameter(defaultValue = "true", property = "cucumber.strict", required = true)
@@ -189,13 +196,24 @@ public class GenerateRunnersMojo extends AbstractMojo implements FileGeneratorCo
      */
     public void execute() throws MojoExecutionException {
 
-        if (!featuresDirectory.exists()) {
-            throw new MojoExecutionException("Features directory does not exist");
+        final Collection<File> inputFiles;
+        if (parallelScheme.equals(ParallelScheme.RERUN)) {
+            if (!rerunFilesDirectory.exists()) {
+                throw new MojoExecutionException("Rerun files directory does not exist");
+            }
+            inputFiles = listFiles(rerunFilesDirectory, null, true);
+        } else {
+            if (!featuresDirectory.exists()) {
+                throw new MojoExecutionException("Features directory does not exist");
+            }
+            inputFiles = listFiles(featuresDirectory, new String[] {"feature"}, true);
         }
 
-        final Collection<File> featureFiles = listFiles(featuresDirectory, new String[] {"feature"}, true);
-        final List<File> sortedFeatureFiles = new NameFileComparator().sort(new ArrayList<File>(featureFiles));
-
+        if (inputFiles.isEmpty()) {
+            getLog().info("No Input File Found, No Runners Will Be Generated.");
+            return;
+        }
+        final List<File> sortedFeatureFiles = new NameFileComparator().sort(new ArrayList<File>(inputFiles));
         createOutputDirIfRequired();
 
         File packageDirectory = packageName == null
