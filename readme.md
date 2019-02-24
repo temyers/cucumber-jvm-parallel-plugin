@@ -224,6 +224,96 @@ It is up to you to ensure that class names generated are valid and there are no 
 
 The `namingPattern` property is for the **class name** only.  Do not add the `.java` suffix.
 
+### Rerun ###
+[Cucumber Rerun formatter](https://relishapp.com/cucumber/cucumber/docs/formatters/rerun-formatter) writes a text file with the path to feature file, and line numbers of all the scenarios failed in that feature in a given runner. 
+When parallelScheme is RERUN, then these text file are used to auto generate the runners for all failed features/scenarios. 
+
+#### Use Case ####
+
+This functionality is designed keeping in mind the use case of rerunning failed scenarios to test a patch deployment or bug fixes.
+
+Which means the rerun can be triggered once or multiple times as needed. And they could be triggered right after the run or hours later, depending on the complexity of fixes needed, and severity of bugs caught by the test suite.
+
+This is not designed to root out flaky tests. Although you can schedule the rerun job to automatically run at the completion of test suite to meet that need, this is not the recommended use. Instead you should fix the flaky tests.
+
+#### How to Use ####
+##### Step 1 #####
+To use this feature add [Cucumber Rerun formatter](https://relishapp.com/cucumber/cucumber/docs/formatters/rerun-formatter) plugin in your Scenario/Feature runners, using the below snippet. 
+```xml
+<plugins>
+    <plugin>
+        <!--The available options are junit, testng, html, pretty, json, usage and rerun -->
+        <name>rerun</name>
+        <!--Optional output directory. Overrides cucumberOutputDirectory. Usefull when different 
+            plugins create files with the same extension-->
+        <outputDirectory>target/rerun-reports/run1/</outputDirectory>
+    </plugin>
+</plugins>
+```
+Location of rerun files directory `<outputDirectory>` should either be outside of target folder, or exclude that directory inside target from being deleted during Maven Clean goal while executing rerun.
+
+##### Step 2 #####
+Then add a separate profile, in which configure the plugin as shown here.
+
+Note the `<parallelScheme>` is configured to be RERUN, and location of rerun files is set in `<rerunFilesDirectory>`. 
+Also note that the `<outputDirectory>` is configured to be different in this profile. 
+
+Since in this example the rerun directory is inside target, exclude that directory from being deleted during Maven Clean goal while executing with this profile.
+
+```xml
+<profiles>
+    <profile>
+        <id>rerun-failed-tests</id>
+        <build>
+            <plugins>
+                <plugin>
+                  <groupId>com.github.temyers</groupId>
+                  <artifactId>cucumber-jvm-parallel-plugin</artifactId>
+                  <version>5.0.0</version>
+                  <executions>
+                    <execution>
+                      <id>generateRunners</id>
+                      <phase>generate-test-sources</phase>
+                      <goals>
+                        <goal>generateRunners</goal>
+                      </goals>
+                      <configuration>
+                        <!-- Mandatory -->
+                        <!-- List of package names to scan for glue code. -->
+                        <glue>
+                          <package>com.example</package>
+                          <package>com.example.other</package>
+                        </glue>
+                        <!-- The directory, which must be in the root of the runtime classpath, containing your rerun files, written by Cucumber Rerun formatter.  -->
+                        <rerunFilesDirectory>target/rerun-reports/run1/</rerunFilesDirectory>
+                        <!-- One of [SCENARIO, FEATURE, RERUN]. SCENARIO generates one runner per scenario.  FEATURE generates a runner per feature. -->
+                        <!-- RERUN generates one runner per row in all rerun files under rerunFilesDirectory -->
+                        <parallelScheme>RERUN</parallelScheme>
+                        <plugins>
+                            <plugin>
+                                <!--The available options are junit, testng, html, pretty, json, usage and rerun -->
+                                <name>rerun</name>
+                                <!--Optional output directory. Overrides cucumberOutputDirectory. Usefull when different 
+                                    plugins create files with the same extension-->
+                                <outputDirectory>target/rerun-reports/run2/</outputDirectory>
+                            </plugin>
+                            <!-- other cucumber plugins -->
+                        </plugins>
+                        <!-- other configurations -->
+                      </configuration>
+                    </execution>
+                  </executions>
+                </plugin>
+                <!-- other build plugins -->
+            </plugins>
+        </build>
+    </profile>
+    <!-- other profiles -->
+<profiles>
+```
+The property `<rerunFilesDirectory>` and rerun `<outputDirectory>` can be passed from command line, keeping them unique in each consecutive rerun. 
+And the parent directory of these (`target/rerun-reports/`) can be excluded from being deleted during Maven Clean goal while executing with this profile.
+
 ### Custom Templates ###
 
 Some reporting plugins, such as
