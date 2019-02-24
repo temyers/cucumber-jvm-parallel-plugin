@@ -29,7 +29,7 @@ import java.util.Properties;
  * Generates Cucumber runner files using configuration from FileGeneratorConfig containing parameters passed into the
  * Maven Plugin configuration.
  * 
- * This is basically similar to CucumberITGeneratorByScenario, but generateCucumberITFiles looks up address of failed
+ * <p>This is basically similar to CucumberITGeneratorByScenario, but generateCucumberITFiles looks up address of failed
  * scenario from rerun files instead of computing it from feature files.
  */
 
@@ -115,7 +115,7 @@ public class CucumberITGeneratorByRerun implements CucumberITGenerator {
     /**
      * Each line in Rerun file contains address of failed scenario in following format:
      * 
-     * features_path/feature_name.feature:<line_number_of_failed_scenario>[:<line_numbers_of_failed_scenarios>]
+     * <p>features_path/feature_name.feature: line_number_of_failed_scenario[:line_numbers_of_failed_scenarios]
      * 
      * @param String one line of rerun file
      */
@@ -154,7 +154,7 @@ public class CucumberITGeneratorByRerun implements CucumberITGenerator {
     /**
      * Sets the feature file location based on the given file.
      * 
-     * A line in rerun contains feature path and feature name followed by scenario line number of failed scenarios.
+     * <p>A line in rerun contains feature path and feature name followed by scenario line number of failed scenarios.
      * Feature name and scenario line numbers are separated by :
      *
      * @param file The feature file
