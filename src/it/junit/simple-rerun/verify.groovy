@@ -26,9 +26,9 @@ import cucumber.api.junit.Cucumber;
 @CucumberOptions(
         strict = true,
         features = {"src/test/resources/features/feature1.feature:3"},
-        plugin = {"json"},
+        plugin = {"json:${buildDirectory.absolutePath}/cucumber-parallel/1.json"},
         monochrome = false,
-        glue = {"foo"})
+        glue = {"foo", "bar"})
 public class Parallel01IT {
 }"""
 
@@ -42,9 +42,9 @@ import cucumber.api.junit.Cucumber;
 @CucumberOptions(
         strict = true,
         features = {"src/test/resources/features/feature2.feature:7"},
-        plugin = {"json"},
+        plugin = {"json:${buildDirectory.absolutePath}/cucumber-parallel/2.json"},
         monochrome = false,
-        glue = {"foo"})
+        glue = {"foo", "bar"})
 public class Parallel02IT {
 }"""
 
@@ -58,9 +58,9 @@ import cucumber.api.junit.Cucumber;
 @CucumberOptions(
         strict = true,
         features = {"src/test/resources/features/feature3.feature:3:12"},
-        plugin = {"json"},
+        plugin = {"json:${buildDirectory.absolutePath}/cucumber-parallel/3.json"},
         monochrome = false,
-        glue = {"foo"})
+        glue = {"foo", "bar"})
 public class Parallel03IT {
 }"""
 
@@ -75,9 +75,9 @@ import cucumber.api.junit.Cucumber;
 @CucumberOptions(
         strict = true,
         features = {"src/test/resources/features/feature4.feature:12"},
-        plugin = {"json"},
+        plugin = {"json:${buildDirectory.absolutePath}/cucumber-parallel/4.json"},
         monochrome = false,
-        glue = {"foo"})
+        glue = {"foo", "bar"})
 public class Parallel04IT {
 }"""
 
