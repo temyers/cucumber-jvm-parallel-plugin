@@ -1,6 +1,6 @@
 # cucumber-jvm-parallel-plugin
 
-#STOP!
+# STOP!
 
 Before reading further, you probably should not be using this plugin.
 
